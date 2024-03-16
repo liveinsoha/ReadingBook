@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -27,8 +28,8 @@ public class SecurityConfig {
         return http
                 .csrf(customizer -> customizer
                         .csrfTokenRequestHandler(requestHandler)
-                        .ignoringRequestMatchers("/register/**", "/account/login/**", "/logout/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/", "/account/login/**", "/logout/**", "/register/validate/email")
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/").hasRole("")
@@ -51,6 +52,7 @@ public class SecurityConfig {
                         .deleteCookies("remember-me")
                         .permitAll()
                 )
+                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
@@ -58,14 +60,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public HttpSessionCsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
-        csrfTokenRepository.setHeaderName("X-CSRF-TOKEN");
-        csrfTokenRepository.setParameterName("_csrf");
-        csrfTokenRepository.setSessionAttributeName("XSRF-TOKEN");
-        return csrfTokenRepository;
     }
 }

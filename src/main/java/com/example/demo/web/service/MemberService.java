@@ -86,14 +86,6 @@ public class MemberService {
 
         }
 
-        String phoneNo = request.getPhoneNo();
-        if(phoneNo.trim() == null){
-            throw new BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
-        }
-        if(phoneNo.length() != 11){
-            throw new BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
-        }
-
         Gender gender = request.getGender();
         if(gender == null){
             throw new BaseException(BaseResponseCode.INVALID_FORM_GENDER);
