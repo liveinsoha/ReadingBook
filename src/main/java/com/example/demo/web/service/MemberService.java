@@ -19,13 +19,13 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     public SignUpSuccessResponse register(MemberRegisterRequest request){
-        validatePresentEmail(request);
+        validatePresentEmail(request.getEmail());
         validateForm(request);
 
         Member member = Member.createMember(request);
@@ -38,8 +38,7 @@ public class MemberService {
     }
 
 
-    private void validatePresentEmail(MemberRegisterRequest request) {
-        String email = request.getEmail();
+    public void validatePresentEmail(String email) {
         Optional<Member> findMember = memberRepository.findByEmail(email);
 
         if(findMember.isPresent()){
@@ -59,13 +58,19 @@ public class MemberService {
         }
 
         String password = request.getPassword();
-        if(password == null){
+        String passwordConfirm = request.getPasswordConfirm();
+        if(password == null || passwordConfirm == null){
             throw new BaseException(BaseResponseCode.INVALID_FORM_PASSWORD);
         }
 
-        if(password.length() < 8 || password.length() > 16){
+        if((password.length() < 8 || password.length() > 16) || (passwordConfirm.length() < 8 || passwordConfirm.length() > 16)){
             throw new BaseException(BaseResponseCode.INVALID_FORM_PASSWORD);
         }
+
+        if(!password.equals(passwordConfirm)){
+            throw new BaseException(BaseResponseCode.INVALID_FORM_PASSWORD);
+        }
+
 
         String name = request.getName();
         if(name == null){
