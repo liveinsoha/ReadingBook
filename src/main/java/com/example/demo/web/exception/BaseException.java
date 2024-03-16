@@ -1,7 +1,6 @@
 package com.example.demo.web.exception;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class BaseException extends RuntimeException {
@@ -12,4 +11,10 @@ public class BaseException extends RuntimeException {
         this.baseResponseCode = baseResponseCode;
         this.message = baseResponseCode.getMessage();
     }
+
+    public BaseException(BaseResponseCode baseResponseCode, String message){
+        this.baseResponseCode = baseResponseCode;
+        this.message = message;
+    }
+
 }

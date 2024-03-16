@@ -30,6 +30,16 @@ public enum BaseResponseCode {
     AUTHORIZATION_NOT_VALID(HttpStatus.BAD_REQUEST, "인증정보가 일치하지 않습니다"),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다. 다시 입력해주세요."),
 
+    EMPTY_NAME(HttpStatus.BAD_REQUEST, "이름을 입력해주세요."),
+    INVALID_NAME_LENGTH(HttpStatus.BAD_REQUEST, "이름을 올바르게 입력해주세요."),
+    EMPTY_OPTION(HttpStatus.BAD_REQUEST, "옵션을 선택해주세요."),
+    EMPTY_NATIONALITY(HttpStatus.BAD_REQUEST, "국적을 입력해주세요."),
+    EMPTY_DESCRIPTION(HttpStatus.BAD_REQUEST, "설명을 입력해주세요."),
+    EMPTY_BIRTH_YEAR(HttpStatus.BAD_REQUEST, "생년을 입력해주세요."),
+    INVALID_BIRTH_YEAR_LENGTH(HttpStatus.BAD_REQUEST, "생년을 올바르게 입력해주세요."),
+    INVALID_BIRTH_YEAR_FORMAT(HttpStatus.BAD_REQUEST, "생년을 올바르게 입력해주세요."),
+    EMPTY_GENDER(HttpStatus.BAD_REQUEST, "성별을 입력해주세요."),
+
 
     /**
      * 401
@@ -45,7 +55,8 @@ public enum BaseResponseCode {
     /**
      * 404
      */
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다.");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    AUTHOR_NOT_FOUND(HttpStatus.NOT_FOUND, "작가를 찾을 수 없습니다.");
 
     private HttpStatus httpStatus;
     private String message;
