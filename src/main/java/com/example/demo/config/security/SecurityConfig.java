@@ -17,7 +17,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final RememberMeUserDetailsService rememberMeService;
     private static final int ONE_MONTH = 2678400;
 
     @Bean
@@ -44,7 +43,6 @@ public class SecurityConfig {
                 ).rememberMe(customizer -> customizer
                         .rememberMeParameter("remember-me")
                         .tokenValiditySeconds(ONE_MONTH)
-                        .userDetailsService(rememberMeService)
                         .authenticationSuccessHandler(new LoginSuccessHandler("/"))
                 ).logout(customizer -> customizer
                         .logoutUrl("/logout")

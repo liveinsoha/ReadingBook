@@ -1,4 +1,4 @@
-package com.example.demo.web.api.controller;
+package com.example.demo.web.controller.api.controller;
 
 import com.example.demo.utils.MessageUtils;
 import com.example.demo.web.dto.BaseResponse;

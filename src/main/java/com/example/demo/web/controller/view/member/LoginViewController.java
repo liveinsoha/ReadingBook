@@ -1,4 +1,4 @@
-package com.example.demo.web.viewController.member;
+package com.example.demo.web.controller.view.member;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

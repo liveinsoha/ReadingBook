@@ -24,6 +24,7 @@ public enum BaseResponseCode {
     INVALID_FORM_PHONE_NO(HttpStatus.BAD_REQUEST, "핸드폰 번호를 올바르게 입력해주세요."),
     INVALID_FORM_GENDER(HttpStatus.BAD_REQUEST, "성별을 올바르게 입력해주세요."),
 
+
     EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "이미 가입된 이메일입니다."),
     USER_DUPLICATE(HttpStatus.BAD_REQUEST, "중복된 사용자가 있습니다"),
     AUTHORIZATION_NOT_VALID(HttpStatus.BAD_REQUEST, "인증정보가 일치하지 않습니다"),
@@ -39,7 +40,8 @@ public enum BaseResponseCode {
 
 
 
-
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "검색되는 카테고리가 없습니다. 카테고리 아이디를 다시 확인해주세요."),
+    CATEGORY_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "검색되는 카테고리 그룹이 없습니다. 카테고리 그룹 아이디를 다시 확인해주세요."),
     /**
      * 404
      */
