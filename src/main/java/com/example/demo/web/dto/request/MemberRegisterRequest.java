@@ -1,4 +1,4 @@
-package com.example.demo.web.controller.dto;
+package com.example.demo.web.dto.request;
 
 import com.example.demo.web.domain.enums.Gender;
 import jakarta.annotation.security.DenyAll;

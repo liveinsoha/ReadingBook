@@ -1,4 +1,4 @@
-package com.example.demo.web.controller;
+package com.example.demo.web.viewController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

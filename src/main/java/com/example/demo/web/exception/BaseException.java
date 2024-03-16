@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 public class BaseException extends RuntimeException {
-    private final BaseResponseCode baseResponseCode;
-    private final String message;
+    public final BaseResponseCode baseResponseCode;
+    public final String message;
 
     public BaseException(BaseResponseCode baseResponseCode) {
         this.baseResponseCode = baseResponseCode;

@@ -1,12 +1,15 @@
 package com.example.demo.web.service;
 
-import com.example.demo.web.controller.dto.MemberRegisterRequest;
+import com.example.demo.web.domain.entity.Member;
+import com.example.demo.web.dto.request.MemberRegisterRequest;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.exception.BaseException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -104,14 +107,17 @@ class MemberServiceTest {
         MemberRegisterRequest registerMember = createRequest("success@example.com", "test1234!", "test", "1999", "01012341234", Gender.SECRET);
 
         //when
-        Long memberId = memberService.register(registerMember);
+        Long memberId = memberService.register(registerMember).getMemberId();
 
         //then
         assertThat(memberId).isEqualTo(2L);
     }
 
+
     private MemberRegisterRequest createRequest(String email, String password, String name, String birthYear, String phoneNo, Gender gender){
         return new MemberRegisterRequest(email, password, name, birthYear, phoneNo, gender);
     }
+
+
 
 }

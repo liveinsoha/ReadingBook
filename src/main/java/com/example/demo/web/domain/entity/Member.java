@@ -1,6 +1,6 @@
 package com.example.demo.web.domain.entity;
 
-import com.example.demo.web.controller.dto.MemberRegisterRequest;
+import com.example.demo.web.dto.request.MemberRegisterRequest;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.domain.enums.MemberRole;
 import jakarta.persistence.*;
@@ -37,6 +37,7 @@ public class Member extends BaseEntity {
         member.birthYear = request.getBirthYear();
         member.phoneNo = request.getPhoneNo();
         member.gender = request.getGender();
+        member.role = MemberRole.ROLE_MEMBER;
         return member;
     }
 

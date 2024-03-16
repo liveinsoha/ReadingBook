@@ -1,7 +1,8 @@
 package com.example.demo.web.service;
 
 
-import com.example.demo.web.controller.dto.MemberRegisterRequest;
+import com.example.demo.web.dto.request.MemberRegisterRequest;
+import com.example.demo.web.dto.response.SignUpSuccessResponse;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.exception.BaseException;
@@ -23,7 +24,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Long register(MemberRegisterRequest request){
+    public SignUpSuccessResponse register(MemberRegisterRequest request){
         validatePresentEmail(request);
         validateForm(request);
 
@@ -32,8 +33,10 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(member.getPassword());
         member.encodePassword(encodedPassword);
 
-        return memberRepository.save(member).getId();
+        Member savedMember = memberRepository.save(member);
+        return new SignUpSuccessResponse(member.getId());
     }
+
 
     private void validatePresentEmail(MemberRegisterRequest request) {
         String email = request.getEmail();
