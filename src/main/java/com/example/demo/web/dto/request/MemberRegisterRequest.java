@@ -10,8 +10,8 @@ import lombok.Data;
 public class MemberRegisterRequest {
     private String email;
     private String password;
+    private String passwordConfirm;
     private String name;
     private String birthYear;
-    private String phoneNo;
     private Gender gender;
 }

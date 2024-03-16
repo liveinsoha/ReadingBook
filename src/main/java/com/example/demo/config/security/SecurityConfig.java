@@ -17,6 +17,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 public class SecurityConfig {
 
     private final RememberMeUserDetailsService rememberMeService;
+    private static final int ONE_MONTH = 2678400;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
