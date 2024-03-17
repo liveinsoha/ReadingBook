@@ -41,8 +41,10 @@ public enum BaseResponseCode {
     EMPTY_GENDER(HttpStatus.BAD_REQUEST, "성별을 입력해주세요."),
     DUPLICATE_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리명입니다."),
     SUBCATEGORIES_EXIST(HttpStatus.BAD_REQUEST, "해당 카테고리 그룹 아래 하위 카테고리들이 존재합니다. 하위 카테고리를 모두 삭제한 다음에 카테고리 그룹을 삭제해주세요."),
-    AUTHOR_BOOKS_EXIST(HttpStatus.BAD_REQUEST, "해당 작가에 도서가 등록되었습니다. 하위 도서를 모두 삭제한 다음에 작가을 삭제해주세요.")
-,
+    AUTHOR_BOOKS_EXIST(HttpStatus.BAD_REQUEST, "해당 작가에 도서가 등록되었습니다. 하위 도서를 모두 삭제한 다음에 작가을 삭제해주세요."),
+    SUBBOOKS_EXIST(HttpStatus.BAD_REQUEST, "해당 도서 그룹을 지정한 하위 도서가 존재합니다. 하위 도서를 모두 삭제한 다음에 도서 그룹을 삭제해주세요."),
+
+
 
 
 
