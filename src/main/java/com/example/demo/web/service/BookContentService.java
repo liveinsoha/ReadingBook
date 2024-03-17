@@ -53,6 +53,7 @@ public class BookContentService {
         bookContent.updateContent(content);
     }
 
+    @Transactional(readOnly = true)
     public BookContent findBookContentByBookId(Long bookId) {
         return bookContentRepository.findByBookId(bookId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));

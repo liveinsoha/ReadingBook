@@ -64,6 +64,7 @@ public class BookAuthorListService {
         bookAuthorListRepository.delete(bookAuthorList);
     }
 
+    @Transactional(readOnly = true)
     public BookAuthorList findBookAuthorListByBookIdAndAuthorId(Long bookId, Long authorId) {
         BookAuthorList bookAuthorList = bookAuthorListRepository.findByBookIdAndAuthorId(bookId, authorId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_AUTHOR_LIST_NOT_FOUND));

@@ -6,6 +6,7 @@ import com.example.demo.web.dto.request.CategoryGroupRegisterRequest;
 import com.example.demo.web.dto.request.CategoryGroupUpdateRequest;
 import com.example.demo.web.dto.request.CategoryRegisterRequest;
 import com.example.demo.web.dto.request.CategoryUpdateRequest;
+import com.example.demo.web.dto.response.CategorySearchResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.CategoryGroupRepository;
@@ -14,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +47,7 @@ public class CategoryService {
         return categoryRepository.save(category).getId();
     }
 
-
+    @Transactional(readOnly = true)
     public Category findCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.CATEGORY_NOT_FOUND));
@@ -100,6 +104,15 @@ public class CategoryService {
         String name = request.getName();
         validateNameExist(name);
         validateName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategorySearchResponse> searchCategories() {
+        List<Category> categories = categoryRepository.findAll();
+
+        return categories.stream()
+                .map(c -> new CategorySearchResponse(c.getCategoryGroup().getId(), c.getId(), c.getName(), c.getCategoryGroup().getName(), true))
+                .collect(Collectors.toList());
     }
 
 

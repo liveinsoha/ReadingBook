@@ -112,6 +112,7 @@ public class AuthorManageService {
         return true;
     }
 
+    @Transactional(readOnly = true)
     private void validateAuthorId(Long authorId) {
         if(authorId == null){
             throw new IllegalArgumentException("작가 아이디를 입력해주세요.");

@@ -1,9 +1,11 @@
 package com.example.demo.web.service;
 
+import com.example.demo.web.domain.entity.Category;
 import com.example.demo.web.domain.entity.CategoryGroup;
 import com.example.demo.web.dto.request.CategoryGroupRegisterRequest;
 import com.example.demo.web.dto.request.CategoryGroupUpdateRequest;
 import com.example.demo.web.dto.response.CategoryGroupSearchResponse;
+import com.example.demo.web.dto.response.CategorySearchResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.CategoryGroupRepository;
@@ -13,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,4 +125,6 @@ public class CategoryGroupService {
                 .map(c -> new CategoryGroupSearchResponse(c.getId(), c.getName(), true))
                 .get();
     }
+
+
 }

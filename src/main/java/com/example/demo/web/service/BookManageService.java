@@ -48,16 +48,18 @@ public class BookManageService {
         return bookRepository.save(book).getId();
     }
 
+    @Transactional(readOnly = true)
     public Book findBookById(Long bookId){
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     private Category getCategory(Long categoryId) {
         Category category = categoryService.findCategory(categoryId);
         return category;
     }
-
+    @Transactional(readOnly = true)
     private BookGroup getBookGroup(Long bookGroupId) {
         BookGroup bookGroup = null;
         if(bookGroupId != null){
