@@ -18,6 +18,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 public class SecurityConfig {
 
     private static final int ONE_MONTH = 2678400;
+    private final MemberDetailsService memberDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,10 +29,20 @@ public class SecurityConfig {
                 .csrf(customizer -> customizer
                         .csrfTokenRequestHandler(requestHandler)
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/", "/account/login/**", "/logout/**", "/register/validate/email")
+                        .ignoringRequestMatchers("/account/login/**", "/logout/**", "/register", "/register/validate/email")
                 )
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/").hasRole("")
+                        .requestMatchers("/cart", "/library", "/user/**").hasAnyRole("MEMBER", "ADMIN")
+                        .requestMatchers(
+                                "/manage/**",
+                                "/register/author", "/update/author", "/delete/author", "/search/author",
+                                "/register/book-author-list", "/delete/book-author-list",
+                                "/register/book", "/update/book", "/delete/book", "/search/book", "/update/search/book",
+                                "/register/book-content", "/update/book-content", "/delete/book-content", "/update/search/book-content",
+                                "/register/book-group", "/update/book-group", "/delete/book-group", "/search/book-group",
+                                "/register/category-group", "/update/category-group", "/delete/category-group", "/search/category-group",
+                                "/register/category", "/update/category", "/delete/category", "/search/category", "/search/categories"
+                        ).hasRole("ADMIN")
                 )
                 .formLogin(form -> form
                         .loginPage("/account/login")
@@ -43,7 +54,8 @@ public class SecurityConfig {
                 ).rememberMe(customizer -> customizer
                         .rememberMeParameter("remember-me")
                         .tokenValiditySeconds(ONE_MONTH)
-                        .authenticationSuccessHandler(new LoginSuccessHandler("/"))
+                        .userDetailsService(memberDetailsService)
+                        .authenticationSuccessHandler(new LoginSuccessHandler())
                 ).logout(customizer -> customizer
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")

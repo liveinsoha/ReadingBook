@@ -33,6 +33,7 @@ public class Book extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private int reviewCount;
 
 
     public static Book createBook(BookRegisterRequest request, Category category, BookGroup bookGroup, String savedImageName) {
@@ -49,6 +50,7 @@ public class Book extends BaseEntity {
         book.savedImageName = savedImageName;
         book.isOnSale = true;
         book.description = request.getDescription();
+        book.reviewCount = 0;
         return book;
     }
 
