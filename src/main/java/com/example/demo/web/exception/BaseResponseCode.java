@@ -44,7 +44,7 @@ public enum BaseResponseCode {
     AUTHOR_BOOKS_EXIST(HttpStatus.BAD_REQUEST, "해당 작가에 도서가 등록되었습니다. 하위 도서를 모두 삭제한 다음에 작가을 삭제해주세요."),
     SUBBOOKS_EXIST(HttpStatus.BAD_REQUEST, "해당 도서 그룹을 지정한 하위 도서가 존재합니다. 하위 도서를 모두 삭제한 다음에 도서 그룹을 삭제해주세요."),
 
-
+    BOOK_CONTENT_EXIST(HttpStatus.BAD_REQUEST, "해당 도서에는 도서 내용이 있습니다. 도서 내용을 삭제한 다음에 도서를 삭제해주세요."),
 
 
 

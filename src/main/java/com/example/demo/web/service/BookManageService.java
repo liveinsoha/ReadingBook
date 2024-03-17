@@ -10,6 +10,7 @@ import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.dto.response.BookUpdateResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
+import com.example.demo.web.repository.BookContentRepository;
 import com.example.demo.web.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class BookManageService {
     private final CategoryService categoryService;
     private final ImageUploadUtil imageUploadUtil;
     private final BookGroupManageService bookGroupManagementService;
-
+    private final BookContentRepository bookContentRepository;
     /**
      * 도서 등록 메소드
      * @param request
@@ -55,7 +56,7 @@ public class BookManageService {
     }
 
     @Transactional(readOnly = true)
-    public Book findBookById(Long bookId){
+    public Book findBook(Long bookId){
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
     }
@@ -129,7 +130,7 @@ public class BookManageService {
      * @param bookId
      */
     public void updateBookImage(MultipartFile file, Long bookId) {
-        Book book = findBookById(bookId);
+        Book book = findBook(bookId);
         String existingImageName = book.getSavedImageName();
         String updatedImageName = imageUploadUtil.updateImage(file, existingImageName);
 
@@ -148,11 +149,22 @@ public class BookManageService {
                 request.getBookGroupId()
         );
 
-        Book book = findBookById(bookId);
+        Book book = findBook(bookId);
 
         Category category = getCategory(request.getCategoryId());
         BookGroup bookGroup = getBookGroup(request.getBookGroupId());
 
         book.updateContent(request, category, bookGroup);
+    }
+
+    public boolean deleteBook(Long bookId) {
+        boolean hasBookContent = bookContentRepository.existsByBookId(bookId);
+        if(hasBookContent == true){
+            throw new BaseException(BaseResponseCode.BOOK_CONTENT_EXIST);
+        }
+
+        Book book = findBook(bookId);
+        bookRepository.delete(book);
+        return true;
     }
 }

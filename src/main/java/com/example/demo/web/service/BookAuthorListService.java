@@ -29,7 +29,7 @@ public class BookAuthorListService {
 
         validateForm(bookId, authorId, ordinal);
 
-        Book book = bookManagementService.findBookById(bookId);
+        Book book = bookManagementService.findBook(bookId);
         Author author = authorManagementService.findAuthorById(authorId);
 
         BookAuthorList bookAuthorList = BookAuthorList.createBookAuthorList(book, author, ordinal);

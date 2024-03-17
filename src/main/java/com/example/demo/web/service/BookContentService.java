@@ -1,11 +1,11 @@
 package com.example.demo.web.service;
 
-import com.example.demo.web.controller.api.controller.BookContentRepository;
 import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.BookContent;
 import com.example.demo.web.dto.request.BookContentRegisterRequest;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
+import com.example.demo.web.repository.BookContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class BookContentService {
 
         validateForm(bookId, content);
 
-        Book book = bookManagementService.findBookById(bookId);
+        Book book = bookManagementService.findBook(bookId);
         BookContent bookContent = BookContent.createBookContent(book, content);
 
         return bookContentRepository.save(bookContent).getId();
