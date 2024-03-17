@@ -105,7 +105,7 @@ public class BookGroupManageService {
 
         boolean hasBooks = bookRepository.existsByBookGroupId(bookGroupId);
 
-        if (hasBooks == true) {
+        if (hasBooks) {
             throw new BaseException(BaseResponseCode.SUBBOOKS_EXIST);
         }
 

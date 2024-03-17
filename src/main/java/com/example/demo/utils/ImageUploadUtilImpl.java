@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-public class ImageUploadUtilImpl implements ImageUploadUtil{
+public class ImageUploadUtilImpl implements ImageUploadUtil {
 
     String UPLOAD_PATH = "C:/Temp/file";
 
@@ -24,7 +24,8 @@ public class ImageUploadUtilImpl implements ImageUploadUtil{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return fileName;
+        String savedFileName = fileName + "." + fileExtension;
+        return savedFileName;
     }
 
     @Override

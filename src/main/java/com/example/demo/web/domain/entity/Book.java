@@ -20,6 +20,7 @@ public class Book extends BaseEntity {
     private int ebookPrice;
     private int discountRate;
     private String savedImageName;
+    private boolean isOnSale;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -42,6 +43,7 @@ public class Book extends BaseEntity {
         book.category = category;
         book.bookGroup = bookGroup;
         book.savedImageName = savedImageName;
+        book.isOnSale = true;
         return book;
     }
 

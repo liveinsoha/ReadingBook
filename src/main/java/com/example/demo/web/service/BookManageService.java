@@ -161,7 +161,7 @@ public class BookManageService {
         boolean hasBookContent = bookContentRepository.existsByBookId(bookId);
         if(hasBookContent == true){
             throw new BaseException(BaseResponseCode.BOOK_CONTENT_EXIST);
-        }
+        } // 북 컨텐츠 cascade 전이 고려.
 
         Book book = findBook(bookId);
         bookRepository.delete(book);

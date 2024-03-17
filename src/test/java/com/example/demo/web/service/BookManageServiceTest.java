@@ -1,12 +1,14 @@
 package com.example.demo.web.service;
 
+import com.example.demo.utils.ImageUploadUtil;
 import com.example.demo.web.domain.entity.Book;
-import com.example.demo.web.dto.request.BookRegisterRequest;
-import com.example.demo.web.dto.request.BookUpdateRequest;
-import com.example.demo.web.dto.request.CategoryGroupRegisterRequest;
-import com.example.demo.web.dto.request.CategoryRegisterRequest;
+import com.example.demo.web.dto.request.*;
 import com.example.demo.web.exception.BaseException;
+import com.example.demo.web.repository.BookContentRepository;
+import com.example.demo.web.repository.BookRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -25,6 +27,11 @@ class BookManageServiceTest {
     private BookManageService bookManagementService;
 
     @Autowired
+    private BookRepository bookRepository;
+
+    private ImageUploadUtil imageUploadUtil;
+
+    @Autowired
     private CategoryService categoryService;
 
     @Autowired
@@ -32,6 +39,18 @@ class BookManageServiceTest {
 
     @Autowired
     private BookGroupManageService bookGroupManagementService;
+
+    @Autowired
+    private BookContentRepository bookContentRepository;
+
+    @Autowired
+    private BookContentService bookContentService;
+
+    @BeforeEach
+    void beforeEach(){
+        imageUploadUtil = Mockito.mock(ImageUploadUtil.class);
+        bookManagementService = new BookManageService(bookRepository, categoryService, imageUploadUtil, bookGroupManagementService, bookContentRepository);
+    }
 
     @Test
     void whenBookRegistered_thenVerifyIsRegistered() {
@@ -125,6 +144,35 @@ class BookManageServiceTest {
         assertThatThrownBy(() -> bookManagementService.findBook(bookId))
                 .isInstanceOf(BaseException.class)
                 .hasMessageContaining("검색되는 도서가 없습니다. 도서 아이디를 다시 확인해주세요.");
+    }
+
+    @Test
+    void whenDeletingBookHasBookContent_thenThrowException(){
+        //given
+        MockMultipartFile file = new MockMultipartFile(
+                "해리포터와 마법사의 돌",
+                "해리포터와 마법사의 돌.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test".getBytes()
+        );
+
+        CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
+        Long categoryGroupId = categoryGroupService.register(categoryGroupRequest);
+
+        CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지 소설", categoryGroupId);
+        Long categoryId = categoryService.register(categoryRequest);
+
+
+        BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
+                "2023.01.01", 0, 9900, 5, categoryId, 0L);
+        Long bookId = bookManagementService.registerBook(request, file);
+
+        BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "test");
+        bookContentService.register(bookContentRegisterRequest);
+
+        assertThatThrownBy(() -> bookManagementService.deleteBook(bookId))
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining("해당 도서에는 도서 내용이 있습니다. 도서 내용을 삭제한 다음에 도서를 삭제해주세요.");
     }
 
     private static BookRegisterRequest createRegisterRequest(String title, String isbn, String publisher, String publishingDate, int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId) {

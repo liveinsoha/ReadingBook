@@ -4,11 +4,13 @@ import com.example.demo.utils.ImageUploadUtil;
 import com.example.demo.web.domain.entity.BookGroup;
 import com.example.demo.web.dto.request.BookGroupRegisterRequest;
 import com.example.demo.web.dto.response.BookGroupSearchResponse;
+import com.example.demo.web.repository.BookContentRepository;
 import com.example.demo.web.repository.BookGroupRepository;
 import com.example.demo.web.repository.BookRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -27,13 +29,18 @@ class BookGroupManageServiceTest {
 
     @Autowired
     private BookGroupRepository bookGroupRepository;
+
     @Autowired
     private BookRepository bookRepository;
+
     private BookGroupManageService bookGroupManagementService;
+
     private ImageUploadUtil imageUploadUtil;
+
 
     @BeforeEach
     void beforeEach(){
+        imageUploadUtil = Mockito.mock(ImageUploadUtil.class);
         bookGroupManagementService = getBookGroupManagementService();
     }
 
