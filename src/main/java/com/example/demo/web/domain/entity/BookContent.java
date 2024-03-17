@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 
 @Entity
 public class BookContent extends BaseEntity {
+    
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
     private String content;
