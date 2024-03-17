@@ -10,7 +10,7 @@ import java.util.UUID;
 @Service
 public class ImageUploadUtilImpl implements ImageUploadUtil{
 
-    String UPLOAD_PATH = "D:/file/";
+    String UPLOAD_PATH = "C:/Temp/file";
 
     @Override
     public String uploadImage(MultipartFile file) {
