@@ -51,4 +51,6 @@ public class BookGroupManageViewController {
         model.addAttribute("selectFlag", "deleteBookGroup");
         return "manage/bookgroup/bookgroup-delete";
     }
+
+
 }
