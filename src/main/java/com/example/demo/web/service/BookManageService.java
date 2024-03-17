@@ -65,9 +65,7 @@ public class BookManageService {
             return null;
         }
 
-        return book.map(b -> new BookUpdateResponse(b.getId(), b.getTitle(), b.getIsbn(), b.getPublisher(),
-                b.getPublishingDate(), b.getPaperPrice(), b.getEbookPrice(), b.getDiscountRate(), b.getSavedImageName(),
-                b.getCategory().getId(), b.getBookGroup().getId())).get();
+        return book.map(BookUpdateResponse::new).get();
     }
 
     @Transactional(readOnly = true)

@@ -40,7 +40,7 @@ public class BookManageController {
                 .body(response);
     }
 
-    @PatchMapping("/title/{bookId}")
+    @PatchMapping("/content/{bookId}")
     public ResponseEntity<Object> updateImage(BookUpdateRequest request, @PathVariable Long bookId){
         bookManagementService.updateBookContent(request, bookId);
 
