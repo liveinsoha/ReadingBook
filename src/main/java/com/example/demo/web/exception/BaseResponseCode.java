@@ -39,6 +39,8 @@ public enum BaseResponseCode {
     INVALID_BIRTH_YEAR_LENGTH(HttpStatus.BAD_REQUEST, "생년을 올바르게 입력해주세요."),
     INVALID_BIRTH_YEAR_FORMAT(HttpStatus.BAD_REQUEST, "생년을 올바르게 입력해주세요."),
     EMPTY_GENDER(HttpStatus.BAD_REQUEST, "성별을 입력해주세요."),
+    DUPLICATE_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리명입니다."),
+
 
 
     /**

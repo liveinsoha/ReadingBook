@@ -66,6 +66,10 @@ public class CategoryService {
 
     private void validateCategoryGroupRegisterForm(CategoryGroupRegisterRequest request) {
         String name = request.getName();
+        boolean isExist = categoryGroupRepository.existsByName(name);
+        if(isExist == true){
+            throw new BaseException(BaseResponseCode.DUPLICATE_CATEGORY_NAME);
+        }
         validateName(name, "카테고리 그룹을 입력하세요.");
     }
 
