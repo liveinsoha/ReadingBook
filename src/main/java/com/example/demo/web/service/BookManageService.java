@@ -6,6 +6,7 @@ import com.example.demo.web.domain.entity.BookGroup;
 import com.example.demo.web.domain.entity.Category;
 import com.example.demo.web.dto.request.BookRegisterRequest;
 import com.example.demo.web.dto.request.BookUpdateRequest;
+import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.dto.response.BookUpdateResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +61,7 @@ public class BookManageService {
     }
 
     @Transactional(readOnly = true)
-    public BookUpdateResponse searchUpdateBook(Long bookId) {
+    public BookUpdateResponse searchBook(Long bookId) {
         Optional<Book> book = bookRepository.findById(bookId);
 
         if(book.isEmpty()){
@@ -80,6 +83,15 @@ public class BookManageService {
             bookGroup = bookGroupManagementService.findBookGroupById(bookGroupId);
         }
         return bookGroup;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookManageSearchResponse> searchBook(String title) {
+        List<Book> books = bookRepository.findByTitle(title);
+
+        return books.stream()
+                .map(b -> new BookManageSearchResponse(b.getId(), b.getTitle(), b.getPublisher(), b.getSavedImageName()))
+                .collect(Collectors.toList());
     }
 
     private void validateForm(String title, String isbn, String publisher, String publishingDate,
