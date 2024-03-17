@@ -21,7 +21,7 @@ public class Book extends BaseEntity {
     private int discountRate;
     private String savedImageName;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

@@ -7,10 +7,12 @@ import lombok.Getter;
 @Entity
 @Getter
 public class Category extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long id;
+
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,11 +26,6 @@ public class Category extends BaseEntity {
         return category;
     }
 
-
-    public void updateCategory(CategoryUpdateRequest request, CategoryGroup categoryGroup) {
-        this.name = request.getName();
-        this.categoryGroup = categoryGroup;
-    }
 
     public void updateCategory(CategoryUpdateRequest request) {
         this.name = request.getName();

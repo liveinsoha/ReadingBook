@@ -13,17 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/manage")
 public class CategoryViewController {
 
-    @GetMapping("/register/category-group")
-    public String registerCategoryGroup(Model model){
-        model.addAttribute("selectFlag", "registerCategoryGroup");
-        return "manage/category/categorygroup-register";
-    }
-
-    @GetMapping("/update/category-group")
-    public String updateCategoryGroup(Model model){
-        model.addAttribute("selectFlag", "updateCategoryGroup");
-        return "manage/category/categorygroup-update";
-    }
 
     @GetMapping("/register/category")
     public String registerCategory(Model model){

@@ -25,6 +25,9 @@ class BookManageServiceTest {
     private CategoryService categoryService;
 
     @Autowired
+    private CategoryGroupService categoryGroupService;
+
+    @Autowired
     private BookGroupManageService bookGroupManagementService;
 
     @Test
@@ -37,10 +40,10 @@ class BookManageServiceTest {
         );
 
         CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
-        Long categoryGroupId = categoryService.registerCategoryGroup(categoryGroupRequest);
+        Long categoryGroupId = categoryGroupService.register(categoryGroupRequest);
 
         CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지 소설", categoryGroupId);
-        Long categoryId = categoryService.registerCategory(categoryRequest);
+        Long categoryId = categoryService.register(categoryRequest);
 
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",

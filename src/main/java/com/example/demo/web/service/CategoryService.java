@@ -20,94 +20,87 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Slf4j
 public class CategoryService {
-    private final CategoryGroupRepository categoryGroupRepository;
+
+    private final CategoryGroupService categoryGroupService;
     private final CategoryRepository categoryRepository;
 
-    public Long registerCategoryGroup(CategoryGroupRegisterRequest request) {
-        validateCategoryGroupRegisterForm(request);
-        CategoryGroup categoryGroup = CategoryGroup.createCategoryGroup(request);
-        return categoryGroupRepository.save(categoryGroup).getId();
-    }
 
-    public Long registerCategory(CategoryRegisterRequest request){
+    /**
+     * 카테고리 등록 메소드
+     *
+     * @param request (등록 DTO)
+     * @return categoryId
+     */
+    public Long register(CategoryRegisterRequest request) {
         Long categoryGroupId = request.getCategoryGroupId();
         String name = request.getName();
 
-        validateCategoryRegisterForm(request);
+        validateRegisterForm(request);
 
-        CategoryGroup categoryGroup = findCategoryGroupById(categoryGroupId);
+        CategoryGroup categoryGroup = categoryGroupService.findCategoryGroupById(categoryGroupId);
 
         Category category = Category.createCategory(name, categoryGroup);
         return categoryRepository.save(category).getId();
     }
 
-    public CategoryGroup findCategoryGroupById(Long categoryGroupId) {
-        CategoryGroup categoryGroup = categoryGroupRepository.findById(categoryGroupId)
-                .orElseThrow(() -> new BaseException(BaseResponseCode.CATEGORY_GROUP_NOT_FOUND));
-        return categoryGroup;
 
-
-    }
-    public Category findCategoryById(Long categoryId) {
+    public Category findCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() ->new BaseException(BaseResponseCode.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(BaseResponseCode.CATEGORY_NOT_FOUND));
         return category;
     }
 
-    private void validateCategoryRegisterForm(CategoryRegisterRequest request) {
+    private void validateRegisterForm(CategoryRegisterRequest request) {
         String name = request.getName();
-        validateName(name, "카테고리를 입력하세요.");
+        validateNameExist(name);
+        validateName(name);
 
         Long categoryGroupId = request.getCategoryGroupId();
-        if(categoryGroupId == null){
+        if (categoryGroupId == null) {
             throw new IllegalArgumentException("카테고리 그룹 아이디를 입력하세요.");
         }
     }
 
-    private void validateCategoryGroupRegisterForm(CategoryGroupRegisterRequest request) {
-        String name = request.getName();
-        boolean isExist = categoryGroupRepository.existsByName(name);
-        if(isExist == true){
+    private void validateNameExist(String name) {
+        boolean isExist = categoryRepository.existsByName(name);
+        if (isExist) {
             throw new BaseException(BaseResponseCode.DUPLICATE_CATEGORY_NAME);
         }
-        validateName(name, "카테고리 그룹을 입력하세요.");
     }
 
-    private static void validateName(String name, String exceptionMessage) {
-        if(name == null || name.trim().equals("")){
-            throw new IllegalArgumentException(exceptionMessage);
+
+    private static void validateName(String name) {
+        if (name == null || name.trim().equals("")) {
+            throw new IllegalArgumentException("카테고리를 입력하세요.");
         }
     }
 
-    public void updateCategoryGroup(CategoryGroupUpdateRequest request, Long categoryGroupId) {
-        validateCategoryGroupUpdateForm(request);
-
-        CategoryGroup categoryGroup = findCategoryGroupById(categoryGroupId);
-        categoryGroup.updateCategoryGroup(request);
-    }
-
-    public void updateCategory(CategoryUpdateRequest request, Long categoryId){
-        validateCategoryUpdateForm(request);
-
-        Category category = findCategoryById(categoryId);
-
-        Long categoryGroupId = request.getCategoryGroupId();
-
-        if(categoryGroupId == null){
-            category.updateCategory(request);
-        }else {
-            CategoryGroup categoryGroup = findCategoryGroupById(categoryGroupId);
-            category.updateCategory(request, categoryGroup);
+    private void validateCategoryGroupId(Long categoryGroupId) {
+        if (categoryGroupId == null) {
+            throw new IllegalArgumentException("카테고리 그룹 아이디를 입력하세요.");
         }
     }
 
-    private void validateCategoryGroupUpdateForm(CategoryGroupUpdateRequest request) {
-        String name = request.getName();
-        validateName(name, "카테고리 그룹을 입력하세요.");
+    public void update(CategoryUpdateRequest request, Long categoryId) {
+        validateUpdateForm(request);
+        validateCategoryId(categoryId);
+
+        Category category = findCategory(categoryId);
+
+        category.updateCategory(request);
     }
 
-    private void validateCategoryUpdateForm(CategoryUpdateRequest request) {
-        String name = request.getName();
-        validateName(name, "카테고리를 입력하세요.");
+    private void validateCategoryId(Long categoryId) {
+        if (categoryId == null) {
+            throw new IllegalArgumentException("카테고리 아이디를 입력하세요.");
+        }
     }
+
+    private void validateUpdateForm(CategoryUpdateRequest request) {
+        String name = request.getName();
+        validateNameExist(name);
+        validateName(name);
+    }
+
+
 }

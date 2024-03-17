@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
+
     @CreationTimestamp
     @Column(updatable = false)
     protected LocalDateTime createdTime;

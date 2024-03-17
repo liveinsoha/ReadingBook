@@ -8,10 +8,13 @@ import lombok.Getter;
 public class BookContent extends BaseEntity {
 
     @Id
-    @OneToOne(fetch = FetchType.LAZY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_content_id")
     private Long id;
 
+
     @JoinColumn(name = "book_id")
+    @OneToOne(fetch = FetchType.LAZY)
     private Book book;
     private String content;
 

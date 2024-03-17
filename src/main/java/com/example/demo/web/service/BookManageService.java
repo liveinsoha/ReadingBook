@@ -48,7 +48,7 @@ public class BookManageService {
     }
 
     private Category getCategory(Long categoryId) {
-        Category category = categoryService.findCategoryById(categoryId);
+        Category category = categoryService.findCategory(categoryId);
         return category;
     }
 

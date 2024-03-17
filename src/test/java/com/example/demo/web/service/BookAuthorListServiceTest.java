@@ -29,6 +29,9 @@ class BookAuthorListServiceTest {
     @Autowired
     private AuthorManageService authorManagementService;
 
+    @Autowired
+    private CategoryGroupService categoryGroupService;
+
     @Test
     void whenBookIdNull_ThenThrowException(){
         //given
@@ -87,10 +90,10 @@ class BookAuthorListServiceTest {
 
     private Long createBook() {
         CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
-        Long categoryGroupId = categoryService.registerCategoryGroup(categoryGroupRequest);
+        Long categoryGroupId = categoryGroupService.register(categoryGroupRequest);
 
         CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지 소설", categoryGroupId);
-        Long categoryId = categoryService.registerCategory(categoryRequest);
+        Long categoryId = categoryService.register(categoryRequest);
 
         BookRegisterRequest bookRegisterRequest = createBookRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, categoryId, null);
