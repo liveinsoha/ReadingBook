@@ -115,7 +115,7 @@ class BookAuthorListServiceTest {
         Long categoryId = categoryService.register(categoryRequest);
 
         BookRegisterRequest bookRegisterRequest = createBookRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, null);
+                "2023.01.01", 0, 9900, 5, categoryId, null, "21세기 최고의 책");
 
         MockMultipartFile file = getMockMultipartFile();
 
@@ -124,8 +124,9 @@ class BookAuthorListServiceTest {
 
 
 
-    private static BookRegisterRequest createBookRegisterRequest(String title, String isbn, String publisher, String publishingDate, int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId) {
-        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId);
+    private static BookRegisterRequest createBookRegisterRequest(String title, String isbn, String publisher, String publishingDate,
+                                                                 int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId,String description) {
+        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId,description);
     }
 
     private AuthorRegisterRequest createAuthorRegisterRequest(String name, AuthorOption option, String nationality, String description, String birthYear, Gender gender) {

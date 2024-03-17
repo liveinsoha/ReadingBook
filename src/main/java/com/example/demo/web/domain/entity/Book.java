@@ -30,6 +30,10 @@ public class Book extends BaseEntity {
     @JoinColumn(name = "book_group_id")
     private BookGroup bookGroup;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+
 
     public static Book createBook(BookRegisterRequest request, Category category, BookGroup bookGroup, String savedImageName) {
         Book book = new Book();
@@ -44,6 +48,7 @@ public class Book extends BaseEntity {
         book.bookGroup = bookGroup;
         book.savedImageName = savedImageName;
         book.isOnSale = true;
+        book.description = request.getDescription();
         return book;
     }
 

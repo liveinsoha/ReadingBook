@@ -69,7 +69,7 @@ class BookManageServiceTest {
 
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L);
+                "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
 
         Long bookId = bookManagementService.registerBook(request, file);
 
@@ -103,11 +103,11 @@ class BookManageServiceTest {
 
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L);
+                "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
 
         Long bookId = bookManagementService.registerBook(request, file);
 
-        BookUpdateRequest updateRequest = new BookUpdateRequest("홍길동전", "test", "test", "test", 1, 1, 1, categoryId, 0L);
+        BookUpdateRequest updateRequest = new BookUpdateRequest("홍길동전", "test", "test", "test", 1, 1, 1, categoryId, 0L,"21세기 최고의 책");
         bookManagementService.updateBookContent(updateRequest, bookId);
 
         Book book = bookManagementService.findBook(bookId);
@@ -133,7 +133,7 @@ class BookManageServiceTest {
 
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L);
+                "2023.01.01", 0, 9900, 5, categoryId, 0L,"21세기 최고의 책");
         Long bookId = bookManagementService.registerBook(request, file);
 
         //when
@@ -164,7 +164,7 @@ class BookManageServiceTest {
 
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L);
+                "2023.01.01", 0, 9900, 5, categoryId, 0L,"21세기 최고의 책");
         Long bookId = bookManagementService.registerBook(request, file);
 
         BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "test");
@@ -175,7 +175,8 @@ class BookManageServiceTest {
                 .hasMessageContaining("해당 도서에는 도서 내용이 있습니다. 도서 내용을 삭제한 다음에 도서를 삭제해주세요.");
     }
 
-    private static BookRegisterRequest createRegisterRequest(String title, String isbn, String publisher, String publishingDate, int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId) {
-        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId);
+    private static BookRegisterRequest createRegisterRequest(String title, String isbn, String publisher, String publishingDate, 
+                                                             int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId, String description) {
+        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId, description);
     }
 }
