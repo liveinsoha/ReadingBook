@@ -34,10 +34,20 @@ public class ImageUploadUtilImpl implements ImageUploadUtil{
         return uploadImage(file);
     }
 
+
     @Override
     public void deleteImage(String savedImageName) {
-        File existFile = new File(savedImageName);
+        String fileExtension = extractExtension(savedImageName);
+        String filename = extractFilename(savedImageName);
+        String filePath = getFilePath(UPLOAD_PATH, filename, fileExtension);
+
+        File existFile = new File(filePath);
         existFile.delete();
+    }
+
+    private String extractFilename(String filename) {
+        int index = filename.lastIndexOf(".");
+        return filename.substring(0, index);
     }
 
     private String createFileName() {

@@ -110,6 +110,8 @@ public class BookGroupManageService {
         }
 
         BookGroup bookGroup = findBookGroupById(bookGroupId);
+        String savedImageName = bookGroup.getSavedImageName();
+        imageUploadUtil.deleteImage(savedImageName);
         bookGroupRepository.delete(bookGroup);
         return true;
     }
