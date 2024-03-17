@@ -38,4 +38,16 @@ public class AuthorManageController {
                 .status(HttpStatus.OK)
                 .body(response);
     }
+
+    @DeleteMapping("/{authorId}")
+    public ResponseEntity<Object> deleteAuthor(@PathVariable Long authorId){
+        authorManagementService.delete(authorId);
+
+        BaseResponse response = new BaseResponse(HttpStatus.OK, "삭제가 완료되었습니다.", true);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+
 }

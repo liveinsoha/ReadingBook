@@ -5,13 +5,18 @@ import com.example.demo.web.domain.enums.AuthorOption;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.dto.request.AuthorRegisterRequest;
 import com.example.demo.web.dto.request.AuthorUpdateRequest;
+import com.example.demo.web.dto.response.AuthorSearchResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.AuthorRepository;
+import com.example.demo.web.repository.BookAuthorListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AuthorManageService {
     private final AuthorRepository authorRepository;
+    private final BookAuthorListRepository bookAuthorListRepository;
 
     public Long registerAuthor(AuthorRegisterRequest request) {
         validateForm(request.getName(), request.getAuthorOption(), request.getNationality(), request.getDescription(), request.getBirthYear(), request.getGender());
@@ -76,5 +82,39 @@ public class AuthorManageService {
     public Author findAuthorById(Long authorId) {
         return authorRepository.findById(authorId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.AUTHOR_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<AuthorSearchResponse> searchByAuthorName(String name) {
+        List<Author> authors = authorRepository.findAllByName(name);
+
+        return authors.stream()
+                .map(a -> new AuthorSearchResponse(a.getId(), a.getName(), a.getBirthYear(), a.getGender().getKorean(), a.getAuthorOption().getKorean()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 작가 삭제 메소드
+     * @param authorId
+     * @return boolean
+     */
+    public boolean delete(Long authorId) {
+        validateAuthorId(authorId);
+
+        boolean isWrittenBooks = bookAuthorListRepository.existsByAuthorId(authorId);
+
+        if(isWrittenBooks == true){
+            throw new BaseException(BaseResponseCode.AUTHOR_BOOKS_EXIST);
+        }
+
+        Author author = findAuthorById(authorId);
+        authorRepository.delete(author);
+        return true;
+    }
+
+    private void validateAuthorId(Long authorId) {
+        if(authorId == null){
+            throw new IllegalArgumentException("작가 아이디를 입력해주세요.");
+        }
     }
 }

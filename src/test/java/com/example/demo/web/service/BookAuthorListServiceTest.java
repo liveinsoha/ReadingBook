@@ -3,13 +3,17 @@ package com.example.demo.web.service;
 import com.example.demo.web.domain.enums.AuthorOption;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.dto.request.*;
+import com.example.demo.web.exception.BaseException;
+import com.example.demo.web.exception.BaseResponseCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,6 +92,21 @@ class BookAuthorListServiceTest {
         return authorId;
     }
 
+    @Test
+    void whenAuthorDeleted_thenVerifyIsDeleted(){
+        Long bookId = createBook();
+        Long authorId = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
+
+        BookAuthorListRegisterRequest request = new BookAuthorListRegisterRequest(bookId, authorId, 1);
+        bookAuthorListService.register(request);
+        bookAuthorListService.delete(bookId, authorId);
+
+        assertThatThrownBy(() -> bookAuthorListService.findBookAuthorListByBookIdAndAuthorId(bookId,authorId))
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_LIST_NOT_FOUND.getMessage());
+    }
+
+
     private Long createBook() {
         CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
         Long categoryGroupId = categoryGroupService.register(categoryGroupRequest);
@@ -102,6 +121,8 @@ class BookAuthorListServiceTest {
 
         return bookManagementService.registerBook(bookRegisterRequest, file);
     }
+
+
 
     private static BookRegisterRequest createBookRegisterRequest(String title, String isbn, String publisher, String publishingDate, int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId) {
         return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId);

@@ -48,7 +48,7 @@ public class CategoryGroupService {
 
     private void validateNameExist(String name) {
         boolean isExist = categoryGroupRepository.existsByName(name);
-        if(isExist == true){
+        if(isExist){
             throw new BaseException(BaseResponseCode.DUPLICATE_CATEGORY_NAME);
         }
     }
