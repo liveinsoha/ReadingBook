@@ -56,7 +56,7 @@ public enum BaseResponseCode {
      * 404
      */
     BOOK_AUTHOR_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "검색되는 결과가 없습니다. 도서 아이디와 작가 아이디를 다시 확인해주세요."),
-
+    BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "검색되는 도서가 없습니다. 도서 아이디를 다시 확인해주세요."),
     BOOK_GROUP_NOT_FOUND(HttpStatus.BAD_REQUEST, "검색되는 도서 그룹이 없습니다. 도서 그룹 아이디를 다시 확인해주세요."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),

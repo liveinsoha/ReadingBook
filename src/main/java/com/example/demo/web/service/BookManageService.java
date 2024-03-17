@@ -44,7 +44,7 @@ public class BookManageService {
 
     public Book findBookById(Long bookId){
         return bookRepository.findById(bookId)
-                .orElseThrow(() -> new BaseException(BaseResponseCode.CATEGORY_GROUP_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
     }
 
     private Category getCategory(Long categoryId) {
