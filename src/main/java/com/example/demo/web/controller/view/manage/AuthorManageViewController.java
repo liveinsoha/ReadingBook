@@ -13,9 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/manage/author")
 public class AuthorManageViewController {
 
-    @GetMapping
+    @GetMapping("/register/author")
     public String registerForm(Model model){
         model.addAttribute("selectFlag", "registerAuthor");
         return "manage/author/author-register";
+    }
+
+    @GetMapping("/update/author")
+    public String updateForm(Model model){
+        model.addAttribute("selectFlag", "updateAuthor");
+        return "manage/author/author-update";
     }
 }
