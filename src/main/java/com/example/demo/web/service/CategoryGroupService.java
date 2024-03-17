@@ -107,6 +107,7 @@ public class CategoryGroupService {
         return true;
     }
 
+    @Transactional(readOnly = true)
     public CategoryGroupSearchResponse searchCategoryName(String name) {
         Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByName(name);
 
