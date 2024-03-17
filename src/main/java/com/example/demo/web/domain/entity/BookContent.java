@@ -16,6 +16,8 @@ public class BookContent extends BaseEntity {
     @JoinColumn(name = "book_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Book book;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
 

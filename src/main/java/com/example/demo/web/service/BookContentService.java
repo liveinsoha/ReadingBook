@@ -20,11 +20,24 @@ public class BookContentService {
     private final BookContentRepository bookContentRepository;
     private final BookManageService bookManagementService;
 
+    /**
+     * 도서 내용 등록 메소드
+     * 이미 등록되어 있을 경우 예외 발생
+     * @param request
+     * @return bookContentId
+     */
     public Long register(BookContentRegisterRequest request) {
         Long bookId = request.getBookId();
         String content = request.getContent();
 
+        boolean isRegisteredBookId = bookContentRepository.existsByBookId(bookId);
+        if(isRegisteredBookId == true){
+            throw new BaseException(BaseResponseCode.BOOK_CONTENT_ALREADY_REGISTERED);
+        }
+
         validateForm(bookId, content);
+
+
 
         Book book = bookManagementService.findBook(bookId);
         BookContent bookContent = BookContent.createBookContent(book, content);
@@ -46,6 +59,11 @@ public class BookContentService {
         }
     }
 
+    /**
+     * 도서 내용 수정 메소드
+     * @param bookId
+     * @param content
+     */
     public void update(Long bookId, String content) {
         validateForm(bookId, content);
 
@@ -59,6 +77,10 @@ public class BookContentService {
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
     }
 
+    /**
+     * 도서 내용 제거
+     * @param bookId
+     */
     public void delete(Long bookId) {
         validateId(bookId);
         BookContent bookContent = findBookContentByBookId(bookId);
