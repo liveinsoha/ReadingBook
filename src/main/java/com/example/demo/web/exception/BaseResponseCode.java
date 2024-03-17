@@ -40,6 +40,8 @@ public enum BaseResponseCode {
     INVALID_BIRTH_YEAR_FORMAT(HttpStatus.BAD_REQUEST, "생년을 올바르게 입력해주세요."),
     EMPTY_GENDER(HttpStatus.BAD_REQUEST, "성별을 입력해주세요."),
     DUPLICATE_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리명입니다."),
+    SUBCATEGORIES_EXIST(HttpStatus.BAD_REQUEST, "해당 카테고리 그룹 아래 하위 카테고리들이 존재합니다. 하위 카테고리를 모두 삭제한 다음에 카테고리 그룹을 삭제해주세요."),
+
 
 
 

@@ -3,13 +3,17 @@ package com.example.demo.web.service;
 import com.example.demo.web.domain.entity.CategoryGroup;
 import com.example.demo.web.dto.request.CategoryGroupRegisterRequest;
 import com.example.demo.web.dto.request.CategoryGroupUpdateRequest;
+import com.example.demo.web.dto.response.CategoryGroupSearchResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.CategoryGroupRepository;
+import com.example.demo.web.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CategoryGroupService {
     private final CategoryGroupRepository categoryGroupRepository;
-
+    private final CategoryRepository categoryRepository;
     /**
      * 카테고리 그룹 등록 메소드
      * @param request (등록 DTO)
@@ -73,6 +77,47 @@ public class CategoryGroupService {
         validateName(name);
     }
 
-    public void deleteCategoryGroup(Long categoryGroupId) {
+    private void validateUpdateForm(CategoryGroupUpdateRequest request, Long categoryGroupId) {
+        String name = request.getName();
+        validateNameExist(name);
+        validateName(name);
+
+        validateCategoryGroupId(categoryGroupId);
+    }
+
+    private void validateCategoryGroupId(Long categoryGroupId) {
+        if(categoryGroupId == null){
+            throw new IllegalArgumentException("카테고리 그룹 아이디를 입력하세요.");
+        }
+    }
+
+
+    public boolean delete(Long categoryGroupId) {
+        validateCategoryGroupId(categoryGroupId);
+
+        boolean isCategoryExists = categoryRepository.existsByCategoryGroupId(categoryGroupId);
+
+        if(isCategoryExists == true){
+            throw new BaseException(BaseResponseCode.SUBCATEGORIES_EXIST);
+        }
+
+        CategoryGroup categoryGroup = findCategoryGroupById(categoryGroupId);
+        categoryGroupRepository.delete(categoryGroup);
+
+        return true;
+    }
+
+    public CategoryGroupSearchResponse searchCategoryName(String name) {
+        Optional<CategoryGroup> categoryGroup = categoryGroupRepository.findByName(name);
+
+        boolean isEmpty = categoryGroup.isEmpty();
+
+        if(isEmpty){
+            return new CategoryGroupSearchResponse(null, name, false);
+        }
+
+        return categoryGroup
+                .map(c -> new CategoryGroupSearchResponse(c.getId(), c.getName(), true))
+                .get();
     }
 }
