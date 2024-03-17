@@ -6,6 +6,7 @@ import com.example.demo.web.domain.entity.BookGroup;
 import com.example.demo.web.domain.entity.Category;
 import com.example.demo.web.dto.request.BookRegisterRequest;
 import com.example.demo.web.dto.request.BookUpdateRequest;
+import com.example.demo.web.dto.response.BookUpdateResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.BookRepository;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +55,19 @@ public class BookManageService {
     public Book findBookById(Long bookId){
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public BookUpdateResponse searchUpdateBook(Long bookId) {
+        Optional<Book> book = bookRepository.findById(bookId);
+
+        if(book.isEmpty()){
+            return null;
+        }
+
+        return book.map(b -> new BookUpdateResponse(b.getId(), b.getTitle(), b.getIsbn(), b.getPublisher(),
+                b.getPublishingDate(), b.getPaperPrice(), b.getEbookPrice(), b.getDiscountRate(), b.getSavedImageName(),
+                b.getCategory().getId(), b.getBookGroup().getId())).get();
     }
 
     @Transactional(readOnly = true)
