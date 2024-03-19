@@ -1,9 +1,12 @@
 package com.example.demo.web.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import org.springframework.web.service.annotation.GetExchange;
 
 
 @Entity
+@Getter
 public class Wishlist extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,4 +20,11 @@ public class Wishlist extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
+
+    public static Wishlist createWishlist(Book book, Member member) {
+        Wishlist wishlist = new Wishlist();
+        wishlist.book = book;
+        wishlist.member = member;
+        return wishlist;
+    }
 }

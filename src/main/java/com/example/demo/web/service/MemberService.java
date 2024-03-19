@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,20 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SignUpSuccessResponse register(MemberRegisterRequest request){
+    public Member getMember(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
+    }
+
+    public Member getMember(Principal principal) {
+        if(principal == null){
+            throw new BaseException(BaseResponseCode.LOGIN_REQUIRED);
+        }
+
+        String email = principal.getName();
+        return getMember(email);
+    }
+
+    public SignUpSuccessResponse register(MemberRegisterRequest request) {
         validatePresentEmail(request.getEmail());
         validateForm(request);
 
@@ -41,53 +55,53 @@ public class MemberService {
     public void validatePresentEmail(String email) {
         Optional<Member> findMember = memberRepository.findByEmail(email);
 
-        if(findMember.isPresent()){
+        if (findMember.isPresent()) {
             throw new BaseException(BaseResponseCode.EMAIL_DUPLICATE);
         }
     }
 
     private static void validateForm(MemberRegisterRequest request) {
         String email = request.getEmail();
-        if(email == null){
+        if (email == null) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_EMAIL);
         }
 
         String[] splitEmail = email.split("@");
-        if(splitEmail[0].length() < 4 || splitEmail[0].length() > 24){
+        if (splitEmail[0].length() < 4 || splitEmail[0].length() > 24) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_EMAIL);
         }
 
         String password = request.getPassword();
         String passwordConfirm = request.getPasswordConfirm();
-        if(password == null || passwordConfirm == null){
+        if (password == null || passwordConfirm == null) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_PASSWORD);
         }
 
-        if((password.length() < 8 || password.length() > 16) || (passwordConfirm.length() < 8 || passwordConfirm.length() > 16)){
+        if ((password.length() < 8 || password.length() > 16) || (passwordConfirm.length() < 8 || passwordConfirm.length() > 16)) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_PASSWORD);
         }
 
-        if(!password.equals(passwordConfirm)){
+        if (!password.equals(passwordConfirm)) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_PASSWORD);
         }
 
 
         String name = request.getName();
-        if(name == null){
+        if (name == null) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_NAME);
         }
-        if(name.length() > 20 || name.length() < 2){
+        if (name.length() > 20 || name.length() < 2) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_NAME);
         }
 
         String birthYear = request.getBirthYear();
-        if(birthYear.length() != 4){
+        if (birthYear.length() != 4) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_BIRTH_YEAR);
 
         }
 
         Gender gender = request.getGender();
-        if(gender == null){
+        if (gender == null) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_GENDER);
         }
     }

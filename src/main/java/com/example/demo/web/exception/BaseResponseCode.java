@@ -46,11 +46,13 @@ public enum BaseResponseCode {
 
     BOOK_CONTENT_EXIST(HttpStatus.BAD_REQUEST, "해당 도서에는 도서 내용이 있습니다. 도서 내용을 삭제한 다음에 도서를 삭제해주세요."),
     BOOK_CONTENT_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "이미 도서 내용이 등록된 도서 아이디입니다."),
-
-
+    BOOK_ALREADY_IN_WISHLIST(HttpStatus.BAD_REQUEST, "위시리스트에 이미 해당 도서가 존재합니다."),
+    INVALID_WISHLIST_ID(HttpStatus.BAD_REQUEST, "위시리스트 아이디를 다시 확인해주세요."),
+    UNAUTHORIZED_BOOK_REMOVAL(HttpStatus.BAD_REQUEST, "본인이 추가하지 않은 도서를 장바구니에서 제거할 수 없습니다."),
     /**
      * 401
      */
+    LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "로그인 하셔야 이용할 수 있습니다."),
     NOT_VALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
     NO_TOKEN_FOUND(HttpStatus.UNAUTHORIZED, "토큰이 없습니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
@@ -66,8 +68,11 @@ public enum BaseResponseCode {
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "검색되는 도서가 없습니다. 도서 아이디를 다시 확인해주세요."),
     BOOK_GROUP_NOT_FOUND(HttpStatus.BAD_REQUEST, "검색되는 도서 그룹이 없습니다. 도서 그룹 아이디를 다시 확인해주세요."),
 
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    BOOK_NOT_IN_WISHLIST(HttpStatus.BAD_REQUEST, "위시리스트에 삭제하고자 하는 도서가 존재하지 않습니다."),
+    BOOK_ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "이미 구매한 도서입니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     AUTHOR_NOT_FOUND(HttpStatus.NOT_FOUND, "작가를 찾을 수 없습니다.");
+
 
     private HttpStatus httpStatus;
     private String message;
