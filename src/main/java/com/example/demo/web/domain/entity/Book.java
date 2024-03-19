@@ -21,6 +21,7 @@ public class Book extends BaseEntity {
     private int discountRate;
     private String savedImageName;
     private boolean isOnSale;
+    private int salePrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -45,6 +46,9 @@ public class Book extends BaseEntity {
         book.paperPrice = request.getPaperPrice();
         book.ebookPrice = request.getEbookPrice();
         book.discountRate = request.getDiscountRate();
+        int discountPrice = (int) (request.getEbookPrice() * request.getDiscountRate() * 0.01);
+        book.salePrice = request.getEbookPrice() - discountPrice; //판매 가격 추가
+
         book.category = category;
         book.bookGroup = bookGroup;
         book.savedImageName = savedImageName;
@@ -68,5 +72,7 @@ public class Book extends BaseEntity {
         this.discountRate = request.getDiscountRate();
         this.category = category;
         this.bookGroup = bookGroup;
+        int discountPrice = (int) (request.getEbookPrice() * request.getDiscountRate() * 0.01);
+        this.salePrice = request.getEbookPrice() - discountPrice; //판매 가격 추가
     }
 }

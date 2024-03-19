@@ -37,6 +37,7 @@ public class SearchController {
         model.addAttribute("responses", responses);
         model.addAttribute("query", query);
         model.addAttribute("paging", paging);
+        model.addAttribute("condition", condition);
         return "search/search";
     }
 
