@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 @Transactional
 @Slf4j
 public class BookManageService {
+
+    private final BookService bookService;
     private final BookRepository bookRepository;
     private final CategoryService categoryService;
     private final ImageUploadUtil imageUploadUtil;
@@ -55,11 +57,7 @@ public class BookManageService {
         return bookRepository.save(book).getId();
     }
 
-    @Transactional(readOnly = true)
-    public Book findBook(Long bookId){
-        return bookRepository.findById(bookId)
-                .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
-    }
+
 
     @Transactional(readOnly = true)
     public BookUpdateResponse searchBook(Long bookId) {
@@ -130,7 +128,7 @@ public class BookManageService {
      * @param bookId
      */
     public void updateBookImage(MultipartFile file, Long bookId) {
-        Book book = findBook(bookId);
+        Book book = bookService.findBook(bookId);
         String existingImageName = book.getSavedImageName();
         String updatedImageName = imageUploadUtil.updateImage(file, existingImageName);
 
@@ -149,7 +147,7 @@ public class BookManageService {
                 request.getBookGroupId()
         );
 
-        Book book = findBook(bookId);
+        Book book = bookService.findBook(bookId);
 
         Category category = getCategory(request.getCategoryId());
         BookGroup bookGroup = getBookGroup(request.getBookGroupId());
@@ -163,7 +161,7 @@ public class BookManageService {
             throw new BaseException(BaseResponseCode.BOOK_CONTENT_EXIST);
         } // 북 컨텐츠 cascade 전이 고려.
 
-        Book book = findBook(bookId);
+        Book book =bookService.findBook(bookId);
         bookRepository.delete(book);
         return true;
     }
