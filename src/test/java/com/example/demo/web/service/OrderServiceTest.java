@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class OrderServiceTest {
+class OrdersServiceTest {
     @Autowired
-    private OrderService orderService;
+    private OrdersService ordersService;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -43,7 +43,7 @@ class OrderServiceTest {
 
     @Test
     void orderNo(){
-        String orderNo = orderService.getOrderNo();
+        String orderNo = ordersService.getOrderNo();
         System.out.println("orderNo = " + orderNo);
         assertThat(orderNo.length()).isEqualTo(14);
     }
@@ -65,8 +65,8 @@ class OrderServiceTest {
                 "test 외 2권", "2023020211215", "test", "card", "test@test", 10000, 5000, 5000,
                 bookIdList
         );
-        Long orderId = orderService.order(member, books, orderRequest);
-        Orders orders = orderService.findOrders(orderId);
+        Long orderId = ordersService.order(member, books, orderRequest);
+        Orders orders = ordersService.findOrders(orderId);
 
         assertThat(orders.getOrderName()).isEqualTo("test 외 2권");
         assertThat(orders.getOrderNo()).isEqualTo("2023020211215");
@@ -100,7 +100,7 @@ class OrderServiceTest {
                 Arrays.asList(1L)
         );
 
-        assertThatThrownBy(() -> orderService.order(member, List.of(book1,book2), orderRequest))
+        assertThatThrownBy(() -> ordersService.order(member, List.of(book1,book2), orderRequest))
                 .isInstanceOf(BaseException.class)
                 .hasMessageContaining("주문하고자 하는 도서 중 일부를 이미 구입하셨습니다.");
     }

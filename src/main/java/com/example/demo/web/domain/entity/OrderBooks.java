@@ -1,11 +1,13 @@
 package com.example.demo.web.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 /**
  * 주문 - 책 다대다 매핑 클래스
  */
 @Entity
+@Getter
 public class OrderBooks extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,7 @@ import com.example.demo.web.dto.BaseResponse;
 import com.example.demo.web.dto.request.OrderRequest;
 import com.example.demo.web.service.BookService;
 import com.example.demo.web.service.MemberService;
-import com.example.demo.web.service.OrderService;
+import com.example.demo.web.service.OrdersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrdersService ordersService;
     private final MemberService memberService;
     private final BookService bookService;
 
@@ -32,7 +32,7 @@ public class OrderController {
         Member member = memberService.getMember(principal);
         List<Book> books = bookService.findAllById(request.getBookIdList());
 
-        orderService.order(member, books, request);
+        ordersService.order(member, books, request);
 
         BaseResponse baseResponse = new BaseResponse(
                 HttpStatus.OK, "주문이 완료되었습니다", true

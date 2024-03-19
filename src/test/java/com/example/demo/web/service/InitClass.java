@@ -36,7 +36,7 @@ public class InitClass {
     BookAuthorListService bookAuthorListService;
 
     @Autowired
-    OrderService orderService;
+    OrdersService ordersService;
 
     @Autowired
     MemberService memberService;
@@ -65,7 +65,7 @@ public class InitClass {
         Member member = getMember(1L);
         List<Book> bookList = bookService.findAllById(Arrays.asList(1L, 2L));
 
-        orderService.order(member, bookList, createOrderRequest());
+        ordersService.order(member, bookList, createOrderRequest());
     }
 
     public void initMemberData() {

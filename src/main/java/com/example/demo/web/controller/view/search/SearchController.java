@@ -2,6 +2,7 @@ package com.example.demo.web.controller.view.search;
 
 import com.example.demo.web.dto.response.paging.PagingDto;
 import com.example.demo.web.dto.response.BookSearchResponse;
+import com.example.demo.web.dto.response.paging.PagingSearchDto;
 import com.example.demo.web.service.search.BookSearchCondition;
 import com.example.demo.web.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class SearchController {
                          Model model){
         Page<BookSearchResponse> responses =  searchService.search(query, pageable, condition);
 
-        PagingDto paging = new PagingDto(responses);
+        PagingSearchDto paging = new PagingSearchDto(responses);
 
         model.addAttribute("responses", responses);
         model.addAttribute("query", query);

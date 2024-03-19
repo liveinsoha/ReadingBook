@@ -2,6 +2,9 @@ package com.example.demo.web.service;
 
 import com.example.demo.web.domain.entity.*;
 import com.example.demo.web.dto.request.OrderRequest;
+import com.example.demo.web.dto.response.OrderBooksResponse;
+import com.example.demo.web.dto.response.OrderFindResponse;
+import com.example.demo.web.dto.response.OrderHistoryResponse;
 import com.example.demo.web.dto.response.PayInformationResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
@@ -11,6 +14,8 @@ import com.example.demo.web.repository.OrdersRepository;
 import com.example.demo.web.repository.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class OrderService {
+public class OrdersService {
     private final BookService bookService;
     private final OrderBooksRepository orderBooksRepository;
     private final OrdersRepository ordersRepository;
@@ -202,5 +207,23 @@ public class OrderService {
     public Orders findOrders(Long orderId) {
         return ordersRepository.findById(orderId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.ORDER_ID_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderHistoryResponse> getHistory(Long memberId, Pageable pageable) {
+        Page<Orders> responses = ordersRepository.findByMemberId(pageable, memberId);
+        return responses.map(r -> new OrderHistoryResponse(r)); //Page<Entity> -> Page<DTO>로 매핑 지원
+    }
+
+    public OrderFindResponse getOrderDetail(Long orderId) {
+        Orders orders = findOrders(orderId);
+        OrderFindResponse response = new OrderFindResponse(orders);
+        return response;
+    }
+
+    public List<OrderBooksResponse> getOrderBooks(Long ordersId) {
+        return orderBooksRepository.findByOrdersId(ordersId).stream()
+                .map(ob -> new OrderBooksResponse(ob.getBook()))
+                .collect(Collectors.toList());
     }
 }

@@ -6,7 +6,7 @@ import com.example.demo.web.dto.BaseResponse;
 import com.example.demo.web.dto.response.PayInformationResponse;
 import com.example.demo.web.service.BookService;
 import com.example.demo.web.service.MemberService;
-import com.example.demo.web.service.OrderService;
+import com.example.demo.web.service.OrdersService;
 import com.example.demo.web.service.WishlistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class WishlistController {
         private final WishlistService wishlistService;
         private final MemberService memberService;
         private final BookService bookService;
-        private final OrderService orderService;
+        private final OrdersService ordersService;
 
         @PostMapping
         public ResponseEntity<Object> addBook(Long bookId, Principal principal){
@@ -58,7 +58,7 @@ public class WishlistController {
             Member member = memberService.getMember(principal);
             String email = member.getEmail();
 
-            PayInformationResponse response = orderService.getPayInformation(bookIdList, email);
+            PayInformationResponse response = ordersService.getPayInformation(bookIdList, email);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(response);
