@@ -1,6 +1,6 @@
 package com.example.demo.web.controller.view.search;
 
-import com.example.demo.web.dto.PagingDto;
+import com.example.demo.web.dto.response.paging.PagingDto;
 import com.example.demo.web.dto.response.BookSearchResponse;
 import com.example.demo.web.service.search.BookSearchCondition;
 import com.example.demo.web.service.search.SearchService;
