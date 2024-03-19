@@ -12,6 +12,7 @@ public class WishlistResponse {
     private String savedImageName;
     private int ebookPrice;
     private int discountRate;
+    private int discountPrice;
     private int salePrice;
 
     public WishlistResponse(Wishlist wishlist) {
@@ -22,6 +23,7 @@ public class WishlistResponse {
         savedImageName = wishlist.getBook().getSavedImageName();
         ebookPrice = wishlist.getBook().getEbookPrice();
         discountRate = wishlist.getBook().getDiscountRate();
+        discountPrice = (int) (ebookPrice * discountRate * 0.01);
         salePrice = wishlist.getBook().getSalePrice();
     }
 }

@@ -2,6 +2,9 @@ package com.example.demo.web.domain.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * 주문 - 책 다대다 매핑 클래스
+ */
 @Entity
 public class OrderBooks extends BaseEntity {
     @Id
@@ -12,4 +15,15 @@ public class OrderBooks extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orders_id")
     private Orders orders;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    public static OrderBooks createOrderBooks(Book book, Orders orders) {
+        OrderBooks orderBooks = new OrderBooks();
+        orderBooks.book = book;
+        orderBooks.orders = orders;
+        return orderBooks;
+    }
 }

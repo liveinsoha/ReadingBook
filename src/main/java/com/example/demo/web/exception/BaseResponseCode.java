@@ -23,7 +23,8 @@ public enum BaseResponseCode {
     INVALID_FORM_BIRTH_YEAR(HttpStatus.BAD_REQUEST, "생년을 올바르게 입력해주세요."),
     INVALID_FORM_PHONE_NO(HttpStatus.BAD_REQUEST, "핸드폰 번호를 올바르게 입력해주세요."),
     INVALID_FORM_GENDER(HttpStatus.BAD_REQUEST, "성별을 올바르게 입력해주세요."),
-
+    SOME_BOOKS_ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "주문하고자 하는 도서 중 일부를 이미 구입하셨습니다."),
+    ORDER_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "주문 아이디를 찾을 수 없습니다."),
 
     EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "이미 가입된 이메일입니다."),
     USER_DUPLICATE(HttpStatus.BAD_REQUEST, "중복된 사용자가 있습니다"),
