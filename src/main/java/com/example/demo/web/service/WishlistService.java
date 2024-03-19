@@ -97,6 +97,7 @@ public class WishlistService {
                 .orElseThrow(() -> new BaseException(BaseResponseCode.INVALID_WISHLIST_ID));
     }
 
+
     public List<WishlistResponse> findBookResponses(Long memberId) {
         return wishlistRepository.findByMemberId(memberId).stream()
                 .map(WishlistResponse::new)

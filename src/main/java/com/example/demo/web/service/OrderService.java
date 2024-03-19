@@ -128,6 +128,7 @@ public class OrderService {
             orderBooksList.add(orderBooks);
         }
         orderBooksRepository.saveAll(orderBooksList);
+        /* --- 책 - 주문 매핑 클래스 저장 --- */
 
         /* --- 위시리스트 삭제 --- */
         deleteWishlist(member, books);
