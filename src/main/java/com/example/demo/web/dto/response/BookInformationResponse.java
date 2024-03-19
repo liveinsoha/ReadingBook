@@ -1,8 +1,9 @@
 package com.example.demo.web.dto.response;
 
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
 public class BookInformationResponse {
     private BookDto bookDto;
     private AuthorDto authorDto;

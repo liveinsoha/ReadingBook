@@ -1,8 +1,10 @@
 package com.example.demo.web.dto.response;
 
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+
+@Data
 public class AuthorDto {
     private Long authorId;
     private String author;

@@ -19,6 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookAuthorListController {
     private final BookAuthorListService bookAuthorListService;
 
+    /**
+     * 책 ,작가를 각각 미리 등록한 상태에서, 도서 작가 등록 을 통해책-작가 매핑 클래스를 등록하다.
+     * 책과 도서가 먼저 있어야한다 -> 책을 등록할 경우 작가를 등록하는 형태로 바꿔볼 수 있다.
+     * @param request
+     * @return
+     */
     @PostMapping
     public ResponseEntity<Object> registerBookAuthorList(BookAuthorListRegisterRequest request){
         bookAuthorListService.register(request);

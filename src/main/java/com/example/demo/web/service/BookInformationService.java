@@ -37,13 +37,13 @@ public class BookInformationService {
         BookDto bookDto = tempBook //Book으로부터 BookDto를 만듦
                 .map(b -> new BookDto(b)).get();
 
-        BookAuthorList authorInBook = bookAuthorListRepository.getMainAuthor(isbn);
+        BookAuthorList authorInBook = bookAuthorListRepository.getMainAuthor(isbn); //메인 작가 얻음
         String author = authorInBook.getAuthor().getName();
         Long authorId = authorInBook.getAuthor().getId();
 
-        int authorCountExceptMainAuthor = bookAuthorListRepository.getAuthorCount(isbn).intValue() - 1;
+        int authorCountExceptMainAuthor = bookAuthorListRepository.getAuthorCount(isbn).intValue() - 1; //작가 수 얻음
 
-        BookAuthorList translatorInBook = bookAuthorListRepository.getMainTranslator(isbn);
+        BookAuthorList translatorInBook = bookAuthorListRepository.getMainTranslator(isbn); //메인 번역가 얻음
 
         String translator = null;
         Long translatorId = null;

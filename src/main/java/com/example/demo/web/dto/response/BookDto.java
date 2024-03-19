@@ -1,9 +1,11 @@
 package com.example.demo.web.dto.response;
 
 import com.example.demo.web.domain.entity.Book;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+
+@Data
 public class BookDto {
     private String isbn;
     private Long bookId;

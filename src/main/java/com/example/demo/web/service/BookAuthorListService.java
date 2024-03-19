@@ -21,6 +21,7 @@ public class BookAuthorListService {
     private final BookAuthorListRepository bookAuthorListRepository;
     private final AuthorManageService authorManagementService;
     private final BookManageService bookManagementService;
+    private final BookService bookService;
 
     public Long register(BookAuthorListRegisterRequest request) {
         Long bookId = request.getBookId();
@@ -29,7 +30,7 @@ public class BookAuthorListService {
 
         validateForm(bookId, authorId, ordinal);
 
-        Book book = bookManagementService.findBook(bookId);
+        Book book = bookService.findBook(bookId);
         Author author = authorManagementService.findAuthorById(authorId);
 
         BookAuthorList bookAuthorList = BookAuthorList.createBookAuthorList(book, author, ordinal);

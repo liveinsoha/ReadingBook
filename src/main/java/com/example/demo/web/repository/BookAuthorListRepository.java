@@ -15,9 +15,9 @@ public interface BookAuthorListRepository extends JpaRepository<BookAuthorList, 
 
     @Query("select bal " +
             "from BookAuthorList bal " +
-            "join bal.book b " +
-            "join bal.author a " +
-            "where b.isbn = :isbn and a.authorOption = com.readingbooks.web.domain.enums.AuthorOption.AUTHOR " +
+            "join fetch bal.book b " +
+            "join fetch bal.author a " +
+            "where b.isbn = :isbn and a.authorOption = com.example.demo.web.domain.enums.AuthorOption.AUTHOR " +
             "order by bal.ordinal asc " +
             "limit 1")
     BookAuthorList getMainAuthor(@Param("isbn") String isbn); //해당 책의 작가 중 1순위 작가를 구한다. (메인 작가) (작가옵션: 작가)
@@ -31,8 +31,8 @@ public interface BookAuthorListRepository extends JpaRepository<BookAuthorList, 
     @Query("select bal " +
             "from BookAuthorList bal " +
             "join bal.book " +
-            "join bal.author " +
-            "where bal.book.isbn = :isbn and bal.author.authorOption = com.readingbooks.web.domain.enums.AuthorOption.TRANSLATOR " +
+            "join fetch bal.author " +
+            "where bal.book.isbn = :isbn and bal.author.authorOption = com.example.demo.web.domain.enums.AuthorOption.TRANSLATOR " +
             "order by bal.ordinal asc " +
             "limit 1")
     BookAuthorList getMainTranslator(@Param("isbn") String isbn); //메인 번역가, 작가 옵션(번역가)

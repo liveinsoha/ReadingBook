@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import static com.example.demo.web.domain.entity.QBook.book;
 import static com.example.demo.web.domain.entity.QBookAuthorList.bookAuthorList;
 import static com.querydsl.jpa.JPAExpressions.select;
 
+@Repository
 public class SearchBookRepositoryImpl implements SearchBookRepository{
     private final JPAQueryFactory queryFactory;
 

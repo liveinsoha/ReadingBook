@@ -46,10 +46,13 @@ class BookManageServiceTest {
     @Autowired
     private BookContentService bookContentService;
 
+    @Autowired
+    private BookService bookService;
+
     @BeforeEach
     void beforeEach(){
         imageUploadUtil = Mockito.mock(ImageUploadUtil.class);
-        bookManagementService = new BookManageService(bookRepository, categoryService, imageUploadUtil, bookGroupManagementService, bookContentRepository);
+        bookManagementService = new BookManageService(bookService, bookRepository, categoryService, imageUploadUtil, bookGroupManagementService, bookContentRepository);
     }
 
     @Test
@@ -62,18 +65,19 @@ class BookManageServiceTest {
         );
 
         CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
-        Long categoryGroupId = categoryGroupService.register(categoryGroupRequest);
+        Long categoryGroupId = categoryGroupService.register(categoryGroupRequest); //카테고리 그룹 등록
 
         CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지 소설", categoryGroupId);
-        Long categoryId = categoryService.register(categoryRequest);
+        Long categoryId = categoryService.register(categoryRequest); //카테고리 등록
 
 
+        //책 등록 request
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
 
-        Long bookId = bookManagementService.registerBook(request, file);
+        Long bookId = bookManagementService.registerBook(request, file); //등록
 
-        Book book = bookManagementService.findBook(bookId);
+        Book book = bookService.findBook(bookId);
         assertThat(book.getTitle()).isEqualTo("해리포터와 마법사의 돌");
         assertThat(book.getIsbn()).isEqualTo("123123");
         assertThat(book.getPublisher()).isEqualTo("포터모어");
@@ -110,7 +114,7 @@ class BookManageServiceTest {
         BookUpdateRequest updateRequest = new BookUpdateRequest("홍길동전", "test", "test", "test", 1, 1, 1, categoryId, 0L,"21세기 최고의 책");
         bookManagementService.updateBookContent(updateRequest, bookId);
 
-        Book book = bookManagementService.findBook(bookId);
+        Book book = bookService.findBook(bookId);
 
         assertThat(book.getTitle()).isEqualTo("홍길동전");
     }
@@ -141,13 +145,13 @@ class BookManageServiceTest {
 
         //then
         assertThat(isDeleted).isTrue();
-        assertThatThrownBy(() -> bookManagementService.findBook(bookId))
+        assertThatThrownBy(() -> bookService.findBook(bookId))
                 .isInstanceOf(BaseException.class)
                 .hasMessageContaining("검색되는 도서가 없습니다. 도서 아이디를 다시 확인해주세요.");
     }
 
     @Test
-    void whenDeletingBookHasBookContent_thenThrowException(){
+    void whenDeletingBookHasBookContent_thenThrowException(){ //도서 내용 먼저 삭제 해야함.
         //given
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
@@ -167,7 +171,7 @@ class BookManageServiceTest {
                 "2023.01.01", 0, 9900, 5, categoryId, 0L,"21세기 최고의 책");
         Long bookId = bookManagementService.registerBook(request, file);
 
-        BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "test");
+        BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "testContent");
         bookContentService.register(bookContentRegisterRequest);
 
         assertThatThrownBy(() -> bookManagementService.deleteBook(bookId))

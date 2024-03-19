@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookContentService {
 
     private final BookContentRepository bookContentRepository;
-    private final BookManageService bookManagementService;
+    private final BookService bookService;
 
     /**
      * 도서 내용 등록 메소드
@@ -39,7 +39,7 @@ public class BookContentService {
 
 
 
-        Book book = bookManagementService.findBook(bookId);
+        Book book = bookService.findBook(bookId);
         BookContent bookContent = BookContent.createBookContent(book, content);
 
         return bookContentRepository.save(bookContent).getId();
