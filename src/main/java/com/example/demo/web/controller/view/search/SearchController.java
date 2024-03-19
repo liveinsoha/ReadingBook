@@ -26,7 +26,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/search")
-    public String search(@PageableDefault(size = 1) Pageable pageable,
+    public String search(@PageableDefault(size = 5) Pageable pageable,
                          @RequestParam(required = false) String query,
                          @ModelAttribute BookSearchCondition condition,
                          Model model){

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -18,5 +20,13 @@ public class BookService {
     public Book findBook(Long bookId){
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
+    }
+
+
+    public List<Book> findAllById(List<Long> bookIdList) {
+        if(bookIdList.size() == 0){
+            throw new IllegalArgumentException("도서가 없습니다.");
+        }
+        return bookRepository.findAllById(bookIdList);
     }
 }

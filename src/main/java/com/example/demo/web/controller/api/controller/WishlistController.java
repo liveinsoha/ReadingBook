@@ -24,7 +24,7 @@ public class WishlistController {
         private final WishlistService wishlistService;
         private final MemberService memberService;
         private final BookService bookService;
-
+        private final OrderService orderService;
 
         @PostMapping
         public ResponseEntity<Object> addBook(Long bookId, Principal principal){
@@ -51,5 +51,14 @@ public class WishlistController {
                     .body(response);
         }
 
+        @PostMapping("/pay-information")
+        public ResponseEntity<Object> responsePayInformation(@RequestBody List<Long> bookIdList, Principal principal){
+            Member member = memberService.getMember(principal);
+            String email = member.getEmail();
 
+            PayInformationResponse response = orderService.getPayInformation(bookIdList, email);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(response);
+        }
 }
