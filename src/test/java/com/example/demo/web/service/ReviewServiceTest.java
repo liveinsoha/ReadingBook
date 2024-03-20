@@ -3,12 +3,15 @@ package com.example.demo.web.service;
 import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Review;
+import com.example.demo.web.dto.response.ReviewResponse;
 import com.example.demo.web.repository.BookRepository;
 import com.example.demo.web.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,6 +90,23 @@ class ReviewServiceTest {
         assertThat(updatedReview.getBook().getId()).isEqualTo(book.getId());
         assertThat(updatedReview.getContent()).isEqualTo("testUpdateReviewContent");
 
+    }
+
+    @Test
+    void when_ReviewDeleted_then_ReviewNotExisted(){
+        initClass.initMemberData();
+        initClass.initBookAndAuthorData();
+        initClass.initOrderData();
+
+        Member member = initClass.getMember(1L);
+        Book book = initClass.getBook(1L);
+        Long savedReviewId = reviewService.review(member, book, "testReviewContent", 5);
+        List<ReviewResponse> reviews = reviewService.findReviews(book.getIsbn());
+        assertThat(reviews.size()).isEqualTo(1);
+
+        reviewService.delete(member,savedReviewId);
+        List<ReviewResponse> emptyReviews = reviewService.findReviews(book.getIsbn());
+        assertThat(emptyReviews.size()).isEqualTo(0);
     }
 
 

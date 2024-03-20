@@ -79,4 +79,8 @@ public class Book extends BaseEntity {
     public void addReviewCount() {
         this.reviewCount++;
     }
+
+    public void subtractReviewCount(){
+        this.reviewCount--;
+    }
 }

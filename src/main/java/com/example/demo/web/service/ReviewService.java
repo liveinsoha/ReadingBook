@@ -4,6 +4,7 @@ import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Review;
 import com.example.demo.web.dto.response.MyWroteReviewResponse;
+import com.example.demo.web.dto.response.ReviewResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.LibraryRepository;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -113,7 +117,7 @@ public class ReviewService {
         Review review = findReview(reviewId);
 
         /* --- 수정하고자 하는 리뷰가 본인이 작성한 리뷰인지 검증 --- */
-        validateUpdatingReviewWriter(review, memberId);
+        validateReviewIdentification(review, memberId);
 
         /* --- 폼 검증 --- */
         validateForm(content, starRating);
@@ -121,10 +125,41 @@ public class ReviewService {
         review.update(content, starRating);
     }
 
-    private void validateUpdatingReviewWriter(Review review, Long memberId) {
+    private void validateReviewIdentification(Review review, Long memberId) {
         Long findMemberId = review.getMember().getId();
         if(findMemberId != memberId){
             throw new BaseException(BaseResponseCode.ONLY_OWN_REVIEW_MODIFIABLE);
         }
+    }
+
+    /**
+     * 리뷰 삭제 메소드
+     * @param member
+     * @param reviewId
+     */
+    @Transactional
+    public boolean delete(Member member, Long reviewId) {
+        Review review = findReview(reviewId);
+        Long memberId = member.getId();
+
+        /* --- 삭제하고자 하는 리뷰가 본인이 작성한 리뷰인지 검증 --- */
+        validateReviewIdentification(review, memberId);
+
+        /* --- 도서의 리뷰 수량 차감 --- */
+        Book book = review.getBook();
+        book.subtractReviewCount();
+
+        reviewRepository.delete(review);
+        return true;
+    }
+
+    public List<ReviewResponse> findReviews(String isbn){
+        Book book = bookService.findBook(isbn);
+        Long bookId = book.getId();
+
+        List<Review> reviews = reviewRepository.findByBookId(bookId);
+        return reviews.stream()
+                .map(r -> new ReviewResponse(r))
+                .collect(Collectors.toList());
     }
 }
