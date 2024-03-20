@@ -28,6 +28,7 @@ public enum BaseResponseCode {
     ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, "이미 해당 도서에 리뷰를 작성했습니다."),
 
 
+
     EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "이미 가입된 이메일입니다."),
     USER_DUPLICATE(HttpStatus.BAD_REQUEST, "중복된 사용자가 있습니다"),
     AUTHORIZATION_NOT_VALID(HttpStatus.BAD_REQUEST, "인증정보가 일치하지 않습니다"),
@@ -52,6 +53,8 @@ public enum BaseResponseCode {
     BOOK_ALREADY_IN_WISHLIST(HttpStatus.BAD_REQUEST, "위시리스트에 이미 해당 도서가 존재합니다."),
     INVALID_WISHLIST_ID(HttpStatus.BAD_REQUEST, "위시리스트 아이디를 다시 확인해주세요."),
     UNAUTHORIZED_BOOK_REMOVAL(HttpStatus.BAD_REQUEST, "본인이 추가하지 않은 도서를 장바구니에서 제거할 수 없습니다."),
+
+    ONLY_OWN_REVIEW_MODIFIABLE(HttpStatus.BAD_REQUEST, "본인이 작성한 리뷰만 수정할 수 있습니다."),
     /**
      * 401
      */

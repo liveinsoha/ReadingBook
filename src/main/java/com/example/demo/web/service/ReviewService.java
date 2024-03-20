@@ -10,6 +10,7 @@ import com.example.demo.web.repository.LibraryRepository;
 import com.example.demo.web.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,5 +105,26 @@ public class ReviewService {
         }
         MyWroteReviewResponse response = new MyWroteReviewResponse(review);
         return response;
+    }
+
+    @Transactional
+    public void update(Member member, Long reviewId, String content, int starRating) {
+        Long memberId = member.getId();
+        Review review = findReview(reviewId);
+
+        /* --- 수정하고자 하는 리뷰가 본인이 작성한 리뷰인지 검증 --- */
+        validateUpdatingReviewWriter(review, memberId);
+
+        /* --- 폼 검증 --- */
+        validateForm(content, starRating);
+
+        review.update(content, starRating);
+    }
+
+    private void validateUpdatingReviewWriter(Review review, Long memberId) {
+        Long findMemberId = review.getMember().getId();
+        if(findMemberId != memberId){
+            throw new BaseException(BaseResponseCode.ONLY_OWN_REVIEW_MODIFIABLE);
+        }
     }
 }

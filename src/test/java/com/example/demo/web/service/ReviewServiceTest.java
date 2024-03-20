@@ -65,5 +65,29 @@ class ReviewServiceTest {
         assertThat(review.isPurchased()).isTrue();
     }
 
+    @Test
+    void when_ReviewUpdated_then_VerifyField(){
+        initClass.initMemberData();
+        initClass.initBookAndAuthorData();
+        initClass.initOrderData();
+
+        Member member = initClass.getMember(1L);
+        Book book = initClass.getBook(1L);
+        Long savedReviewId = reviewService.review(member, book, "testReviewContent", 5);
+        Review review = reviewService.findReview(savedReviewId);
+
+        assertThat(review.getMember().getId()).isEqualTo(member.getId());
+        assertThat(review.getBook().getId()).isEqualTo(book.getId());
+        assertThat(review.getContent()).isEqualTo("testReviewContent");
+
+        reviewService.update(member,savedReviewId,"testUpdateReviewContent", 3);
+        Review updatedReview = reviewService.findReview(savedReviewId);
+
+        assertThat(updatedReview.getMember().getId()).isEqualTo(member.getId());
+        assertThat(updatedReview.getBook().getId()).isEqualTo(book.getId());
+        assertThat(updatedReview.getContent()).isEqualTo("testUpdateReviewContent");
+
+    }
+
 
 }
