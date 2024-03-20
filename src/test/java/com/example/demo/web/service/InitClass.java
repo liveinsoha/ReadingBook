@@ -76,12 +76,17 @@ public class InitClass {
 
 
     public void initMemberData() {
-
         for (int i = 1; i <= 110; i++) {
             MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET);
             Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
         }
+    }
 
+    public void initMemberDataSmall() {
+        for (int i = 1; i <= 5; i++) {
+            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET);
+            Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+        }
     }
 
     public void initCategoryData() {
@@ -127,6 +132,7 @@ public class InitClass {
         bookAuthorListService.register(secondAuthorBookRequest);
         bookAuthorListService.register(translatorBookRequest);
     }
+
 
     public void initReviewData() {
         initMemberData();// 회원 데이터 저장

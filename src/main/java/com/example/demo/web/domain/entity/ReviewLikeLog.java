@@ -17,4 +17,11 @@ public class ReviewLikeLog extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
+
+    public static ReviewLikeLog createReviewLikeLog(Member member, Review review) {
+        ReviewLikeLog log = new ReviewLikeLog();
+        log.member = member;
+        log.review = review;
+        return log;
+    }
 }

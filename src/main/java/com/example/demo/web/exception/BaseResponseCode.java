@@ -82,8 +82,8 @@ public enum BaseResponseCode {
     AUTHOR_NOT_FOUND(HttpStatus.NOT_FOUND, "작가를 찾을 수 없습니다."),
     REVIEW_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰 아이디로 리뷰를 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다. 회원 아이디와 도서 아이디를 확인해주세요."),
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다. 댓글 아이디를 다시 확인해주세요.");
-
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다. 댓글 아이디를 다시 확인해주세요."),
+    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 조회할 수 없습니다. 회원 아이디와 리뷰 아이디를 확인해주세요.");
 
     private HttpStatus httpStatus;
     private String message;

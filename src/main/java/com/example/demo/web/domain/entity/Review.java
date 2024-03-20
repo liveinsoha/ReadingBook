@@ -47,6 +47,14 @@ public class Review extends BaseEntity {
         this.commentsCount--;
     }
 
+    public void subtractLikesCount() {
+        this.likesCount--;
+    }
+
+    public void addLikesCount() {
+        this.likesCount++;
+    }
+
     public static Review createReview(Member member, Book book, String content, int starRating, boolean isPurchased) {
         Review review = new Review();
         review.member = member;
