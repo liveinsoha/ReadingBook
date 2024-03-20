@@ -70,6 +70,33 @@ public class BookController {
             model.addAttribute("isLogin", false);
         }
 
+        List<ReviewResponse> reviews = reviewService.findReviews(isbn);
+
+        if(!reviews.isEmpty()){
+            /* --- 몇 명이 평가했고, 평점의 평균 구하기 --- */
+            int totalReviewRating = 0;
+            int reviewCount = 0;
+            for (ReviewResponse review : reviews) {
+                reviewCount++;
+                totalReviewRating += review.getStarRating();
+            }
+            double starRatingAvg = totalReviewRating / reviewCount;
+            model.addAttribute("starRatingAvg", starRatingAvg);
+            model.addAttribute("reviewCount", reviewCount);
+        }else{
+            model.addAttribute("starRatingAvg", 0.0);
+            model.addAttribute("reviewCount", 0);
+        }
+
+        /* --- 본인 확인용 이메일 --- */
+        String email = "";
+        if(principal != null){
+            email = principal.getName();
+        }else{
+            email = "";
+        }
+        model.addAttribute("email", email);
+
         model.addAttribute("myReview", myReview);
         model.addAttribute("information", bookInformation);
         model.addAttribute("booksInGroup", seriesInformation);

@@ -144,7 +144,6 @@ class ReviewServiceTest {
         entityManager.clear();
 
 
-
         /*--- 해당 책에 있는 리뷰들을 불러온다. ---*/
         List<ReviewResponse> reviews = reviewService.findReviews(book.getId());
         for (int i = 0; i <= 9; i++) {
@@ -155,5 +154,29 @@ class ReviewServiceTest {
         }
     }
 
+    @Test
+    void when_ReviewCommentDeleted_then_verifyReviewCommentCount() {
+        /*--- 초기 데이터 저장 ---*/
+        initClass.initMemberData();
+        initClass.initBookAndAuthorData();
+        initClass.initOrderData();
 
+        Book book = initClass.getBook(1L);
+
+        Member reviewWriter = initClass.getMember(1L);
+        Long savedReviewId = reviewService.review(reviewWriter, book, "Review Content", 5);
+        Review review = reviewService.findReview(savedReviewId);
+
+        //대댓글 작성
+        Member reviewCommentWriter = initClass.getMember(10L);
+        Long reviewCommentId = reviewCommentService.comment(reviewCommentWriter, review, "Review Comment Content");
+
+        //작성 확인
+        assertThat(review.getCommentsCount()).isEqualTo(1);
+
+        //대댓글 삭제 및 확인
+        reviewCommentService.delete(reviewCommentWriter, reviewCommentId);
+        assertThat(review.getCommentsCount()).isEqualTo(0);
+    }
 }
+

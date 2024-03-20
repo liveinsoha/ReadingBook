@@ -165,4 +165,18 @@ public class ReviewService {
 
         return reviewResponses;
     }
+
+    public List<ReviewResponse> findReviews(String isbn){
+
+        Book book = bookService.findBook(isbn);
+        List<Review> reviews = reviewRepository.findReviewsByBookId(book.getId());
+
+        log.info("대댓글 in쿼리 로드 ============시작===========");
+        List<ReviewResponse> reviewResponses = reviews.stream()
+                .map(ReviewResponse::new)
+                .collect(Collectors.toList());
+        log.info("대댓글 in쿼리 로드 ============끝===========");
+
+        return reviewResponses;
+    }
 }

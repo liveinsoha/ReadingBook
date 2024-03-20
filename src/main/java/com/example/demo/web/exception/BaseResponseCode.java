@@ -55,6 +55,8 @@ public enum BaseResponseCode {
     UNAUTHORIZED_BOOK_REMOVAL(HttpStatus.BAD_REQUEST, "본인이 추가하지 않은 도서를 장바구니에서 제거할 수 없습니다."),
 
     ONLY_OWN_REVIEW_MODIFIABLE(HttpStatus.BAD_REQUEST, "본인이 작성한 리뷰만 수정할 수 있습니다."),
+    ONLY_OWN_REVIEW_MANAGEABLE(HttpStatus.BAD_REQUEST, "본인이 작성한 리뷰만 관리할 수 있습니다."),
+
     /**
      * 401
      */
@@ -79,7 +81,10 @@ public enum BaseResponseCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     AUTHOR_NOT_FOUND(HttpStatus.NOT_FOUND, "작가를 찾을 수 없습니다."),
     REVIEW_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰 아이디로 리뷰를 찾을 수 없습니다."),
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다. 회원 아이디와 도서 아이디를 확인해주세요.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다. 회원 아이디와 도서 아이디를 확인해주세요."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다. 댓글 아이디를 다시 확인해주세요.");
+
+
     private HttpStatus httpStatus;
     private String message;
 }

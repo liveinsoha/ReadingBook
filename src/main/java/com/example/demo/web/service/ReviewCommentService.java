@@ -3,9 +3,12 @@ package com.example.demo.web.service;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Review;
 import com.example.demo.web.domain.entity.ReviewComment;
+import com.example.demo.web.exception.BaseException;
+import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.ReviewCommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,33 @@ public class ReviewCommentService {
 
         if (content.length() > 2000) {
             throw new IllegalArgumentException("2000자 미만의 댓글을 남겨주세요.");
+        }
+    }
+
+    public boolean delete(Member member, Long reviewCommentId){
+        ReviewComment reviewComment = findReview(reviewCommentId);
+
+        /* --- 본인이 작성한 댓글인지 확인 --- */
+        validateCommentIdentification(reviewComment, member.getId());
+
+        /* --- 댓글 수량 차감 --- */
+        Review review = reviewComment.getReview();
+        review.subtractCommentsCount();
+
+        reviewCommentRepository.delete(reviewComment);
+        return true;
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewComment findReview(Long commentId){
+        return reviewCommentRepository.findReviewComment(commentId)
+                .orElseThrow(() -> new BaseException(BaseResponseCode.REVIEW_NOT_FOUND));
+    }
+
+    private void validateCommentIdentification(ReviewComment reviewComment, Long memberId) {
+        Long findMemberId = reviewComment.getMember().getId();
+        if(findMemberId != memberId){
+            throw new BaseException(BaseResponseCode.ONLY_OWN_REVIEW_MANAGEABLE);
         }
     }
 }

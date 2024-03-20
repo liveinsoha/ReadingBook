@@ -23,4 +23,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                     "order by r.likesCount desc, r.createdTime asc "
     )
     List<Review> findReviewsByBookId(Long bookId);
+
+
+
 }
