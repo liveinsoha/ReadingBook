@@ -1,5 +1,6 @@
 package com.example.demo.web.repository;
 
+import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,6 +25,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     )
     List<Review> findReviewsByBookId(Long bookId);
 
+    List<Review> findAllByMember(Member member);
 
 
 }

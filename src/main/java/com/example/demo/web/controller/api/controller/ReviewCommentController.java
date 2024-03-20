@@ -1,4 +1,4 @@
-package com.example.demo.web.controller.view.review;
+package com.example.demo.web.controller.api.controller;
 
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Review;

@@ -3,6 +3,7 @@ package com.example.demo.web.service;
 import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Review;
+import com.example.demo.web.dto.response.MyWroteReviewInBookResponse;
 import com.example.demo.web.dto.response.MyWroteReviewResponse;
 import com.example.demo.web.dto.response.ReviewResponse;
 import com.example.demo.web.exception.BaseException;
@@ -62,6 +63,16 @@ public class ReviewService {
     }
 
     private void validateForm(String content, int starRating) {
+        validateContent(content);
+
+        if (starRating > 5 || starRating < 1) {
+            throw new IllegalArgumentException("별점은 1에서 5의 정수만 올 수 있습니다.");
+        }
+    }
+
+
+    private void validateContent(String content) {
+
         if (content == null || content.trim() == "") {
             throw new IllegalArgumentException("리뷰를 남겨주세요.");
         }
@@ -72,10 +83,6 @@ public class ReviewService {
 
         if (content.length() > 2000) {
             throw new IllegalArgumentException("2000자 미만의 리뷰를 남겨주세요.");
-        }
-
-        if (starRating > 5 || starRating < 1) {
-            throw new IllegalArgumentException("별점은 1에서 5의 정수만 올 수 있습니다.");
         }
     }
 
@@ -91,13 +98,25 @@ public class ReviewService {
     }
 
     /**
+     * 본인이 작성한 모든 리뷰들 가져오는 메소드
+     * @param member
+     * @return
+     */
+    public List<MyWroteReviewResponse> findWroteReviews(Member member) {
+        return reviewRepository.findAllByMember(member).stream()
+                .map(MyWroteReviewResponse::new)
+                .collect(Collectors.toList());
+    }
+
+
+    /**
      * 도서에서 내가 작성한 리뷰 반환해주는 메소드
      *
      * @param memberId
      * @param isbn
      * @return MyWroteReviewResponse DTO
      */
-    public MyWroteReviewResponse findWroteReview(Long memberId, String isbn) {
+    public MyWroteReviewInBookResponse findWroteReview(Long memberId, String isbn) {
         Book book = bookService.findBook(isbn);
         Long bookId = book.getId();
 
@@ -107,7 +126,7 @@ public class ReviewService {
         } catch (BaseException e){
             return null; //리뷰가 없는 경우 null 리턴
         }
-        MyWroteReviewResponse response = new MyWroteReviewResponse(review);
+        MyWroteReviewInBookResponse response = new MyWroteReviewInBookResponse(review);
         return response;
     }
 

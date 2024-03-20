@@ -59,7 +59,7 @@ public class BookController {
 
 
         /* --- 리뷰에 관련한 정보 --- */
-        MyWroteReviewResponse myReview = null;
+        MyWroteReviewInBookResponse  myReview = null;
         try {
             Member member = memberService.getMember(principal);
             Long memberId = member.getId();
