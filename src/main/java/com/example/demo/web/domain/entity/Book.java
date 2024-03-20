@@ -75,4 +75,8 @@ public class Book extends BaseEntity {
         int discountPrice = (int) (request.getEbookPrice() * request.getDiscountRate() * 0.01);
         this.salePrice = request.getEbookPrice() - discountPrice; //판매 가격 추가
     }
+
+    public void addReviewCount() {
+        this.reviewCount++;
+    }
 }

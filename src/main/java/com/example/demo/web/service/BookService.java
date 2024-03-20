@@ -22,6 +22,12 @@ public class BookService {
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
+    public Book findBook(String isbn){
+        return bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
+    }
+
 
     public List<Book> findAllById(List<Long> bookIdList) {
         if(bookIdList.size() == 0){

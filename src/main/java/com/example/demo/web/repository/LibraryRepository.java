@@ -23,4 +23,6 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
     boolean existsByBookIds(@Param("bookIdList") List<Long> bookIdList);
 
     boolean existsByBookId(Long bookId);
+
+    boolean existsByBookIdAndMemberId(Long bookId, Long memberId);
 }

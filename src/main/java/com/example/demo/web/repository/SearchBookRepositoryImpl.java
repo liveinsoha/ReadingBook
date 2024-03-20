@@ -20,10 +20,11 @@ import java.util.List;
 
 import static com.example.demo.web.domain.entity.QBook.book;
 import static com.example.demo.web.domain.entity.QBookAuthorList.bookAuthorList;
+import static com.example.demo.web.domain.entity.QReview.review;
 import static com.querydsl.jpa.JPAExpressions.select;
 
 @Repository
-public class SearchBookRepositoryImpl implements SearchBookRepository{
+public class SearchBookRepositoryImpl implements SearchBookRepository {
     private final JPAQueryFactory queryFactory;
 
     public SearchBookRepositoryImpl(EntityManager em) {
@@ -32,6 +33,7 @@ public class SearchBookRepositoryImpl implements SearchBookRepository{
 
     /**
      * 조회 메소드
+     *
      * @param query
      * @param pageable
      * @param condition
@@ -44,15 +46,15 @@ public class SearchBookRepositoryImpl implements SearchBookRepository{
                 .from(bookAuthorList) //작가-책 매핑 테이블로부터 찾는다
                 .join(bookAuthorList.author) // 작가 테이블 조인
                 .where(bookAuthorList.book.id.eq(book.id).and(bookAuthorList.author.authorOption.eq(AuthorOption.AUTHOR)));
-                //책 id와 작가-책 매핑의 책id 같은 애들 중(여기서 book은 최종 where절에 검색어로 인해 결과가 나온 상황?), 작가의 테이블도 조인 되어 있는데, Option은 AUTHOR만 취급
+        //책 id와 작가-책 매핑의 책id 같은 애들 중(여기서 book은 최종 where절에 검색어로 인해 결과가 나온 상황?), 작가의 테이블도 조인 되어 있는데, Option은 AUTHOR만 취급
 
         JPQLQuery<Long> limitTranslatorQuery = select(bookAuthorList.ordinal.min())
                 .from(bookAuthorList) // 작가-책 매핑 테이블
                 .join(bookAuthorList.author) //작가 테이블 조인(왜래키는 다대일에서 다쪽에 있다. bookAuthorList에 있다. 다대다 매핑 테이블)
                 .where(bookAuthorList.book.id.eq(book.id).and(bookAuthorList.author.authorOption.eq(AuthorOption.TRANSLATOR)));
-                    //번역가들도 여러명 중에 ordinal이 가장 작은 숫자 리턴.
+        //번역가들도 여러명 중에 ordinal이 가장 작은 숫자 리턴.
 
-        /* --- 페이지 count total 구하는 쿼리 --- */
+        /* --- 페이지 count total 구하는 쿼리 --- */ //서브 쿼리.
         JPAQuery<Long> countQuery = queryFactory
                 .select(book.count())
                 .from(book)
@@ -112,7 +114,15 @@ public class SearchBookRepositoryImpl implements SearchBookRepository{
                                                 .limit(1),
                                         "translator"
                                 ),
-                                book.category.categoryGroup.name
+                                book.category.categoryGroup.name,
+                                ExpressionUtils.as(
+                                        select(review.starRating.sum())
+                                                .from(review)
+                                                .join(review.book)
+                                                .where(book.id.eq(review.book.id)),
+                                        "totalStarRating"
+                                ),
+                                book.reviewCount
                         )
                 )
                 .from(book)
@@ -128,7 +138,7 @@ public class SearchBookRepositoryImpl implements SearchBookRepository{
     }
 
     private String initQuery(boolean isPublisherSearching, String query) {
-        if(isPublisherSearching == false){
+        if (isPublisherSearching == false) {
             return query;
         }
 
@@ -137,14 +147,14 @@ public class SearchBookRepositoryImpl implements SearchBookRepository{
     }
 
     private StringPath initPath(boolean isPublisherSearching) {
-        if(isPublisherSearching == true){
+        if (isPublisherSearching == true) {
             return book.publisher;
         }
         return book.title;
     }
 
     private boolean isPublisherSearching(String query) {
-        if(query == null){
+        if (query == null) {
             return false;
         }
         return query.contains("출판사_");

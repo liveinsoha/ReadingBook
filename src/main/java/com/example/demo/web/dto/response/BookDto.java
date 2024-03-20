@@ -18,6 +18,7 @@ public class BookDto {
     private int paperPrice;
     private int salePrice;
     private String description;
+    private int reviewCount;
 
     public BookDto(Book book) {
         isbn = book.getIsbn();
@@ -31,5 +32,6 @@ public class BookDto {
         paperPrice = book.getPaperPrice();
         salePrice = book.getSalePrice();
         description = book.getDescription();
+        reviewCount = book.getReviewCount();
     }
 }
