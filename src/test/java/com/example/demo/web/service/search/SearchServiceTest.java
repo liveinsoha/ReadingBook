@@ -27,14 +27,14 @@ class SearchServiceTest {
     @Test
     void test() {
 
-        initClass.initReviewData();
+        initClass.initReviewData(); // 리뷰 데이터
 
         /**
          * pageNumber : 요청하는 페이지 너버
          * pageSize : 한 페이지에 담을 컨텐츠 수
          */
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "createdTime");
-        Page<BookSearchResponse> search = searchService.search("해리포터", pageRequest, new BookSearchCondition("price"));
+        Page<BookSearchResponse> search = searchService.search("해리포터", pageRequest, new BookSearchCondition("price")); // 가격 순으로 검색
 
         print(search);
     }

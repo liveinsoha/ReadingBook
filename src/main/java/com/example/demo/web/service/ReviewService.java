@@ -155,9 +155,14 @@ public class ReviewService {
 
     public List<ReviewResponse> findReviews(Long bookId){
 
-        List<Review> reviews = reviewRepository.findReviews(bookId);
-        return reviews.stream()
-                .map(r -> new ReviewResponse(r))
+        List<Review> reviews = reviewRepository.findReviewsByBookId(bookId);
+
+        log.info("대댓글 in쿼리 로드 ============시작===========");
+        List<ReviewResponse> reviewResponses = reviews.stream()
+                .map(ReviewResponse::new)
                 .collect(Collectors.toList());
+        log.info("대댓글 in쿼리 로드 ============끝===========");
+
+        return reviewResponses;
     }
 }

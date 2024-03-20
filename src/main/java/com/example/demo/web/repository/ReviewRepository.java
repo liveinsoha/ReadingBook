@@ -17,11 +17,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query(
             "select r " +
                     "from Review r " +
-                    "join r.member " +
-                    "join r.book " +
-                   // "left join r.reviewComments " +
+                    "join fetch r.member " +
+                  //  "left join fetch r.reviewComments " + // 컬렉션을 조인할 경우 페이징이 불가!
                     "where r.book.id = :bookId " +
                     "order by r.likesCount desc, r.createdTime asc "
     )
-    List<Review> findReviews(Long bookId);
+    List<Review> findReviewsByBookId(Long bookId);
 }

@@ -60,11 +60,11 @@ public class InitClass {
     Random random = new Random();
 
     public Member getMember(Long memberId) {
-        return memberRepository.findById(memberId).get();
+        return memberRepository.getReferenceById(memberId);
     }
 
     public Book getBook(Long bookId) {
-        return bookRepository.findById(bookId).get();
+        return bookRepository.getReferenceById(bookId);
     }
 
     public void initOrderData() {
@@ -74,13 +74,14 @@ public class InitClass {
         ordersService.order(member, bookList, createOrderRequest());
     }
 
+
     public void initMemberData() {
 
-        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test1@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET);
-        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+        for (int i = 1; i <= 110; i++) {
+            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET);
+            Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+        }
 
-        MemberRegisterRequest memberRegisterRequest2 = createMemberRegisterRequest("test2@example.com", "test1234", "test1234", "test2", "1999", Gender.SECRET);
-        Long memberId2 = memberService.register(memberRegisterRequest2).getMemberId();
     }
 
     public void initCategoryData() {

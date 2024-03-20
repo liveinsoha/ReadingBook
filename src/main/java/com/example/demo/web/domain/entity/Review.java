@@ -3,12 +3,15 @@ package com.example.demo.web.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * OrderBook과 비슷한 양상 (다대다 -> 매핑 클래스). but 컨텐츠 있음, 다른 컬럼 있음.
  */
 @Getter
 @Entity
-public class Review extends BaseEntity{
+public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
@@ -19,6 +22,10 @@ public class Review extends BaseEntity{
     private boolean isPurchased;
     private boolean isHidden;
     private int likesCount;
+    private int commentsCount;
+
+    @OneToMany(mappedBy = "review", orphanRemoval = true)
+    private List<ReviewComment> reviewComments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
@@ -27,6 +34,14 @@ public class Review extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void addReviewComment(ReviewComment reviewComment) {
+        reviewComments.add(reviewComment);
+    }
+
+    public void increaseCommentsCount() {
+        this.commentsCount++;
+    }
 
     public static Review createReview(Member member, Book book, String content, int starRating, boolean isPurchased) {
         Review review = new Review();
@@ -37,6 +52,7 @@ public class Review extends BaseEntity{
         review.likesCount = 0;
         review.isHidden = false;
         review.isPurchased = isPurchased;
+        review.commentsCount = 0;
         return review;
     }
 
