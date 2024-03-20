@@ -60,19 +60,19 @@ public class BookController {
 
         /* --- 리뷰에 관련한 정보 --- */
         MyWroteReviewResponse myReview = null;
-        try{
+        try {
             Member member = memberService.getMember(principal);
             Long memberId = member.getId();
 
             myReview = reviewService.findWroteReview(memberId, isbn);
             model.addAttribute("isLogin", true);
-        } catch (BaseException e){
+        } catch (BaseException e) {
             model.addAttribute("isLogin", false);
         }
 
         List<ReviewResponse> reviews = reviewService.findReviews(isbn);
 
-        if(!reviews.isEmpty()){
+        if (!reviews.isEmpty()) {
             /* --- 몇 명이 평가했고, 평점의 평균 구하기 --- */
             int totalReviewRating = 0;
             int reviewCount = 0;
@@ -80,19 +80,19 @@ public class BookController {
                 reviewCount++;
                 totalReviewRating += review.getStarRating();
             }
-            double starRatingAvg = totalReviewRating / reviewCount;
+            double starRatingAvg = totalReviewRating / (reviewCount * 1.0);
             model.addAttribute("starRatingAvg", starRatingAvg);
             model.addAttribute("reviewCount", reviewCount);
-        }else{
+        } else {
             model.addAttribute("starRatingAvg", 0.0);
             model.addAttribute("reviewCount", 0);
         }
 
         /* --- 본인 확인용 이메일 --- */
         String email = "";
-        if(principal != null){
+        if (principal != null) {
             email = principal.getName();
-        }else{
+        } else {
             email = "";
         }
         model.addAttribute("email", email);
