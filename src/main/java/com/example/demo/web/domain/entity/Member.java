@@ -28,7 +28,7 @@ public class Member extends BaseEntity {
     private MemberRole role;
 
 
-    public static Member createMember(MemberRegisterRequest request){
+    public static Member createMember(MemberRegisterRequest request) {
         Member member = new Member();
         member.email = request.getEmail();
         member.password = request.getPassword();
@@ -39,7 +39,11 @@ public class Member extends BaseEntity {
         return member;
     }
 
-    public void encodePassword(String encodedPassword){
+    public void encodePassword(String encodedPassword) {
         password = encodedPassword;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }

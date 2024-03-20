@@ -2,6 +2,7 @@ package com.example.demo.web.service;
 
 
 import com.example.demo.web.dto.request.MemberRegisterRequest;
+import com.example.demo.web.dto.response.ModifyMemberResponse;
 import com.example.demo.web.dto.response.SignUpSuccessResponse;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.enums.Gender;
@@ -24,6 +25,10 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public Member getMember(Long memberId){
+        return memberRepository.findById(memberId).orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
+    }
 
     public Member getMember(String email) {
         return memberRepository.findByEmail(email).orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
@@ -103,6 +108,66 @@ public class MemberService {
         Gender gender = request.getGender();
         if (gender == null) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_GENDER);
+        }
+    }
+
+
+    /**
+     * 비밀번호 확인 이후 DTO 반환 메소드
+     * @param rawPassword
+     * @param member
+     * @return dto
+     */
+    public ModifyMemberResponse matchPasswordThenReturnResponse(String rawPassword, Member member) {
+        String encodedPassword = member.getPassword();
+
+        matchPasswords(rawPassword, encodedPassword);
+
+        return new ModifyMemberResponse(member);
+    }
+
+    private void matchPasswords(String rawPassword, String encodedPassword) {
+        boolean result = passwordEncoder.matches(rawPassword, encodedPassword);
+
+        if(result == false){
+            throw new BaseException(BaseResponseCode.INVALID_PASSWORD);
+        }
+    }
+
+    /**
+     * 비밀번호 업데이트
+     * @param password
+     * @param newPassword
+     * @param newPasswordConfirm
+     * @param member
+     */
+    @Transactional
+    public void update(String password, String newPassword, String newPasswordConfirm, Member member) {
+        String encodedPassword = member.getPassword();
+
+        validatePasswords(password, newPassword, newPasswordConfirm);
+
+        matchPasswords(password, encodedPassword);
+
+        String changingPassword = passwordEncoder.encode(newPassword);
+        member.updatePassword(changingPassword);
+    }
+
+    private void validatePasswords(String password, String newPassword, String newPasswordConfirm) {
+        if(password == null || password.trim().equals("")){
+            throw new IllegalArgumentException("현재 비밀번호나 새 비밀번호 또는 새 비밀번호 확인을 입력하세요.");
+        }
+
+        if(newPassword == null || newPassword.trim().equals("")){
+            throw new IllegalArgumentException("현재 비밀번호나 새 비밀번호 또는 새 비밀번호 확인을 입력하세요.");
+        }
+
+        if(newPasswordConfirm == null || newPasswordConfirm.trim().equals("")){
+            throw new IllegalArgumentException("현재 비밀번호나 새 비밀번호 또는 새 비밀번호 확인을 입력하세요.");
+        }
+
+        if(!newPassword.equals(newPasswordConfirm)){
+            throw new IllegalArgumentException("변경할 비밀번호가 일치하지 않습니다.");
         }
     }
 }
