@@ -56,6 +56,7 @@ public enum BaseResponseCode {
 
     ONLY_OWN_REVIEW_MODIFIABLE(HttpStatus.BAD_REQUEST, "본인이 작성한 리뷰만 수정할 수 있습니다."),
     ONLY_OWN_REVIEW_MANAGEABLE(HttpStatus.BAD_REQUEST, "본인이 작성한 리뷰만 관리할 수 있습니다."),
+    REVIEW_FOR_PURCHASED_BOOK_ONLY(HttpStatus.BAD_REQUEST, "구매한 책에만 리뷰를 작성할 수 있습니다."),
 
     /**
      * 401
@@ -98,4 +99,4 @@ public enum BaseResponseCode {
 
     private HttpStatus httpStatus;
     private String message;
-    }
+}

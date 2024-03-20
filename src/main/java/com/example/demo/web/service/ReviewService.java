@@ -46,8 +46,10 @@ public class ReviewService {
         validateMemberWroteReviewInSameBook(member.getId(), book.getId());
 
         /* --- 리뷰 작성자가 이 책을 구매 작성했는지 확인 --- */
-        boolean isPurchased = libraryRepository.existsByBookIdAndMemberId(book.getId(),member.getId());
-
+        boolean isPurchased = libraryRepository.existsByBookAndMember(book, member);
+        if (!isPurchased) {
+            throw new BaseException(BaseResponseCode.REVIEW_FOR_PURCHASED_BOOK_ONLY);
+        }
         /* --- 리뷰 카운트 추가 --- */
         book.addReviewCount();
 
@@ -92,13 +94,14 @@ public class ReviewService {
     }
 
 
-    public Review findReview(Long memberId, Long bookId){
+    public Review findReview(Long memberId, Long bookId) {
         return reviewRepository.findByMemberIdAndBookId(memberId, bookId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.REVIEW_NOT_FOUND));
     }
 
     /**
      * 본인이 작성한 모든 리뷰들 가져오는 메소드
+     *
      * @param member
      * @return
      */
@@ -121,9 +124,9 @@ public class ReviewService {
         Long bookId = book.getId();
 
         Review review = null;
-        try{
+        try {
             review = findReview(memberId, bookId);
-        } catch (BaseException e){
+        } catch (BaseException e) {
             return null; //리뷰가 없는 경우 null 리턴
         }
         MyWroteReviewInBookResponse response = new MyWroteReviewInBookResponse(review);
@@ -146,13 +149,14 @@ public class ReviewService {
 
     private void validateReviewIdentification(Review review, Long memberId) {
         Long findMemberId = review.getMember().getId();
-        if(findMemberId != memberId){
+        if (findMemberId != memberId) {
             throw new BaseException(BaseResponseCode.ONLY_OWN_REVIEW_MODIFIABLE);
         }
     }
 
     /**
      * 리뷰 삭제 메소드
+     *
      * @param member
      * @param reviewId
      */
@@ -172,7 +176,7 @@ public class ReviewService {
         return true;
     }
 
-    public List<ReviewResponse> findReviews(Long bookId){
+    public List<ReviewResponse> findReviews(Long bookId) {
 
         List<Review> reviews = reviewRepository.findReviewsByBookId(bookId);
 
@@ -185,7 +189,7 @@ public class ReviewService {
         return reviewResponses;
     }
 
-    public List<ReviewResponse> findReviews(String isbn){
+    public List<ReviewResponse> findReviews(String isbn) {
 
         Book book = bookService.findBook(isbn);
         List<Review> reviews = reviewRepository.findReviewsByBookId(book.getId());
