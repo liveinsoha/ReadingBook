@@ -55,6 +55,9 @@ public class InitClass {
     BookService bookService;
 
     @Autowired
+    BookContentService bookContentService;
+
+    @Autowired
     EntityManager entityManager;
 
     Random random = new Random();
@@ -175,6 +178,10 @@ public class InitClass {
 
         Long bookId = bookManageService.registerBook(request, file); // 책 등록
 
+        //BookContent 등록
+        BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "testContent1");
+        bookContentService.register(bookContentRegisterRequest);
+
         AuthorRegisterRequest firstAuthorRequest = createAuthorRegisterRequest("DANNY", AuthorOption.AUTHOR, "영국", "test", "1999", Gender.MEN);
         Long firstAuthorId = authorManageService.registerAuthor(firstAuthorRequest);
         AuthorRegisterRequest secondAuthorRequest = createAuthorRegisterRequest("KIM", AuthorOption.AUTHOR, "미국", "test", "1999", Gender.MEN);
@@ -196,6 +203,10 @@ public class InitClass {
                 "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
 
         Long secondBookId = bookManageService.registerBook(secondBookRequest, file);
+
+        //두 번째 BookContent 등록
+        BookContentRegisterRequest bookContentRegisterRequest2 = new BookContentRegisterRequest(secondBookId, "testContent2");
+        bookContentService.register(bookContentRegisterRequest2);
 
 // 세 번째 작가 등록
         AuthorRegisterRequest thirdAuthorRequest = createAuthorRegisterRequest("LEE", AuthorOption.AUTHOR, "프랑스", "test", "2000", Gender.WOMEN);

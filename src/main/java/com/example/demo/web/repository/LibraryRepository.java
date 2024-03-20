@@ -1,6 +1,8 @@
 package com.example.demo.web.repository;
 
+import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.Library;
+import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Wishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,7 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
 
     /**
      * 이 책들 중 구매한 책이 카운트 센다.
+     *
      * @param bookIdList
      * @return
      */
@@ -25,4 +28,10 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
     boolean existsByBookId(Long bookId);
 
     boolean existsByBookIdAndMemberId(Long bookId, Long memberId);
+
+    boolean existsByBookAndMember(Book book, Member member);
+
+    List<Library> findAllByMember(Member member);
+
+
 }

@@ -1,12 +1,14 @@
 package com.example.demo.web.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 /**
  * 구메라는 행위에 대하여 책과 회원은 다대다 매핑
  * 멤버 - 책 구매한 책들에 관한 매핑 클래스
  */
 @Entity
+@Getter
 public class Library extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

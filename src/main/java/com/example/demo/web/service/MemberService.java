@@ -2,6 +2,7 @@ package com.example.demo.web.service;
 
 
 import com.example.demo.web.dto.request.MemberRegisterRequest;
+import com.example.demo.web.dto.response.MemberInformationResponse;
 import com.example.demo.web.dto.response.ModifyMemberResponse;
 import com.example.demo.web.dto.response.SignUpSuccessResponse;
 import com.example.demo.web.domain.entity.Member;
@@ -26,7 +27,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member getMember(Long memberId){
+    public Member getMember(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
     }
 
@@ -35,7 +36,7 @@ public class MemberService {
     }
 
     public Member getMember(Principal principal) {
-        if(principal == null){
+        if (principal == null) {
             throw new BaseException(BaseResponseCode.LOGIN_REQUIRED);
         }
 
@@ -114,6 +115,7 @@ public class MemberService {
 
     /**
      * 비밀번호 확인 이후 DTO 반환 메소드
+     *
      * @param rawPassword
      * @param member
      * @return dto
@@ -129,13 +131,14 @@ public class MemberService {
     private void matchPasswords(String rawPassword, String encodedPassword) {
         boolean result = passwordEncoder.matches(rawPassword, encodedPassword);
 
-        if(result == false){
+        if (result == false) {
             throw new BaseException(BaseResponseCode.INVALID_PASSWORD);
         }
     }
 
     /**
      * 비밀번호 업데이트
+     *
      * @param password
      * @param newPassword
      * @param newPasswordConfirm
@@ -154,20 +157,25 @@ public class MemberService {
     }
 
     private void validatePasswords(String password, String newPassword, String newPasswordConfirm) {
-        if(password == null || password.trim().equals("")){
+        if (password == null || password.trim().equals("")) {
             throw new IllegalArgumentException("현재 비밀번호나 새 비밀번호 또는 새 비밀번호 확인을 입력하세요.");
         }
 
-        if(newPassword == null || newPassword.trim().equals("")){
+        if (newPassword == null || newPassword.trim().equals("")) {
             throw new IllegalArgumentException("현재 비밀번호나 새 비밀번호 또는 새 비밀번호 확인을 입력하세요.");
         }
 
-        if(newPasswordConfirm == null || newPasswordConfirm.trim().equals("")){
+        if (newPasswordConfirm == null || newPasswordConfirm.trim().equals("")) {
             throw new IllegalArgumentException("현재 비밀번호나 새 비밀번호 또는 새 비밀번호 확인을 입력하세요.");
         }
 
-        if(!newPassword.equals(newPasswordConfirm)){
+        if (!newPassword.equals(newPasswordConfirm)) {
             throw new IllegalArgumentException("변경할 비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    public MemberInformationResponse findMemberInformation(Principal principal) {
+        Member member = getMember(principal);
+        return new MemberInformationResponse(member);
     }
 }

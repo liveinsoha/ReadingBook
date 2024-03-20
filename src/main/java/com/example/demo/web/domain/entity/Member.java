@@ -19,7 +19,7 @@ public class Member extends BaseEntity {
 
     private String name;
     private String birthYear;
-    private int point;
+
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
