@@ -122,7 +122,7 @@ public class ReviewService {
         /* --- 폼 검증 --- */
         validateForm(content, starRating);
 
-        review.update(content, starRating);
+        review.update(content, starRating); // 변경 감지
     }
 
     private void validateReviewIdentification(Review review, Long memberId) {
@@ -153,11 +153,9 @@ public class ReviewService {
         return true;
     }
 
-    public List<ReviewResponse> findReviews(String isbn){
-        Book book = bookService.findBook(isbn);
-        Long bookId = book.getId();
+    public List<ReviewResponse> findReviews(Long bookId){
 
-        List<Review> reviews = reviewRepository.findByBookId(bookId);
+        List<Review> reviews = reviewRepository.findReviews(bookId);
         return reviews.stream()
                 .map(r -> new ReviewResponse(r))
                 .collect(Collectors.toList());

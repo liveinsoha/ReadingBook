@@ -101,11 +101,11 @@ class ReviewServiceTest {
         Member member = initClass.getMember(1L);
         Book book = initClass.getBook(1L);
         Long savedReviewId = reviewService.review(member, book, "testReviewContent", 5);
-        List<ReviewResponse> reviews = reviewService.findReviews(book.getIsbn());
+        List<ReviewResponse> reviews = reviewService.findReviews(book.getId());
         assertThat(reviews.size()).isEqualTo(1);
 
         reviewService.delete(member,savedReviewId);
-        List<ReviewResponse> emptyReviews = reviewService.findReviews(book.getIsbn());
+        List<ReviewResponse> emptyReviews = reviewService.findReviews(book.getId());
         assertThat(emptyReviews.size()).isEqualTo(0);
     }
 
