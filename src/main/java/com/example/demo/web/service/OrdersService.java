@@ -118,7 +118,7 @@ public class OrdersService {
      */
     public Long order(Member member, List<Book> books, OrderRequest orderRequest) {
         /* --- 이미 구매한 도서인지 검증 --- */
-        validateOrderingBooksWasBought(books);
+        validateOrderingBooksWasBought(member, books);
 
         /* --- 폼 검증 --- */
         validateForm(orderRequest.getOrderName(), orderRequest.getOrderNo(), orderRequest.getImpUid(), orderRequest.getChoosingOption(), orderRequest.getEmail(), orderRequest.getOrderAmount(), orderRequest.getDiscountAmount(), orderRequest.getPaymentAmount());
@@ -143,15 +143,11 @@ public class OrdersService {
         return orders.getId();
     }
 
-    private void validateOrderingBooksWasBought(List<Book> books) {
-        List<Long> bookIdList = new ArrayList<>();
-        for (Book book : books) {
-            bookIdList.add(book.getId());
-        }
+    private void validateOrderingBooksWasBought(Member member, List<Book> books) {
         /*---  책Id들 중 구매한 책이 존재하는 경우 true를 리턴. ---*/
-        boolean isExists = libraryRepository.existsByBookIds(bookIdList);
+        boolean isExists = libraryRepository.existsByBookInAndMember(books, member);
        
-        if(isExists == true){
+        if(isExists){
             throw new BaseException(BaseResponseCode.SOME_BOOKS_ALREADY_PURCHASED);
         }
     }

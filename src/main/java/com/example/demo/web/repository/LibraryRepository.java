@@ -29,6 +29,9 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
 
     boolean existsByBookAndMember(Book book, Member member);
 
+
+    boolean existsByBookInAndMember(List<Book> books, Member member);
+
     List<Library> findAllByMember(Member member);
 
 

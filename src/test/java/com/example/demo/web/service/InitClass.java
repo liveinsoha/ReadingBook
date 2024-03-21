@@ -14,9 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Component
 public class InitClass {
@@ -75,6 +77,79 @@ public class InitClass {
         List<Book> bookList = bookService.findAllById(Arrays.asList(1L, 2L));
 
         ordersService.order(member, bookList, createOrderRequest());
+    }
+
+    public void initOrderAndReviewBigData() {
+        initMemberData(); // 회원 110명 등록
+        initCategoryData(); // 카테고리 등록
+
+        for (int i = 1; i <= 10; i++) {
+            Long savedBookId = initBookData(i); // 책 10권 등록
+            initAuthorData(i, savedBookId); //각각 책에 작가 3명씩 등록
+        }
+
+
+        for (long j = 1; j <= 100; j++) { //1~100 번 회원이 각각 랜덤으로 책을 구매한다.
+            Member member = getMember(j);
+            List<Long> randomBookIds = getRandomBookIds();
+            List<Book> randomBooks = bookService.findAllById(randomBookIds);
+            ordersService.order(member, randomBooks, createOrderRequest((int) j, randomBookIds)); // 책들 구매
+
+            for (int i = 0; i < randomBookIds.size(); i++) { //구매 책 Ids
+                Book book = randomBooks.get(i); // 구매한 책
+                if (random.nextInt(2) == 0) { //리뷰를 적을 수도 있고 안 적을 수도 있음
+                    reviewService.review(member, book, "reviewTest" + member.getId(), random.nextInt(5) + 1); //별점 랜덤
+                }
+            }
+        }
+    }
+
+
+    private List<Long> getRandomBookIds() {
+        int randomCount = 1 + random.nextInt(10); // 1 ~ 10 난수 구매 권 수
+
+        List<Long> bookIds = new ArrayList<>();
+        for (int i = 0; i < randomCount; i++) {
+            long bookId = 1 + random.nextLong(10); // 구매 책 Id
+            bookIds.add(bookId);
+        }
+
+        List<Long> distictBookIds = bookIds.stream().distinct().collect(Collectors.toList()); // 중복 번호는 필터링
+        return distictBookIds;
+    }
+
+    public void initAuthorData(int index, Long bookId) {
+        AuthorRegisterRequest firstAuthorRequest = createAuthorRegisterRequest("DANNY" + index, AuthorOption.AUTHOR, "영국", "test", "1999", Gender.MEN);
+        Long firstAuthorId = authorManageService.registerAuthor(firstAuthorRequest);
+        initBookAuthorListData(bookId, firstAuthorId, 1);
+
+        AuthorRegisterRequest secondAuthorRequest = createAuthorRegisterRequest("KIM" + index, AuthorOption.AUTHOR, "미국", "test", "1999", Gender.MEN);
+        Long secondAuthorId = authorManageService.registerAuthor(secondAuthorRequest);
+        initBookAuthorListData(bookId, secondAuthorId, 2);
+
+        AuthorRegisterRequest secondTranslatorRequest = createAuthorRegisterRequest("JACK" + index, AuthorOption.TRANSLATOR, "대한민국", "test", "1999", Gender.MEN);
+        Long translatorId = authorManageService.registerAuthor(secondTranslatorRequest);
+        initBookAuthorListData(bookId, translatorId, 3);
+    }
+
+    public void initBookAuthorListData(Long bookId, Long authorId, int ordinal) {
+        BookAuthorListRegisterRequest AuthorBookRequest = createBookAuthorListRegisterRequest(bookId, authorId, ordinal);
+        bookAuthorListService.register(AuthorBookRequest);
+    }
+
+    public Long initBookData(int index) {
+        MockMultipartFile file = new MockMultipartFile(
+                "해리포터와 마법사의 돌",
+                "해리포터와 마법사의 돌.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test".getBytes()
+        );
+        // 시리즈 번호를 제목에 추가
+        String title = "해리포터와 마법사의 돌 " + index;
+        // 책 등록 request
+        BookRegisterRequest request = createRegisterRequest(title, "123123", "포터모어",
+                "2023.01.01", 0, random.nextInt(10000), 5, 1L, 0L, "21세기 최고의 책");
+        return bookManageService.registerBook(request, file);
     }
 
 
@@ -156,6 +231,7 @@ public class InitClass {
 
     }
 
+
     public void initBookAndAuthorData() {
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
@@ -165,16 +241,11 @@ public class InitClass {
         );
 
         //첫번쨰 책 등록
-        CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
-        Long categoryGroupId = categoryGroupService.register(categoryGroupRequest); //카테고리 그룹 등록
-
-        CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지 소설", categoryGroupId);
-        Long categoryId = categoryService.register(categoryRequest); //카테고리 등록
-
+        initCategoryData();
 
         //책 등록 request
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
+                "2023.01.01", 0, 9900, 5, 1L, 0L, "21세기 최고의 책");
 
         Long bookId = bookManageService.registerBook(request, file); // 책 등록
 
@@ -200,7 +271,7 @@ public class InitClass {
 
         // 두 번째 책 등록
         BookRegisterRequest secondBookRequest = createRegisterRequest("톰 소여의 모험", "9788952760289", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
+                "2023.01.01", 0, 9900, 5, 1L, 0L, "21세기 최고의 책");
 
         Long secondBookId = bookManageService.registerBook(secondBookRequest, file);
 
@@ -231,6 +302,13 @@ public class InitClass {
 
         entityManager.flush();
         entityManager.clear();
+    }
+
+    private OrderRequest createOrderRequest(int index, List<Long> bookIds) {
+        return new OrderRequest(
+                "test 외 9권", "2023020211215" + index, "test", "card",
+                "test" + index + "@test", 10000, 5000, 5000, bookIds
+        );
     }
 
     private OrderRequest createOrderRequest() {

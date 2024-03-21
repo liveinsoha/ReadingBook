@@ -56,7 +56,7 @@ class ReviewServiceTest {
 
     @Test
     void when_memberPurchasedBook_then_isPurchasedIsTrue() {
-        initClass.initMemberData();
+        initClass.initMemberDataSmall();
         initClass.initBookAndAuthorData();
         initClass.initOrderData();
 
@@ -79,7 +79,7 @@ class ReviewServiceTest {
 
     @Test
     void when_ReviewUpdated_then_VerifyField() {
-        initClass.initMemberData();
+        initClass.initMemberDataSmall();
         initClass.initBookAndAuthorData();
         initClass.initOrderData();
 
@@ -103,7 +103,7 @@ class ReviewServiceTest {
 
     @Test
     void when_ReviewDeleted_then_ReviewNotExisted() {
-        initClass.initMemberData();
+        initClass.initMemberDataSmall();
         initClass.initBookAndAuthorData();
         initClass.initOrderData();
 
@@ -159,7 +159,7 @@ class ReviewServiceTest {
     @Test
     void when_ReviewCommentDeleted_then_verifyReviewCommentCount() {
         /*--- 초기 데이터 저장 ---*/
-        initClass.initMemberData();
+        initClass.initMemberDataSmall();
         initClass.initBookAndAuthorData();
         initClass.initOrderData();
 

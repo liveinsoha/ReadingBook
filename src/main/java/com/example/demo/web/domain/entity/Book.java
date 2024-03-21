@@ -4,9 +4,11 @@ import com.example.demo.web.dto.request.BookRegisterRequest;
 import com.example.demo.web.dto.request.BookUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.ToString;
 
 @Entity
 @Getter
+@ToString
 public class Book extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +27,12 @@ public class Book extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @ToString.Exclude
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_group_id")
+    @ToString.Exclude
     private BookGroup bookGroup;
 
     @Column(columnDefinition = "TEXT")
