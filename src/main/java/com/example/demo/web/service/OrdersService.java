@@ -40,6 +40,7 @@ public class OrdersService {
 
     /**
      * 결제 정보 조회 API
+     *
      * @param bookIdList
      * @param email
      * @return PayInformationResponse DTO
@@ -84,14 +85,14 @@ public class OrdersService {
 
         int count = 0;
         int size = bookIdList.size();
-        if(size > 1){
+        if (size > 1) {
             count = size - 1;
         }
 
-        if(count == 0){
+        if (count == 0) {
             return title;
-        }else{
-            return title + " 외 " + count +"권";
+        } else {
+            return title + " 외 " + count + "권";
         }
     }
 
@@ -111,6 +112,7 @@ public class OrdersService {
 
     /**
      * 주문 메소드
+     *
      * @param member
      * @param books
      * @param orderRequest
@@ -143,11 +145,13 @@ public class OrdersService {
         return orders.getId();
     }
 
+
+
     private void validateOrderingBooksWasBought(Member member, List<Book> books) {
         /*---  책Id들 중 구매한 책이 존재하는 경우 true를 리턴. ---*/
-        boolean isExists = libraryRepository.existsByBookInAndMember(books, member);
-       
-        if(isExists){
+        boolean isExists = libraryRepository.existsByMemberAndBookIn(member, books);
+
+        if (isExists) {
             throw new BaseException(BaseResponseCode.SOME_BOOKS_ALREADY_PURCHASED);
         }
     }
@@ -168,7 +172,7 @@ public class OrdersService {
         }
         Long memberId = member.getId();
 
-         /*--- memberId와 구매 책 Id 리스트를 가지고 위시리스트 목록을 불러온다. ---*/
+        /*--- memberId와 구매 책 Id 리스트를 가지고 위시리스트 목록을 불러온다. ---*/
         List<Wishlist> wishlists = wishlistRepository.findByMemberIdAndBookIds(memberId, bookIdList);
         /*--- 불러온 위시리스트를 Id로 매핑한다. ---*/
         List<Long> wishlistIdList = wishlists.stream().map(w -> w.getId()).collect(Collectors.toList());
@@ -177,25 +181,25 @@ public class OrdersService {
     }
 
     private void validateForm(String orderName, String orderNo, String impUid, String choosingOption, String email, int orderAmount, int discountAmount, int paymentAmount) {
-        if(orderName == null || orderName.trim().equals("")){
+        if (orderName == null || orderName.trim().equals("")) {
             throw new IllegalArgumentException("주문한 도서 이름을 입력해주세요.");
         }
-        if(orderNo == null || orderNo.trim().equals("")){
+        if (orderNo == null || orderNo.trim().equals("")) {
             throw new IllegalArgumentException("주문 번호를 입력해주세요.");
         }
-        if(impUid == null || impUid.trim().equals("")){
+        if (impUid == null || impUid.trim().equals("")) {
             throw new IllegalArgumentException("IMP UID를 입력해주세요.");
         }
-        if(choosingOption == null || choosingOption.trim().equals("")){
+        if (choosingOption == null || choosingOption.trim().equals("")) {
             throw new IllegalArgumentException("주문 시 선택한 결제 옵션을 입력해주세요.");
         }
-        if(email == null || email.trim().equals("")){
+        if (email == null || email.trim().equals("")) {
             throw new IllegalArgumentException("주문 당시 이메일을 입력해주세요.");
         }
-        if(orderAmount == 0){
+        if (orderAmount == 0) {
             throw new IllegalArgumentException("주문 금액이 0원일 수는 없습니다.");
         }
-        if(paymentAmount == 0){
+        if (paymentAmount == 0) {
             throw new IllegalArgumentException("결제 금액이 0원일 수는 없습니다.");
         }
     }

@@ -24,6 +24,7 @@ public enum BaseResponseCode {
     INVALID_FORM_PHONE_NO(HttpStatus.BAD_REQUEST, "핸드폰 번호를 올바르게 입력해주세요."),
     INVALID_FORM_GENDER(HttpStatus.BAD_REQUEST, "성별을 올바르게 입력해주세요."),
     SOME_BOOKS_ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "주문하고자 하는 도서 중 일부를 이미 구입하셨습니다."),
+    BOOK_ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "이미 구매한 도서입니다"),
     ORDER_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "주문 아이디를 찾을 수 없습니다."),
     ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, "이미 해당 도서에 리뷰를 작성했습니다."),
 
@@ -84,7 +85,7 @@ public enum BaseResponseCode {
 
     BOOK_NOT_IN_WISHLIST(HttpStatus.BAD_REQUEST, "위시리스트에 삭제하고자 하는 도서가 존재하지 않습니다."),
 
-    BOOK_ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "이미 구매한 도서입니다."),
+
 
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
 

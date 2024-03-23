@@ -33,11 +33,14 @@ public class WishlistService {
         Long memberId = member.getId();
         Long bookId = book.getId();
 
+
+
         /* --- 도서가 이미 위시리스트에 담겨 있는지 확인 --- */
-        validateIsBookExisted(bookId, memberId);
+        validateIsBookExisted(member, book);
+
 
         /* --- 위시리스트에 담으려고 하는 도서를 구매했는지 확인 --- */
-        validateAddingBookAlreadyBuyed(book);
+        validateAddingBooksWasBought(member, book);
 
 
         Wishlist wishlist = Wishlist.createWishlist(book, member);
@@ -45,17 +48,6 @@ public class WishlistService {
         return wishlistRepository.save(wishlist).getId();
     }
 
-    /**
-     * 구매목록(라이브러리)에 있을 경우 이미 구매 예외 발생
-     * @param book
-     */
-    private void validateAddingBookAlreadyBuyed(Book book) {
-        Long bookId = book.getId();
-        boolean isExistsBook = libraryRepository.existsByBookId(bookId);
-        if(isExistsBook == true){
-            throw new BaseException(BaseResponseCode.BOOK_ALREADY_PURCHASED);
-        }
-    }
 
     /**
      * 위시리스트에서 도서를 제거하는 메소드
@@ -81,12 +73,22 @@ public class WishlistService {
         return true;
     }
 
+
+    private void validateAddingBooksWasBought(Member member,Book book) {
+        /*---  책Id들 중 구매한 책이 존재하는 경우 true를 리턴. ---*/
+        boolean isExists = libraryRepository.existsByMemberAndBook(member, book);
+
+        if (isExists) {
+            throw new BaseException(BaseResponseCode.BOOK_ALREADY_PURCHASED);
+        }
+    }
+
     private List<Wishlist> findWishlist(List<Long> wishlistIdList) {
         return wishlistRepository.findAllById(wishlistIdList);
     }
 
-    private void validateIsBookExisted(Long bookId, Long memberId) {
-        boolean isExists = wishlistRepository.existsByBookIdAndMemberId(bookId, memberId);
+    private void validateIsBookExisted(Member member, Book book) {
+        boolean isExists = wishlistRepository.existsByMemberAndMember(member, book);
         if(isExists == true){
             throw new BaseException(BaseResponseCode.BOOK_ALREADY_IN_WISHLIST);
         }
