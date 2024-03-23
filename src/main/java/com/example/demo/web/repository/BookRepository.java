@@ -1,7 +1,10 @@
 package com.example.demo.web.repository;
 
 import com.example.demo.web.domain.entity.Book;
+import com.example.demo.web.domain.entity.Category;
+import com.example.demo.web.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,4 +29,18 @@ public interface BookRepository extends JpaRepository<Book, Long>, SearchBookRep
     Optional<Book> findByIsbn(String isbn);
 
     List<Book> findByBookGroupId(Long bookGroupId);
+
+    @Modifying //수정하는 쿼리임을 의미
+    @Query("DELETE " +
+            "FROM Book b " +
+            "WHERE b.category = :category")
+    void deleteByCategory(Category category);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update Book b " +
+            "set b.reviewCount = b.reviewCount - 1 " +
+            "where b in (:books)")
+    void updateReviewCountByBookIdInQuery(@Param("books") List<Book> books);
+
+    List<Book> findByCategory(Category category);
 }

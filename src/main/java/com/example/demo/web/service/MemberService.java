@@ -1,15 +1,15 @@
 package com.example.demo.web.service;
 
 
+import com.example.demo.web.domain.entity.*;
 import com.example.demo.web.dto.request.MemberRegisterRequest;
 import com.example.demo.web.dto.response.MemberInformationResponse;
 import com.example.demo.web.dto.response.ModifyMemberResponse;
 import com.example.demo.web.dto.response.SignUpSuccessResponse;
-import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
-import com.example.demo.web.repository.MemberRepository;
+import com.example.demo.web.repository.*;
 import com.example.demo.web.service.email.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +33,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final OrdersRepository ordersRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewCommentRepository reviewCommentRepository;
+    private final ReviewLikeLogRepository reviewLikeLogRepository;
+    private final BookRepository bookRepository;
+    private final LibraryRepository libraryRepository;
 
     public Member getMember(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
@@ -240,6 +248,65 @@ public class MemberService {
         return tempPassword;
     }
 
+    @Transactional
+    public boolean leave(Member member, String password) {
+        /* --- 비밀번호 일치하는지 확인 --- */
+        String encodedPassword = member.getPassword();
+        matchPasswords(password, encodedPassword);
+
+       /* Long memberId = member.getId();
+
+        *//* --- 주문의 member null처리--- *//*
+        List<Orders> orders = ordersRepository.findAllByMember(member);
+        List<Long> orderIds = orders.stream()
+                .map(order -> order.getId())
+                .collect(Collectors.toList());*/
+
+        ordersRepository.bulkMemberIdNull(member); //Order을 삭제하면 OrderBook 왜래키 참조하므로 에러
+
+        /*--- 리뷰 조회 --- */
+        List<Review> reviews = reviewRepository.findByMember(member);
+
+
+        List<Long> reviewIds = reviews.stream()
+                .map(r -> r.getId())
+                .collect(Collectors.toList());
+
+        //리뷰의 좋아요들 제거
+        reviewLikeLogRepository.mDeleteAllByReviewsInQuery(reviews);
+
+        //리뷰의 댓글들 제거
+        reviewCommentRepository.mDeleteAllByReviewInQuery(reviews);
+
+        //도서의 리뷰 건수 빼기
+        List<Book> reviewedBooks = reviews.stream()
+                .map(Review::getBook)
+                .toList();
+        bookRepository.updateReviewCountByBookIdInQuery(reviewedBooks);
+
+        /*--- 이제 회원의 리뷰 제거 ---*/
+        reviewRepository.mDeleteByMember(member); 
+
+        //*  --- 회원의 리뷰 댓글 제거 --- *//*
+        reviewCommentRepository.mDeleteByMember(member);
+
+        /*--- 회원이 좋아요 누른 리뷰 찾아서 좋아요 카운트 감소 ---*/
+        List<ReviewLikeLog> reviewLikeLogs = reviewLikeLogRepository.findByMember(member);
+        List<Review> likedReviews = reviewLikeLogs.stream().map(ReviewLikeLog::getReview).toList();
+        reviewRepository.updateLikesCountByReviewInQuery(likedReviews);
+
+        //* --- 회원의 좋아요 로그 제거 --- *//*
+        reviewLikeLogRepository.mDeleteByMember(member);
+
+
+
+        /*--- 회원의 구매목록 제거 ---*/
+        libraryRepository.mDeleteByMember(member);
+
+        memberRepository.delete(member);
+        return true;
+    }
+
     private void validateEmail(String email) {
         if (email == null || email.trim().equals("")) {
             throw new IllegalArgumentException("이메일을 올바르게 입력해주세요.");
@@ -259,5 +326,12 @@ public class MemberService {
     private Member findMember(String email, String phoneNo) {
         return memberRepository.findByEmailAndPhoneNo(email, phoneNo)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
+    }
+
+    public int findTodayRegisterMemberCount() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startOfToday = today.with(LocalTime.MIN);
+        LocalDateTime endOfToday = today.with(LocalTime.MAX);
+        return memberRepository.countByCreatedTimeBetween(startOfToday, endOfToday);
     }
 }

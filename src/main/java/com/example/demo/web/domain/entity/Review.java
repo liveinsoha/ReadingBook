@@ -24,7 +24,7 @@ public class Review extends BaseEntity {
     private int likesCount;
     private int commentsCount;
 
-    @OneToMany(mappedBy = "review", orphanRemoval = true)
+    @OneToMany(mappedBy = "review")
     private List<ReviewComment> reviewComments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,6 +34,9 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "review")
+    private List<ReviewLikeLog> logs = new ArrayList<>();
 
     public void addReviewComment(ReviewComment reviewComment) {
         reviewComments.add(reviewComment);

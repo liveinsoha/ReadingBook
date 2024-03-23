@@ -55,4 +55,11 @@ public class LoginViewController {
         return "/login/find-password";
     }
 
+
+    @GetMapping("/leave")
+    public String leave(){
+        return "/login/leave";
+    }
+
+
 }

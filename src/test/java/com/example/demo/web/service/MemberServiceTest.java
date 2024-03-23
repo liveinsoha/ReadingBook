@@ -1,17 +1,20 @@
 package com.example.demo.web.service;
 
+import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.dto.request.MemberRegisterRequest;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.dto.response.SignUpSuccessResponse;
 import com.example.demo.web.exception.BaseException;
-import com.example.demo.web.repository.MemberRepository;
+import com.example.demo.web.repository.*;
 import com.example.demo.web.service.email.MailService;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -27,6 +30,21 @@ import static org.mockito.Mockito.mock;
 class MemberServiceTest {
 
     @Autowired
+    private OrdersRepository ordersRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private ReviewCommentRepository reviewCommentRepository;
+    @Autowired
+    private ReviewLikeLogRepository reviewLikeLogRepository;
+
+    @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
     private MemberService memberService;
 
     @Autowired
@@ -35,10 +53,15 @@ class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private LibraryRepository libraryRepository;
+
     @BeforeEach
     void beforeEach(){
         MailService mailService = mock(MailService.class);
-        memberService = new MemberService(memberRepository, passwordEncoder, mailService);
+        memberService = new MemberService(memberRepository, passwordEncoder,
+                mailService, ordersRepository,reviewRepository,
+                reviewCommentRepository,reviewLikeLogRepository,bookRepository,libraryRepository);
     }
 
     @Test
@@ -154,6 +177,37 @@ class MemberServiceTest {
 
     private MemberRegisterRequest createRequest(String email, String password, String passwordConfirm, String name, String birthYear, Gender gender, String phoneNo) {
         return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender, phoneNo);
+    }
+
+
+    @Autowired
+    InitClass initClass;
+    @Autowired
+    EntityManager entityManager;
+
+    @Test
+    @Rollback(value = false)
+    void when_MemberLeave_then_CheckQuery(){
+        initClass.initMemberDataSmall();
+        initClass.initCategoryData();
+        for (int i = 1; i <= 5; i++) { //책 5개 등록
+            initClass.initBookData(i);
+        }
+        initClass.initOrderData();
+
+        Member member = initClass.getMember(1L);
+
+
+        for (long i = 1; i <= 5; i++) { //책 5개에 각각 리뷰 작성
+            Book book = initClass.getBook(i);
+            Long savedId1 = reviewService.review(member, book, "reviewContent", 5);
+        }
+        entityManager.flush();
+        entityManager.clear();
+
+
+        memberService.leave(member, "test1234");
+
     }
 
 

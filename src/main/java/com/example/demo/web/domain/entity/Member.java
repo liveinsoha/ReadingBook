@@ -6,6 +6,9 @@ import com.example.demo.web.domain.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 public class Member extends BaseEntity {
@@ -16,12 +19,9 @@ public class Member extends BaseEntity {
 
     private String email;
     private String password;
-
     private String name;
     private String birthYear;
-
     private String phoneNo;
-
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

@@ -65,17 +65,17 @@ public class InitClass {
     Random random = new Random();
 
     public Member getMember(Long memberId) {
-        return memberRepository.getReferenceById(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
     public Book getBook(Long bookId) {
-        return bookRepository.getReferenceById(bookId);
+        return bookRepository.findById(bookId).get();
     }
 
     public void initOrderData() {
         Member member1 = getMember(1L);
         Member member2 = getMember(2L);
-        List<Book> bookList = bookService.findAllById(Arrays.asList(1L, 2L));
+        List<Book> bookList = bookService.findAllById(Arrays.asList(1L, 2L, 3L, 4L, 5L));
 
         ordersService.order(member1, bookList, createOrderRequest());
         ordersService.order(member2, bookList, createOrderRequest());
@@ -157,7 +157,7 @@ public class InitClass {
 
     public void initMemberData() {
         for (int i = 1; i <= 110; i++) {
-            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET,"01012341234");
+            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
             Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
         }
     }

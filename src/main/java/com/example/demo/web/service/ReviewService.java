@@ -8,10 +8,7 @@ import com.example.demo.web.dto.response.MyWroteReviewResponse;
 import com.example.demo.web.dto.response.ReviewResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
-import com.example.demo.web.repository.BookRepository;
-import com.example.demo.web.repository.LibraryRepository;
-import com.example.demo.web.repository.MemberRepository;
-import com.example.demo.web.repository.ReviewRepository;
+import com.example.demo.web.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +26,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ReviewService {
 
+    private final ReviewLikeLogRepository reviewLikeLogRepository;
+    private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewRepository reviewRepository;
     private final LibraryRepository libraryRepository;
     private final MemberRepository memberRepository;
@@ -201,6 +200,10 @@ public class ReviewService {
         Book book = review.getBook();
         book.subtractReviewCount();
 
+        reviewCommentRepository.mDeleteByReview(review); // 리뷰 댓글 삭제
+        reviewLikeLogRepository.mDeleteByReview(review); // 리뷰 좋아요 삭제
+
+
         reviewRepository.delete(review);
         return true;
     }
@@ -230,5 +233,13 @@ public class ReviewService {
         log.info("대댓글 in쿼리 로드 ============끝===========");
 
         return reviewResponses;
+    }
+
+    public int findTodayReviewCount() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startOfToday = today.with(LocalTime.MIN);
+        LocalDateTime endOfToday = today.with(LocalTime.MAX);
+
+        return reviewRepository.countByCreatedTimeBetween(startOfToday, endOfToday);
     }
 }

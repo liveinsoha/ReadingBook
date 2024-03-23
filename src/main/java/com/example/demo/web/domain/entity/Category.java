@@ -4,6 +4,9 @@ import com.example.demo.web.dto.request.CategoryUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 public class Category extends BaseEntity {
@@ -18,6 +21,7 @@ public class Category extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_group_id")
     private CategoryGroup categoryGroup;
+
 
     public static Category createCategory(String name, CategoryGroup categoryGroup) {
         Category category = new Category();

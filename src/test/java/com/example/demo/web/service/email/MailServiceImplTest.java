@@ -2,8 +2,9 @@ package com.example.demo.web.service.email;
 
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.dto.request.MemberRegisterRequest;
-import com.example.demo.web.repository.MemberRepository;
+import com.example.demo.web.repository.*;
 import com.example.demo.web.service.MemberService;
+import com.example.demo.web.service.ReviewService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,25 @@ import static org.mockito.Mockito.verify;
 class MailServiceImplTest {
 
     @Autowired
+    private OrdersRepository ordersRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Autowired
+    private ReviewCommentRepository reviewCommentRepository;
+
+    @Autowired
+    private ReviewLikeLogRepository reviewLikeLogRepository;
+
+    @Autowired LibraryRepository libraryRepository;
+
+    private ReviewService reviewService;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
@@ -31,7 +51,9 @@ class MailServiceImplTest {
 
     @BeforeEach
     void beforeEach(){
-        memberService = new MemberService(memberRepository, passwordEncoder, mailService);
+        memberService = new MemberService(memberRepository, passwordEncoder,
+                mailService, ordersRepository,reviewRepository,
+                reviewCommentRepository,reviewLikeLogRepository,bookRepository,libraryRepository);
     }
 
     @Test

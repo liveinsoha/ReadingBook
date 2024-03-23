@@ -1,8 +1,10 @@
 package com.example.demo.web.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class ReviewLikeLog extends BaseEntity{
 
     @Id

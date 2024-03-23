@@ -29,7 +29,7 @@ class LikeServiceTest {
     EntityManager entityManager;
 
     @Test
-    void when_LikeAdded_then_verify_LikeCounts() {
+    void when_LikeAdded_then_verify_likesCounts() {
         initClass.initMemberDataSmall();
         initClass.initBookAndAuthorData();
         initClass.initOrderData(); //1번 회원이 책1, 책2 구매.

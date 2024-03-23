@@ -5,6 +5,7 @@ import com.example.demo.web.domain.entity.Library;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.entity.Wishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -36,5 +37,10 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
 
     List<Library> findAllByMember(Member member);
 
+    @Modifying
+    @Query("DELETE " +
+            "FROM Library l " +
+            "WHERE l.member = :member")
+    void mDeleteByMember(Member member);
 
 }
