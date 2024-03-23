@@ -41,6 +41,9 @@ dependencies {
     //swagger
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
+    //mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 
 
     // Querydsl 추가

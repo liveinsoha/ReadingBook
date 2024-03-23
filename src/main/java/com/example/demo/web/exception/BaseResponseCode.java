@@ -96,8 +96,14 @@ public enum BaseResponseCode {
 
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다. 댓글 아이디를 다시 확인해주세요."),
 
-    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 조회할 수 없습니다. 회원 아이디와 리뷰 아이디를 확인해주세요.");
+    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 조회할 수 없습니다. 회원 아이디와 리뷰 아이디를 확인해주세요."),
 
+
+    /**
+     * 500
+     */
+
+    EMAIL_ERROR_OCCURRED(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 전송 시 에러 발생");
     private HttpStatus httpStatus;
     private String message;
 }

@@ -10,6 +10,7 @@ import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.MemberRepository;
+import com.example.demo.web.service.email.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,6 +30,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     public Member getMember(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
@@ -42,6 +47,26 @@ public class MemberService {
 
         String email = principal.getName();
         return getMember(email);
+    }
+
+    public List<String> findEmail(String name, String phoneNo) {
+        List<Member> members = memberRepository.findByNameAndPhoneNo(name, phoneNo);
+
+        if (members.isEmpty()) {
+            throw new BaseException(BaseResponseCode.MEMBER_NOT_FOUND);
+        }
+
+        return members.stream().map(m -> maskEmail(m.getEmail()))
+                .collect(Collectors.toList());
+    }
+
+    public String maskEmail(String email) {
+        int atIndex = email.indexOf('@');
+
+        String prefix = email.substring(0, 3);
+        String domain = email.substring(atIndex);
+        String maskedPrefix = prefix + "*".repeat(atIndex - 3); // 빼기 3을 한 이유는, 앞 3글자는 마스킹 되지 않아야 함
+        return maskedPrefix + domain;
     }
 
     public SignUpSuccessResponse register(MemberRegisterRequest request) {
@@ -110,13 +135,15 @@ public class MemberService {
         if (gender == null) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_GENDER);
         }
-        String phoneNo = request.getPhoneNo();
-        if(phoneNo == null || phoneNo.trim().isEmpty()){
-            throw new  BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
+    }
+
+    private void validatePhoneNo(String phoneNo) {
+        if (phoneNo == null || phoneNo.trim().isEmpty()) {
+            throw new BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
         }
 
-        if(phoneNo.length() != 11){
-            throw new  BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
+        if (phoneNo.length() != 11) {
+            throw new BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
         }
 
     }
@@ -186,5 +213,51 @@ public class MemberService {
     public MemberInformationResponse findMemberInformation(Principal principal) {
         Member member = getMember(principal);
         return new MemberInformationResponse(member);
+    }
+
+    /**
+     * 임시 비밀번호로 변경 이후 이메일 전송 메소드
+     *
+     * @param email
+     * @param phoneNo
+     * @return tempPassword
+     */
+    @Transactional
+    public String changePasswordAndSendEmail(String email, String phoneNo) {
+        /* --- 폼 검증 --- */
+        validateEmail(email);
+        validatePhoneNo(phoneNo);
+
+        Member member = findMember(email, phoneNo);
+
+        /* --- 임시 비밀번호 변경 --- */
+        String tempPassword = createTempPassword();
+        String encodedTempPassword = passwordEncoder.encode(tempPassword);
+        member.updatePassword(encodedTempPassword);
+
+        /* --- 이메일 전송 --- */
+        mailService.send(email, tempPassword);
+        return tempPassword;
+    }
+
+    private void validateEmail(String email) {
+        if (email == null || email.trim().equals("")) {
+            throw new IllegalArgumentException("이메일을 올바르게 입력해주세요.");
+        }
+
+        String[] splitEmail = email.split("@");
+        if (splitEmail[0].length() < 4 || splitEmail[0].length() > 24) {
+            throw new IllegalArgumentException("이메일을 올바르게 입력해주세요.");
+        }
+    }
+
+    private String createTempPassword() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().substring(0, 8);
+    }
+
+    private Member findMember(String email, String phoneNo) {
+        return memberRepository.findByEmailAndPhoneNo(email, phoneNo)
+                .orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
     }
 }

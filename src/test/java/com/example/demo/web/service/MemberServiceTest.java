@@ -3,7 +3,11 @@ package com.example.demo.web.service;
 import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.dto.request.MemberRegisterRequest;
 import com.example.demo.web.domain.enums.Gender;
+import com.example.demo.web.dto.response.SignUpSuccessResponse;
 import com.example.demo.web.exception.BaseException;
+import com.example.demo.web.repository.MemberRepository;
+import com.example.demo.web.service.email.MailService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 
 @SpringBootTest
@@ -26,6 +31,15 @@ class MemberServiceTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @BeforeEach
+    void beforeEach(){
+        MailService mailService = mock(MailService.class);
+        memberService = new MemberService(memberRepository, passwordEncoder, mailService);
+    }
 
     @Test
     void register_fail_null() {
@@ -119,6 +133,23 @@ class MemberServiceTest {
         memberService.update("test1234", "asdf1234!", "asdf1234!", member);
 
         assertTrue(passwordEncoder.matches("asdf1234!", member.getPassword()));
+    }
+
+    @Test
+    void whenChangedTempPassword_thenVerifyField(){
+        //given
+        MemberRegisterRequest request = new MemberRegisterRequest("test@gmail.com", "testtest1234", "testtest1234", "홍길동", "1999", Gender.SECRET, "01055555555");
+        SignUpSuccessResponse signUpSuccessResponse = memberService.register(request);
+
+        //when
+        String email = "test@gmail.com";
+        String tempPassword = memberService.changePasswordAndSendEmail(email, "01055555555");
+
+        Member member = memberService.getMember(signUpSuccessResponse.getMemberId());
+
+
+        //then
+        assertThat(passwordEncoder.matches(tempPassword, member.getPassword())).isTrue();
     }
 
     private MemberRegisterRequest createRequest(String email, String password, String passwordConfirm, String name, String birthYear, Gender gender, String phoneNo) {

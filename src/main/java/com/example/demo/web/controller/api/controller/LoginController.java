@@ -14,10 +14,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
 
 import static com.example.demo.web.exception.BaseResponseCode.*;
 
@@ -45,6 +45,29 @@ public class LoginController {
         memberService.validatePresentEmail(email);
 
         BaseResponse response = new BaseResponse(HttpStatus.OK, "사용 가능한 이메일입니다.", true);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @PostMapping("/account/find-id")
+    public ResponseEntity<Object> findId(@RequestBody HashMap<String, String> request){
+        String name = request.get("name");
+        String phoneNo = request.get("phoneNo");
+        List<String> maskedEmail = memberService.findEmail(name, phoneNo);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(maskedEmail);
+    }
+
+    @PostMapping("/account/find-password")
+    public ResponseEntity<Object> findPassword(@RequestParam String email, @RequestParam String phoneNo){
+        memberService.changePasswordAndSendEmail(email, phoneNo);
+
+        BaseResponse response = new BaseResponse(
+                HttpStatus.OK, "비밀번호가 변경되었습니다.", true
+        );
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
