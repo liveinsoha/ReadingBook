@@ -155,14 +155,14 @@ public class InitClass {
 
     public void initMemberData() {
         for (int i = 1; i <= 110; i++) {
-            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET);
+            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET,"01012341234");
             Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
         }
     }
 
     public void initMemberDataSmall() {
         for (int i = 1; i <= 5; i++) {
-            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET);
+            MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test" + i + "@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
             Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
         }
     }
@@ -337,8 +337,8 @@ public class InitClass {
 
 
     private MemberRegisterRequest createMemberRegisterRequest(String email, String password, String
-            passwordConfirm, String name, String birthYear, Gender gender) {
-        return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender);
+            passwordConfirm, String name, String birthYear, Gender gender, String phoneNo) {
+        return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender, phoneNo);
     }
 
 }

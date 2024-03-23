@@ -110,6 +110,15 @@ public class MemberService {
         if (gender == null) {
             throw new BaseException(BaseResponseCode.INVALID_FORM_GENDER);
         }
+        String phoneNo = request.getPhoneNo();
+        if(phoneNo == null || phoneNo.trim().isEmpty()){
+            throw new  BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
+        }
+
+        if(phoneNo.length() != 11){
+            throw new  BaseException(BaseResponseCode.INVALID_FORM_PHONE_NO);
+        }
+
     }
 
 

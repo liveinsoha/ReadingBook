@@ -14,4 +14,5 @@ public class MemberRegisterRequest {
     private String name;
     private String birthYear;
     private Gender gender;
+    private String phoneNo;
 }
