@@ -8,6 +8,7 @@ import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.BookRepository;
 import com.example.demo.web.repository.MemberRepository;
+import com.example.demo.web.repository.ReviewRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 @Transactional
 @SpringBootTest
@@ -39,6 +39,9 @@ class ReviewServiceTest {
 
     @Autowired
     EntityManager entityManager;
+
+    @Autowired
+    ReviewRepository reviewRepository;
 
     @Test
     void whenReviewedWithOut_thenErrorOccurred() {
@@ -154,6 +157,34 @@ class ReviewServiceTest {
             assertThat(reviewResponse.getReviewComments().size()).isEqualTo(10);
             System.out.println(reviewResponse);
         }
+    }
+
+    @Test
+    void deleteReviewsTest() {
+        initClass.initMemberDataSmall(); //5명 멤버 등록
+        initClass.initCategoryData();
+        initClass.initBookData(1);
+        initClass.initOrderData();
+
+
+        Book book = initClass.getBook(1L);
+
+
+        //리뷰쓰기
+        Long savedId1 = reviewService.review(initClass.getMember(1L), book, "reviewContent", 5);
+        Long savedId2 = reviewService.review(initClass.getMember(2L), book, "reviewContent", 5);
+
+        Review referenceById1 = reviewRepository.getReferenceById(savedId1);
+        Review referenceById2 = reviewRepository.getReferenceById(savedId2);
+
+        //리뷰삭제
+        reviewService.deleteAll(List.of(referenceById1, referenceById2));
+
+
+        //리뷰 존재하지 않음 확인
+        assertThatThrownBy(() ->  reviewService.findReview(1L, 1L))
+                .isInstanceOf(BaseException.class)
+                        .hasMessageContaining(BaseResponseCode.REVIEW_NOT_FOUND.getMessage());
     }
 
     @Test

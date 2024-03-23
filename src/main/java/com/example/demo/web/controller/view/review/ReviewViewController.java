@@ -32,4 +32,6 @@ public class ReviewViewController {
         model.addAttribute("active", "review");
         return "user/review/review";
     }
+
+
 }

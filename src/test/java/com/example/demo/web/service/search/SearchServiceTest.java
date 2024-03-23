@@ -35,7 +35,6 @@ class SearchServiceTest {
          */
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "createdTime");
         Page<BookSearchResponse> search = searchService.search("해리포터", pageRequest, new BookSearchCondition("price")); // 가격 순으로 검색
-
         print(search);
     }
 

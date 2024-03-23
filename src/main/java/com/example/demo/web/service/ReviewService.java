@@ -8,7 +8,9 @@ import com.example.demo.web.dto.response.MyWroteReviewResponse;
 import com.example.demo.web.dto.response.ReviewResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
+import com.example.demo.web.repository.BookRepository;
 import com.example.demo.web.repository.LibraryRepository;
+import com.example.demo.web.repository.MemberRepository;
 import com.example.demo.web.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +28,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional(readOnly = true)
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
     private final LibraryRepository libraryRepository;
+    private final MemberRepository memberRepository;
+    private final BookRepository bookRepository;
     private final BookService bookService;
 
     /**
@@ -95,7 +102,9 @@ public class ReviewService {
 
 
     public Review findReview(Long memberId, Long bookId) {
-        return reviewRepository.findByMemberIdAndBookId(memberId, bookId)
+        Member member = memberRepository.getReferenceById(memberId);
+        Book book = bookRepository.getReferenceById(bookId);
+        return reviewRepository.findByMemberAndBook(member, book)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.REVIEW_NOT_FOUND));
     }
 
@@ -160,6 +169,26 @@ public class ReviewService {
      * @param member
      * @param reviewId
      */
+    /**
+     * 리뷰 제거 메소드
+     * @param reviews
+     */
+    @Transactional
+    public void deleteAll(List<Review> reviews) {
+        reviewRepository.deleteAll(reviews);
+    }
+
+
+//    public int findTodayReviewCount() {
+//        LocalDateTime today = LocalDateTime.now();
+//        LocalDateTime startOfToday = today.with(LocalTime.MIN);
+//        LocalDateTime endOfToday = today.with(LocalTime.MAX);
+//
+//        return reviewRepository.countByCreatedTimeBetween(startOfToday, endOfToday);
+//    }
+
+
+
     @Transactional
     public boolean delete(Member member, Long reviewId) {
         Review review = findReview(reviewId);

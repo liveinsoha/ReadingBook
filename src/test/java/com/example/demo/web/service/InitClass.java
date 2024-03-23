@@ -73,10 +73,12 @@ public class InitClass {
     }
 
     public void initOrderData() {
-        Member member = getMember(1L);
+        Member member1 = getMember(1L);
+        Member member2 = getMember(2L);
         List<Book> bookList = bookService.findAllById(Arrays.asList(1L, 2L));
 
-        ordersService.order(member, bookList, createOrderRequest());
+        ordersService.order(member1, bookList, createOrderRequest());
+        ordersService.order(member2, bookList, createOrderRequest());
     }
 
     public void initOrderAndReviewBigData() {
