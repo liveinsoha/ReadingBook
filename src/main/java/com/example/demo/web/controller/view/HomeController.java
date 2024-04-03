@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class HomeController {
 
-    HomeService homeService;
+    private final HomeService homeService;
 
     @RequestMapping("/")
     public String home(Model model) {

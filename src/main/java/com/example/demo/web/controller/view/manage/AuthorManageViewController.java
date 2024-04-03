@@ -15,7 +15,6 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/manage/author")
 public class AuthorManageViewController {
 
     private final AuthorManageService authorManageService;

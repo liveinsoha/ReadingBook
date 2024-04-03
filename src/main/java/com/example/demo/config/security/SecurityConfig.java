@@ -1,6 +1,7 @@
 package com.example.demo.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -29,7 +30,7 @@ public class SecurityConfig {
                 .csrf(customizer -> customizer
                         .csrfTokenRequestHandler(requestHandler)
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/account/login/**", "/logout/**", "/register", "/register/validate/email")
+                        .ignoringRequestMatchers("/","/account/**", "/logout/**", "/register", "/register/validate/email")
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/cart", "/library", "/user/**").hasAnyRole("MEMBER", "ADMIN")
@@ -43,6 +44,9 @@ public class SecurityConfig {
                                 "/register/category-group", "/update/category-group", "/delete/category-group", "/search/category-group",
                                 "/register/category", "/update/category", "/delete/category", "/search/category", "/search/categories"
                         ).hasRole("ADMIN")
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .anyRequest().permitAll()
+
                 )
                 .formLogin(form -> form
                         .loginPage("/account/login")

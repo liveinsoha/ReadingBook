@@ -88,7 +88,7 @@ public class WishlistService {
     }
 
     private void validateIsBookExisted(Member member, Book book) {
-        boolean isExists = wishlistRepository.existsByMemberAndMember(member, book);
+        boolean isExists = wishlistRepository.existsByMemberAndBook(member, book);
         if(isExists == true){
             throw new BaseException(BaseResponseCode.BOOK_ALREADY_IN_WISHLIST);
         }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 @RequestMapping("/account")
 public class LoginViewController {
+
     @GetMapping("/login")
     public String login(@RequestParam(required = false) boolean hasMessage,
                         @RequestParam(required = false) String message,
@@ -33,7 +34,7 @@ public class LoginViewController {
 
     @GetMapping("/register")
     public String register() {
-        return "/login/register";
+        return "login/register";
     }
 
     @GetMapping("/register/email")

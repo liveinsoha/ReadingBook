@@ -42,6 +42,10 @@ public class Member extends BaseEntity {
         return member;
     }
 
+    public void setRole(MemberRole role) {
+        this.role = role;
+    }
+
     public void encodePassword(String encodedPassword) {
         password = encodedPassword;
     }

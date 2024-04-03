@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <th:block th:replace="~{common/fragments/csrf :: csrf}"></th:block>
+  <title>리딩북스</title>
+
+  <th:block th:replace="~{common/fragments/common-settings :: settings}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/home/navbar.css}" type="text/css">
+  <link rel="stylesheet" th:href="@{/css/user/home.css}" type="text/css">
+
+  <script th:src="@{/js/user/modify/modify.js}"></script>
+  <script th:src="@{/js/common/call-ajax.js}"></script>
+</head>
+<body>
+<div class="container">
+  <header class="header mt-1 mb-5">
+    <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
+  </header>
+  <main class="main container">
+    <div class="row">
+      <div class="col-3">
+        <th:block th:replace="~{user/fragments/navbar :: navbar}"></th:block>
+      </div>
+      <div class="col-9">
+  <div class="modify-wrap">   <!--비밀번호 확인 후 이 부분을 대체하게 된다-->
+          <h3 class="fs-5">비밀번호 재확인</h3>
+          <p class="fw-bold">보안을 위해 비밀번호를 한번 더 입력해 주세요.</p>
+          <div class="d-flex">
+            <input type="password" class="password form-control w-25 me-2">
+            <button type="button" class="btn btn-primary btn-confirm" >확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+<th:block th:replace="~{common/fragments/footer :: footer}"></th:block>
+</body>
+</html>
