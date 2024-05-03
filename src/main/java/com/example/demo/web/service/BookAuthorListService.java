@@ -33,26 +33,38 @@ public class BookAuthorListService {
         Book book = bookService.findBook(bookId);
         Author author = authorManagementService.findAuthorById(authorId);
 
+        validateDuplicate(author, book, ordinal); //중복이 있는지 체크
+
         BookAuthorList bookAuthorList = BookAuthorList.createBookAuthorList(book, author, ordinal);
 
         return bookAuthorListRepository.save(bookAuthorList).getId();
     }
 
+    private void validateDuplicate(Author author, Book book, int ordinal) {
+        if (bookAuthorListRepository.existsByAuthorAndBook(author, book)) {
+            throw new BaseException(BaseResponseCode.BOOK_AUTHOR_EXIST);
+        }
+
+        if (bookAuthorListRepository.existsByBookAndOrdinal(book, ordinal)) {
+            throw new BaseException(BaseResponseCode.BOOK_AUTHOR_ORDINAL_EXIST);
+        }
+    }
+
     private static void validateForm(Long bookId, Long authorId, int ordinal) {
         validateId(bookId, authorId);
 
-        if(ordinal == 0){
+        if (ordinal == 0) {
             throw new IllegalArgumentException("서수를 입력해주세요.");
         }
 
     }
 
     private static void validateId(Long bookId, Long authorId) {
-        if(bookId == null){
+        if (bookId == null) {
             throw new IllegalArgumentException("도서 아이디를 입력해주세요.");
         }
 
-        if(authorId == null){
+        if (authorId == null) {
             throw new IllegalArgumentException("작가 아이디를 입력해주세요.");
         }
     }

@@ -56,7 +56,7 @@ $(function () {
         const name = $('#name').val();
 
         if(name.trim() == ''){
-            alert('카테고리 그룹을 입력하세요.');
+            alert('검색어를 입력하세요.');
             return false;
         }
 

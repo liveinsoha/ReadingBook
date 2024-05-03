@@ -27,24 +27,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class WishlistServiceTest {
 
     @Autowired
-    InitClass initClass;
+    TestInitClass TestInitClass;
 
     @Autowired
     WishlistService wishlistService;
 
     @BeforeEach
     void beforeEach() {
-//        initClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
-//        initClass.initMemberData(); //책 2권 초기 데이터
+//        TestInitClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
+//        TestInitClass.initMemberData(); //책 2권 초기 데이터
     }
 
     @Test
     void wishlist_save_success_test() {
-        initClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
-        initClass.initMemberData(); //책 2권 초기 데이터
+        TestInitClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
+        TestInitClass.initMemberData(); //책 2권 초기 데이터
 
-        Book book1 = initClass.getBook(1L);
-        Member member = initClass.getMember(1L);
+        Book book1 = TestInitClass.getBook(1L);
+        Member member = TestInitClass.getMember(1L);
 
         Long savedId = wishlistService.addBook(member, book1);
 
@@ -56,13 +56,13 @@ class WishlistServiceTest {
 
     @Test
     void when_purchasedBookExist_then_throwError(){
-        initClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
-        initClass.initMemberData(); //책 2권 초기 데이터
-        initClass.initOrderData(); //주문 2건 초기 데이터
+        TestInitClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
+        TestInitClass.initMemberData(); //책 2권 초기 데이터
+        TestInitClass.initOrderData(); //주문 2건 초기 데이터
 
 
-        Book book1 = initClass.getBook(1L);
-        Member member = initClass.getMember(1L);
+        Book book1 = TestInitClass.getBook(1L);
+        Member member = TestInitClass.getMember(1L);
 
         assertThatThrownBy(() -> wishlistService.addBook(member, book1))
                 .isInstanceOf(BaseException.class)
@@ -71,11 +71,11 @@ class WishlistServiceTest {
 
     @Test
     void when_alreadyWishlistExist_then_throwsError(){
-        initClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
-        initClass.initMemberData(); //책 2권 초기 데이터
+        TestInitClass.initBookAndAuthorData(); //멤버 1명 초기 데이터
+        TestInitClass.initMemberData(); //책 2권 초기 데이터
 
-        Book book1 = initClass.getBook(1L);
-        Member member = initClass.getMember(1L);
+        Book book1 = TestInitClass.getBook(1L);
+        Member member = TestInitClass.getMember(1L);
 
         Long savedId = wishlistService.addBook(member, book1);
         assertThatThrownBy(() -> wishlistService.addBook(member, book1))

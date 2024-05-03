@@ -32,7 +32,7 @@ class ReviewServiceTest {
     private BookRepository bookRepository;
 
     @Autowired
-    private InitClass initClass;
+    private TestInitClass TestInitClass;
 
     @Autowired
     private ReviewCommentService reviewCommentService;
@@ -59,12 +59,12 @@ class ReviewServiceTest {
 
     @Test
     void when_memberPurchasedBook_then_isPurchasedIsTrue() {
-        initClass.initMemberDataSmall();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberDataSmall();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Member savedMember = initClass.getMember(1L);
-        Book savedBook = initClass.getBook(1L);
+        Member savedMember = TestInitClass.getMember(1L);
+        Book savedBook = TestInitClass.getBook(1L);
 
         Long savedReviewId = reviewService.review(savedMember, savedBook, "testReviewContent", 5);
         Review review = reviewService.findReview(savedReviewId);
@@ -82,12 +82,12 @@ class ReviewServiceTest {
 
     @Test
     void when_ReviewUpdated_then_VerifyField() {
-        initClass.initMemberDataSmall();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberDataSmall();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Member member = initClass.getMember(1L);
-        Book book = initClass.getBook(1L);
+        Member member = TestInitClass.getMember(1L);
+        Book book = TestInitClass.getBook(1L);
         Long savedReviewId = reviewService.review(member, book, "testReviewContent", 5);
         Review review = reviewService.findReview(savedReviewId);
 
@@ -106,12 +106,12 @@ class ReviewServiceTest {
 
     @Test
     void when_ReviewDeleted_then_ReviewNotExisted() {
-        initClass.initMemberDataSmall();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberDataSmall();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Member member = initClass.getMember(1L);
-        Book book = initClass.getBook(1L);
+        Member member = TestInitClass.getMember(1L);
+        Book book = TestInitClass.getBook(1L);
         Long savedReviewId = reviewService.review(member, book, "testReviewContent", 5);
         List<ReviewResponse> reviews = reviewService.findReviews(book.getId());
         assertThat(reviews.size()).isEqualTo(1);
@@ -124,21 +124,21 @@ class ReviewServiceTest {
     @Test
     void when_ReviewCommentRegistered_then_verifyField() {
         /*--- 초기 데이터 저장 ---*/
-        initClass.initMemberData();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberData();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Book book = initClass.getBook(1L);
+        Book book = TestInitClass.getBook(1L);
         long ten = 10;
         /*--- 책 1개에 대해 리뷰 10개 작성 ---*/ // 1~10번 회원은 리뷰를 작성
         for (long i = 1; i <= 10; i++) {
-            Member reviewWriter = initClass.getMember(i);
+            Member reviewWriter = TestInitClass.getMember(i);
             Long savedReviewId = reviewService.review(reviewWriter, book, "Review Content", 5);
 
             /*--- 각각 리뷰에 대해 모두 다른 회원이 대댓글 10개씩 작성 ---*/
             for (long j = 1; j <= 10; j++) { //11 ~ 110번 회원은 대댓글을 작성
                 Long reviewCommentWriterId = ten + j;
-                Member reviewCommentWriter = initClass.getMember(reviewCommentWriterId);
+                Member reviewCommentWriter = TestInitClass.getMember(reviewCommentWriterId);
                 Review review = reviewService.findReview(savedReviewId);
                 reviewCommentService.comment(reviewCommentWriter, review, "Review Comment Content" + reviewCommentWriterId);
             }
@@ -161,18 +161,18 @@ class ReviewServiceTest {
 
     @Test
     void deleteReviewsTest() {
-        initClass.initMemberDataSmall(); //5명 멤버 등록
-        initClass.initCategoryData();
-        initClass.initBookData(1);
-        initClass.initOrderData();
+        TestInitClass.initMemberDataSmall(); //5명 멤버 등록
+        TestInitClass.initCategoryData();
+        TestInitClass.initBookData(1);
+        TestInitClass.initOrderData();
 
 
-        Book book = initClass.getBook(1L);
+        Book book = TestInitClass.getBook(1L);
 
 
         //리뷰쓰기
-        Long savedId1 = reviewService.review(initClass.getMember(1L), book, "reviewContent", 5);
-        Long savedId2 = reviewService.review(initClass.getMember(2L), book, "reviewContent", 5);
+        Long savedId1 = reviewService.review(TestInitClass.getMember(1L), book, "reviewContent", 5);
+        Long savedId2 = reviewService.review(TestInitClass.getMember(2L), book, "reviewContent", 5);
 
         Review referenceById1 = reviewRepository.getReferenceById(savedId1);
         Review referenceById2 = reviewRepository.getReferenceById(savedId2);
@@ -190,18 +190,18 @@ class ReviewServiceTest {
     @Test
     void when_ReviewCommentDeleted_then_verifyReviewCommentCount() {
         /*--- 초기 데이터 저장 ---*/
-        initClass.initMemberDataSmall();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberDataSmall();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Book book = initClass.getBook(1L);
+        Book book = TestInitClass.getBook(1L);
 
-        Member reviewWriter = initClass.getMember(1L);
+        Member reviewWriter = TestInitClass.getMember(1L);
         Long savedReviewId = reviewService.review(reviewWriter, book, "Review Content", 5);
         Review review = reviewService.findReview(savedReviewId);
 
         //대댓글 작성
-        Member reviewCommentWriter = initClass.getMember(10L);
+        Member reviewCommentWriter = TestInitClass.getMember(10L);
         Long reviewCommentId = reviewCommentService.comment(reviewCommentWriter, review, "Review Comment Content");
 
         //작성 확인

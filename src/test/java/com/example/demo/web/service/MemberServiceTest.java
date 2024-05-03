@@ -181,7 +181,7 @@ class MemberServiceTest {
 
 
     @Autowired
-    InitClass initClass;
+    TestInitClass initClass;
     @Autowired
     EntityManager entityManager;
 

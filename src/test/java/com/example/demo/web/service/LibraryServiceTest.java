@@ -23,15 +23,15 @@ class LibraryServiceTest {
     private LibraryService libraryService;
 
     @Autowired
-    private InitClass initClass;
+    private TestInitClass TestInitClass;
 
     @Test
     void when_Book_Ordered_then_Check_Library() {
-        initClass.initMemberDataSmall();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberDataSmall();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Member member = initClass.getMember(1L);
+        Member member = TestInitClass.getMember(1L);
 
         List<LibraryResponse> booksInLibrary = libraryService.findBooksInLibrary(member);
 
@@ -40,12 +40,12 @@ class LibraryServiceTest {
 
     @Test
     void when_Book_Ordered_then_check_BookContent_In_Library() {
-        initClass.initMemberDataSmall();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberDataSmall();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Member member = initClass.getMember(1L);
-        Book book = initClass.getBook(1L);
+        Member member = TestInitClass.getMember(1L);
+        Book book = TestInitClass.getBook(1L);
 
         BookContentResponse bookContent = libraryService.findBookContent(member, book.getId());
         assertThat(bookContent.getContent()).isEqualTo("testContent1");

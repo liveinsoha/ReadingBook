@@ -37,6 +37,37 @@ class BookAuthorListServiceTest {
     private CategoryGroupService categoryGroupService;
 
     @Test
+    void whenAuthorDuplicate_thenThrowException(){
+        //given
+        Long bookId = createBook();
+        Long authorId = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
+
+        //when
+        BookAuthorListRegisterRequest request1 = new BookAuthorListRegisterRequest(bookId, authorId, 1);
+        BookAuthorListRegisterRequest request2 = new BookAuthorListRegisterRequest(bookId, authorId, 2);
+        bookAuthorListService.register(request1);
+        assertThatThrownBy(() -> bookAuthorListService.register(request2))
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_EXIST.getMessage());
+    }
+
+    @Test
+    void whenAuthorOrdinalDuplicate_thenThrowException(){
+        Long bookId = createBook();
+        //given
+        Long authorId1 = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
+        Long authorId2 = createAuthor("J.K 롤링파스타", AuthorOption.AUTHOR);
+
+        //when
+        BookAuthorListRegisterRequest request1 = new BookAuthorListRegisterRequest(bookId, authorId1, 1);
+        BookAuthorListRegisterRequest request2 = new BookAuthorListRegisterRequest(bookId, authorId2, 1);
+        bookAuthorListService.register(request1);
+        assertThatThrownBy(() -> bookAuthorListService.register(request2))
+                .isInstanceOf(BaseException.class)
+                .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_ORDINAL_EXIST.getMessage());
+    }
+
+    @Test
     void whenBookIdNull_ThenThrowException(){
         //given
         Long authorId = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
@@ -108,14 +139,9 @@ class BookAuthorListServiceTest {
 
 
     private Long createBook() {
-        CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
-        Long categoryGroupId = categoryGroupService.register(categoryGroupRequest);
 
-        CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지 소설", categoryGroupId);
-        Long categoryId = categoryService.register(categoryRequest);
-
-        BookRegisterRequest bookRegisterRequest = createBookRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, null, "21세기 최고의 책");
+        BookRegisterRequest bookRegisterRequest = createBookRegisterRequest("해리포터와 마법사의", "4141", "포터모어",
+                "2023.01.01", 0, 9900, 5, 1L, 1L, "21세기 최고의 책");
 
         MockMultipartFile file = getMockMultipartFile();
 

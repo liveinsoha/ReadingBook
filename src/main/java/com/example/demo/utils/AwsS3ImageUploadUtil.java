@@ -56,7 +56,7 @@ public class AwsS3ImageUploadUtil implements ImageUploadUtil{
 
     @Override
     public void deleteImage(String savedImageName) {
-        amazonS3Client.deleteObject(bucket, savedImageName);
+       // amazonS3Client.deleteObject(bucket, savedImageName);
     }
 
     private String extractExtension(String filename) {

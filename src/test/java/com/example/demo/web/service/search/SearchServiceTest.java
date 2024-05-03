@@ -1,7 +1,8 @@
 package com.example.demo.web.service.search;
 
 import com.example.demo.web.dto.response.BookSearchResponse;
-import com.example.demo.web.service.InitClass;
+import com.example.demo.web.service.TestInitClass;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,12 @@ class SearchServiceTest {
     SearchService searchService;
 
     @Autowired
-    InitClass initClass;
+    TestInitClass TestInitClass;
 
     @Test
     void test() {
 
-        initClass.initReviewData(); // 리뷰 데이터
+        TestInitClass.initReviewData(); // 리뷰 데이터
 
         /**
          * pageNumber : 요청하는 페이지 너버
@@ -55,14 +56,13 @@ class SearchServiceTest {
         System.out.println("Has next page: " + search.hasNext());
         System.out.println("Has previous page: " + search.hasPrevious());
 
-        if (search.hasNext()) {
-            printNextPage(search.nextPageable());
-        }
+//        if (search.hasNext()) {
+//            printNextPage(search.nextPageable());
+//        }
     }
 
     private void printNextPage(Pageable nextPageable) {
         Page<BookSearchResponse> nextPage = searchService.search("해리포터", nextPageable, new BookSearchCondition("price"));
-
         print(nextPage);
     }
 }

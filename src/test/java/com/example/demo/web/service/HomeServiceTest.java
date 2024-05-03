@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class HomeServiceTest {
 
     @Autowired
-    InitClass initClass;
+    TestInitClass TestInitClass;
 
     @Autowired
     HomeService homeService;
 
     @Test
     void findBestBooksTest() {
-        initClass.initOrderAndReviewBigData();
+        TestInitClass.initOrderAndReviewBigData();
 
         List<HomeBooksResponse> bestBooks = homeService.findBestBooks();
         System.out.println("bestBooks = " + bestBooks);

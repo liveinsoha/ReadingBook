@@ -39,7 +39,7 @@ class OrdersServiceTest {
     private OrderBooksRepository orderBooksRepository;
 
     @Autowired
-    private InitClass initClass;
+    private TestInitClass TestInitClass;
 
     @Test
     void orderNo(){
@@ -88,13 +88,13 @@ class OrdersServiceTest {
 
     @Test
     void when_alreadyPurchasedBook_then_throwError(){
-        initClass.initMemberData();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData();
+        TestInitClass.initMemberData();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData();
 
-        Member member = initClass.getMember(1L);
-        Book book1 = initClass.getBook(1L);
-        Book book2 = initClass.getBook(2L);
+        Member member = TestInitClass.getMember(1L);
+        Book book1 = TestInitClass.getBook(1L);
+        Book book2 = TestInitClass.getBook(2L);
         OrderRequest orderRequest = new OrderRequest(
                 "test 외 2권", "2023020211215", "test", "card", "test@test", 10000, 5000, 5000,
                 Arrays.asList(1L)

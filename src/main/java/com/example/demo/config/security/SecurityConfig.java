@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/","/account/**", "/logout/**", "/register", "/register/validate/email")
                 )
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/cart", "/library", "/user/**").hasAnyRole("MEMBER", "ADMIN")
+                        .requestMatchers("/cart", "/library", "/user/**").hasAnyRole("MEMBER", "ADMIN", "VENDOR")
                         .requestMatchers(
                                 "/manage/**",
                                 "/register/author", "/update/author", "/delete/author", "/search/author",

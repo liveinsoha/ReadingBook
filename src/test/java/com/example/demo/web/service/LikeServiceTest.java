@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LikeServiceTest {
 
     @Autowired
-    InitClass initClass;
+    TestInitClass TestInitClass;
 
     @Autowired
     LikeService likeService;
@@ -30,16 +30,16 @@ class LikeServiceTest {
 
     @Test
     void when_LikeAdded_then_verify_likesCounts() {
-        initClass.initMemberDataSmall();
-        initClass.initBookAndAuthorData();
-        initClass.initOrderData(); //1번 회원이 책1, 책2 구매.
-        Member member = initClass.getMember(1L);
-        Book book = initClass.getBook(1L);
+        TestInitClass.initMemberDataSmall();
+        TestInitClass.initBookAndAuthorData();
+        TestInitClass.initOrderData(); //1번 회원이 책1, 책2 구매.
+        Member member = TestInitClass.getMember(1L);
+        Book book = TestInitClass.getBook(1L);
 
         Long savedReviewId = reviewService.review(member, book, "Review Content", 5);
 
         // 좋아요 누름
-        Member member2 = initClass.getMember(2L);
+        Member member2 = TestInitClass.getMember(2L);
         likeService.like(member2, savedReviewId);
 
         entityManager.flush();

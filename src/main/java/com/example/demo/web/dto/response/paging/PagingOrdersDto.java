@@ -18,7 +18,7 @@ public class PagingOrdersDto extends PagingDto {
         pageGroupSize = MAXIMUM_PAGE_NUMBER_IN_PAGE_GROUP;
 
         totalPageGroups = calculateTotalPageGroups(totalPages);
-        pageGroupNumber = calculatePageGroupNumber(responses.getNumber());
+        pageGroupNumber = calculatePageGroupNumber(responses.getNumber()); //페이지 넘버
 
         startPageNumberInThisPageGroup = calculateStartPageNumber();
         lastPageNumberInThisPageGroup = calculateLastPageNumber(totalPages, startPageNumberInThisPageGroup);

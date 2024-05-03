@@ -1,5 +1,7 @@
 package com.example.demo.web.repository;
 
+import com.example.demo.web.domain.entity.Author;
+import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.BookAuthorList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -54,4 +56,8 @@ public interface BookAuthorListRepository extends JpaRepository<BookAuthorList, 
                     "where b.isbn = :isbn and a.id = :authorId"
     )
     Optional<BookAuthorList> getAuthorInformation(@Param("isbn") String isbn, @Param("authorId") Long authorId);
+
+    boolean existsByAuthorAndBook(Author author, Book book);
+
+    boolean existsByBookAndOrdinal(Book book, int ordinal);
 }

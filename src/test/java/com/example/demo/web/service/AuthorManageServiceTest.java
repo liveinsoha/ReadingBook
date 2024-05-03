@@ -38,6 +38,12 @@ class AuthorManageServiceTest {
     private BookAuthorListService authorListService;
 
     @Test
+    void searchAuthorTest(){
+        List<AuthorSearchResponse> authors = authorManageService.searchByAuthorName("D");
+        System.out.println("authors = " + authors);
+    }
+
+    @Test
     void register_fail_empty_name() {
         AuthorRegisterRequest request = createAuthorRegisterRequest("", AuthorOption.AUTHOR, "Korea", "Description", "1990", Gender.MEN);
         assertThatThrownBy(() -> authorManageService.registerAuthor(request))

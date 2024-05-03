@@ -21,7 +21,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
-public class InitClass {
+public class TestInitClass {
 
     @Autowired
     BookManageService bookManageService;
@@ -170,10 +170,10 @@ public class InitClass {
     }
 
     public void initCategoryData() {
-        CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("소설");
+        CategoryGroupRegisterRequest categoryGroupRequest = new CategoryGroupRegisterRequest("에세이");
         Long categoryGroupId = categoryGroupService.register(categoryGroupRequest); // 카테고리 그룹 등록
 
-        CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지 소설", categoryGroupId);
+        CategoryRegisterRequest categoryRequest = new CategoryRegisterRequest("판타지", categoryGroupId);
         Long categoryId = categoryService.register(categoryRequest); // 카테고리 등록
     }
 
@@ -223,13 +223,6 @@ public class InitClass {
             initHarryPotterSeriesBookAndAuthorData(i); //해리포터 시리즈 저장
         }
 
-        for (long i = 1; i <= 10; i++) {
-            int rating1 = 1 + random.nextInt(5); //별점 1~5 사이만 가능
-            reviewService.review(getMember(1L), getBook(i), "좋은 리뷰입니다111.", rating1);
-
-            int rating2 = 1 + random.nextInt(5); //별점 1~5 사이만 가능
-            reviewService.review(getMember(2L), getBook(i), "좋은 리뷰입니다222.", rating2);
-        }
 
     }
 

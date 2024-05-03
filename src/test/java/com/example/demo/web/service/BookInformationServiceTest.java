@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookInformationServiceTest {
 
     @Autowired
-    InitClass initClass;
+    TestInitClass TestInitClass;
 
     @Autowired
     BookInformationService bookInformationService;
@@ -33,7 +33,7 @@ class BookInformationServiceTest {
 
     @BeforeEach
     void before() {
-        initClass.initBookAndAuthorData();
+        TestInitClass.initBookAndAuthorData();
     }
 
     @Test

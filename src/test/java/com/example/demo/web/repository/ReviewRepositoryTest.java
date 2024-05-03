@@ -3,7 +3,7 @@ package com.example.demo.web.repository;
 import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.Category;
 import com.example.demo.web.domain.entity.Member;
-import com.example.demo.web.service.InitClass;
+import com.example.demo.web.service.TestInitClass;
 import com.example.demo.web.service.ReviewService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ReviewRepositoryTest {
     ReviewRepository reviewRepository;
 
     @Autowired
-    InitClass initClass;
+    TestInitClass initClass;
 
     @Autowired
     MemberRepository memberRepository;

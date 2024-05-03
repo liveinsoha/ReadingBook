@@ -77,6 +77,7 @@ public class MemberService {
         return maskedPrefix + domain;
     }
 
+    @Transactional
     public SignUpSuccessResponse register(MemberRegisterRequest request) {
         validatePresentEmail(request.getEmail());
         validateForm(request);

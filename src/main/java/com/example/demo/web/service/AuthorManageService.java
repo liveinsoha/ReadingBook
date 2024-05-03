@@ -86,7 +86,7 @@ public class AuthorManageService {
 
     @Transactional(readOnly = true)
     public List<AuthorSearchResponse> searchByAuthorName(String name) {
-        List<Author> authors = authorRepository.findAllByName(name);
+        List<Author> authors = authorRepository.findAllByNameContaining(name);
 
         return authors.stream()
                 .map(a -> new AuthorSearchResponse(a.getId(), a.getName(), a.getBirthYear(), a.getGender().getKorean(), a.getAuthorOption().getKorean()))

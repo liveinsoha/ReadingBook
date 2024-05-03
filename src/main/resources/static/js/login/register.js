@@ -186,7 +186,7 @@ $(function () {
             },
             success: function (data){
                 console.log(data);
-                alert(data.message)
+                alert("회원가입을 환영합니다!")
                 location.replace("/");
             },
             error: function (data){

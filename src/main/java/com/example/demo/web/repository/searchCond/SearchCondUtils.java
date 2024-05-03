@@ -36,7 +36,7 @@ public class SearchCondUtils {
         }else if(StringUtils.hasText(order) && order.equals("price")){
             orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, book.salePrice));
         }else{
-            orderSpecifiers.add(new OrderSpecifier(Order.DESC, book.createdTime));
+            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, book.createdTime));
         }
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }
