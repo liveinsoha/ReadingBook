@@ -41,12 +41,12 @@ public class BookAuthorListService {
     }
 
     private void validateDuplicate(Author author, Book book, int ordinal) {
-        if (bookAuthorListRepository.existsByAuthorAndBook(author, book)) {
-            throw new BaseException(BaseResponseCode.BOOK_AUTHOR_EXIST);
+        if (bookAuthorListRepository.existsByBookAndAuthor(book, author)) {
+            throw new BaseException(BaseResponseCode.BOOK_AUTHOR_ALREADY_EXIST);
         }
 
         if (bookAuthorListRepository.existsByBookAndOrdinal(book, ordinal)) {
-            throw new BaseException(BaseResponseCode.BOOK_AUTHOR_ORDINAL_EXIST);
+            throw new BaseException(BaseResponseCode.BOOK_AUTHOR_ORDINAL_ALREADY_EXIST);
         }
     }
 

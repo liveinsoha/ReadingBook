@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -13,6 +12,7 @@
     <link rel="stylesheet" th:href="@{/css/home/home.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/home/navbar.css}" type="text/css">
 </head>
+
 <body>
     <div class="container">
         <header class="header mt-1">
@@ -23,7 +23,8 @@
                 <div id="carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                     <div class="carousel-inner">
 
-                        <div class="carousel-item active d-flex justify-content-around align-items-center" data-bs-interval="7000" style="background-color: rgb(191, 172, 131)">
+                        <div class="carousel-item active d-flex justify-content-around align-items-center"
+                            data-bs-interval="7000" style="background-color: rgb(191, 172, 131)">
                             <div class="right">
                                 <div class="title">
                                     <h1 class="fs-4 fw-bold text-white">
@@ -40,7 +41,8 @@
                                 <img src="/images/book.gif" class="d-block" id="first" width="240" height="340">
                             </div>
                         </div>
-                        <div class="carousel-item bg-primary d-flex justify-content-around align-items-center" data-bs-interval="7000">
+                        <div class="carousel-item bg-primary d-flex justify-content-around align-items-center"
+                            data-bs-interval="7000">
                             <div class="right">
                                 <div class="title">
                                     <h1 class="fs-4 fw-bold text-white">
@@ -62,13 +64,17 @@
                 </div>
                 <div class="button-wrap">
                     <button class="prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
-                            <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                            <path
+                                d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
                         </svg>
                     </button>
                     <button class="next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                            <path
+                                d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
                         </svg>
                     </button>
                 </div>
@@ -76,11 +82,11 @@
             <section class="book-wrap">
                 <div class="content">
                     <h1 class="fs-3 fw-bold">베스트 도서</h1>
-                    <ul class="d-flex justify-content-between flex-row w-100">
+                    <ul class="d-flex justify-content-start w-100"> <!-- justify-content-start로 변경 -->
                         <li class="me-2" th:each="book : ${bestBooks}">
-                            <a th:href="@{/book/{isbn}(isbn=${book.isbn})}">
+                            <a th:href="@{/book/{isbn}(isbn=${book.isbn})}" class="d-block"> <!-- d-block 클래스 추가 -->
                                 <img th:src="@{/images/book/{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="120" height="180">
-                                <div th:text="${book.title}"></div>
+                                <div class="text-truncate" style="max-width: 120px;" th:text="${book.title}"></div> <!-- text-truncate 클래스와 max-width 속성 추가 -->
                             </a>
                         </li>
                     </ul>
@@ -89,11 +95,11 @@
             <section class="book-wrap">
                 <div class="content">
                     <h1 class="fs-3 fw-bold">새로 나온 도서</h1>
-                    <ul class="d-flex justify-content-between w-100">
+                    <ul class="d-flex justify-content-start w-100"> <!-- justify-content-start로 변경 -->
                         <li class="me-2" th:each="book : ${newBooks}">
-                            <a th:href="@{/book/{isbn}(isbn=${book.isbn})}">
+                            <a th:href="@{/book/{isbn}(isbn=${book.isbn})}" class="d-block"> <!-- d-block 클래스 추가 -->
                                 <img th:src="@{/images/book/{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="180" height="260" alt="">
-                                <div class="fs-5 fw-bold" th:text="${book.title}">도서 제목</div>
+                                <div class="fs-5 fw-bold text-truncate" style="max-width: 180px;" th:text="${book.title}">도서 제목</div> <!-- text-truncate 클래스와 max-width 속성 추가 -->
                                 <div>
                                     <th:block th:if="${book.reviewRatingAvg eq '0'}">
                                         <span>아직 리뷰가 없습니다.</span>
@@ -114,8 +120,10 @@
                     </ul>
                 </div>
             </section>
+            
         </main>
     </div>
     <th:block th:replace="~{common/fragments/footer :: footer}"></th:block>
 </body>
+
 </html>

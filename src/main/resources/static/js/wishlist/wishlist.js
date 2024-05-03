@@ -1,3 +1,5 @@
+
+
 function initCheckbox() {
     $(".checkbox").prop("checked", true);
 }
@@ -130,7 +132,7 @@ $(function (){
         console.log(data);
         IMP.request_pay(
             {
-                pg: "html5_inicis.INIpayTest",
+                pg: "kakaopay",
                 pay_method: "card",
                 merchant_uid: data.orderNo,
                 name: data.orderName,
@@ -161,6 +163,8 @@ $(function (){
             }
         );
     })
+
+
 
     function addBookIdList(bookIdList) {
         $('.check-book').each(function () {

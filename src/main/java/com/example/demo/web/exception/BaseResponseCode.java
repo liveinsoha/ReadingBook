@@ -17,6 +17,9 @@ public enum BaseResponseCode {
     /**
      * 400
      */
+    NO_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "해당 ID가 존재하지 않습니다."),
+
+
     INVALID_FORM_EMAIL(HttpStatus.BAD_REQUEST, "이메일을 올바르게 입력해주세요."),
     INVALID_FORM_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 올바르게 입력해주세요. 비밀번호는 8-16자에 특수문자 '@, $, !, %, *, #, ?, &'가 포함되야 합니다."),
     INVALID_FORM_NAME(HttpStatus.BAD_REQUEST, "이름을 올바르게 입력해주세요."),
@@ -49,8 +52,8 @@ public enum BaseResponseCode {
     SUBCATEGORIES_EXIST(HttpStatus.BAD_REQUEST, "해당 카테고리 그룹 아래 하위 카테고리들이 존재합니다. 하위 카테고리를 모두 삭제한 다음에 카테고리 그룹을 삭제해주세요."),
     AUTHOR_BOOKS_EXIST(HttpStatus.BAD_REQUEST, "해당 작가에 도서가 등록되었습니다. 하위 도서를 모두 삭제한 다음에 작가을 삭제해주세요."),
     SUBBOOKS_EXIST(HttpStatus.BAD_REQUEST, "해당 도서 그룹을 지정한 하위 도서가 존재합니다. 하위 도서를 모두 삭제한 다음에 도서 그룹을 삭제해주세요."),
-    BOOK_AUTHOR_EXIST(HttpStatus.BAD_REQUEST, "해당 도서에 입력하신 작가가 이미 등록되어 있습니다."),
-    BOOK_AUTHOR_ORDINAL_EXIST(HttpStatus.BAD_REQUEST, "해당 도서에 입력하신 서수는 이미 등록되어 있습니다."),
+    BOOK_AUTHOR_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "해당 도서에 입력하신 작가가 이미 등록되어 있습니다."),
+    BOOK_AUTHOR_ORDINAL_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "해당 도서에 입력하신 서수는 이미 등록되어 있습니다."),
 
     BOOK_CONTENT_EXIST(HttpStatus.BAD_REQUEST, "해당 도서에는 도서 내용이 있습니다. 도서 내용을 삭제한 다음에 도서를 삭제해주세요."),
     BOOK_CONTENT_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "이미 도서 내용이 등록된 도서 아이디입니다."),

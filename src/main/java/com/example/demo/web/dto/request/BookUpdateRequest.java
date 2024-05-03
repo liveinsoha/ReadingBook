@@ -1,14 +1,16 @@
 package com.example.demo.web.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
 public class BookUpdateRequest {
     private String title;
     private String isbn;
     private String publisher;
     private String publishingDate;
+    private Long authorId;
     private int paperPrice;
     private int ebookPrice;
     private int discountRate;

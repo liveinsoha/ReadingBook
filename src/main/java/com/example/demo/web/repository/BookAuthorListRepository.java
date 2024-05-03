@@ -13,13 +13,14 @@ import java.util.Optional;
 public interface BookAuthorListRepository extends JpaRepository<BookAuthorList, Long> {
 
     Optional<BookAuthorList> findByBookIdAndAuthorId(Long bookId, Long authorId);
+
     boolean existsByAuthorId(Long authorId);
 
     @Query("select bal " +
             "from BookAuthorList bal " +
             "join fetch bal.book b " +
             "join fetch bal.author a " +
-            "where b.isbn = :isbn and a.authorOption = com.example.demo.web.domain.enums.AuthorOption.AUTHOR " +
+            "where b.isbn = :isbn " +
             "order by bal.ordinal asc " +
             "limit 1")
     BookAuthorList getMainAuthor(@Param("isbn") String isbn); //해당 책의 작가 중 1순위 작가를 구한다. (메인 작가) (작가옵션: 작가)
@@ -57,7 +58,7 @@ public interface BookAuthorListRepository extends JpaRepository<BookAuthorList, 
     )
     Optional<BookAuthorList> getAuthorInformation(@Param("isbn") String isbn, @Param("authorId") Long authorId);
 
-    boolean existsByAuthorAndBook(Author author, Book book);
+    boolean existsByBookAndAuthor(Book book, Author author);
 
     boolean existsByBookAndOrdinal(Book book, int ordinal);
 }

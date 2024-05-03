@@ -1,15 +1,19 @@
 package com.example.demo.web.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
+import java.util.List;
 
-@Getter
+
+@Data
 public class BookRegisterRequest {
     private String title;
     private String isbn;
     private String publisher;
     private String publishingDate;
+    private List<ReqAuthorOrdinal> authors;
     private int paperPrice;
     private int ebookPrice;
     private int discountRate;
