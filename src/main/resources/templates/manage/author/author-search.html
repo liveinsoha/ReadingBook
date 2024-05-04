@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,26 +15,46 @@
   <script th:src="@{/js/common/call-ajax.js}"></script>
   <script th:src="@{/js/manage/author/author.js}"></script>
 </head>
-<body>
-<div class="container">
-  <header class="header mb-5 mt-1">
-    <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
-  </header>
-  <main class="main">
-    <div class="row">
-      <div class="col-2">
-        <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
-      </div>
-      <div class="col-10">
-        <form class="author-form content-box" action="/result/author" method="get">
-          <label for="name">작가 이름으로 검색</label>
-          <input type="text" name="name" id="name" class="form-control mb-3 p-2"/>
 
-          <button type="button" class="btn btn-primary w-100 p-3 search">검색하기</button>
-        </form>
-      </div>
-    </div>
-  </main>
-</div>
+<body>
+  <div class="container">
+    <header class="header mb-5 mt-1">
+      <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
+    </header>
+    <main class="main">
+      <div class="row">
+        <div class="col-2">
+          <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
+        </div>
+
+        <div class="col-10">
+          <form class="author-form content-box" id="authorForm"> <!-- 폼에 ID 추가 -->
+            <label for="authorSearch">작가 이름으로 검색</label>
+            <input type="text" name="authorName" id="authorSearch" class="form-control mb-3 p-2" />
+            <div id="authorSuggestions" class="mb-3 p-2"></div>
+            <button type="submit" class="btn btn-primary w-100 p-3 search">검색하기</button> <!-- 버튼 타입 변경 -->
+          </form>
+        
+          <!-- 결과를 표시할 테이블 -->
+          <div class="category-form">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>작가 ID</th>
+                  <th>작가 이름</th>
+                  <th>출생 연도</th>
+                  <th>성별</th>
+                  <th>작가 옵션</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        
+          <!-- 선택된 작가 ID를 저장할 hidden input -->
+          <input type="hidden" name="selectedAuthorId" id="selectedAuthorId">
+        </div>
+        
 </body>
+
 </html>

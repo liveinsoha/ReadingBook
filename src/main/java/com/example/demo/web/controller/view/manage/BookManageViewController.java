@@ -18,21 +18,22 @@ import java.util.List;
 @Slf4j
 public class BookManageViewController {
 
-     private final BookManageService bookManageService;
+    private final BookManageService bookManageService;
+
     @GetMapping("/register/book")
-    public String registerForm(Model model){
+    public String registerForm(Model model) {
         model.addAttribute("selectFlag", "registerBook");
         return "manage/book/book-register";
     }
 
 
     @GetMapping("/update/book")
-    public String updateForm(Model model, Long bookId){
+    public String updateForm(Model model, Long bookId) {
         BookUpdateResponse response = bookManageService.searchBook(bookId);
 
-        if(response == null){
+        if (response == null) {
             model.addAttribute("isSearched", false);
-        } else{
+        } else {
             model.addAttribute("isSearched", true);
         }
 
@@ -41,22 +42,20 @@ public class BookManageViewController {
     }
 
 
-
-
     @GetMapping("/update/search/book")
-    public String updateSearchForm(Model model){
+    public String updateSearchForm(Model model) {
         model.addAttribute("selectFlag", "updateBook");
         return "manage/book/book-update-search";
     }
 
     @GetMapping("/search/book")
-    public String searchForm(Model model){
+    public String searchForm(Model model) {
         model.addAttribute("selectFlag", "searchBook");
         return "manage/book/book-search";
     }
 
     @GetMapping("/result/book")
-    public String returnSearchResult(@RequestParam String title, Model model){
+    public String returnSearchResult(@RequestParam String title, Model model) {
         List<BookManageSearchResponse> responses = bookManageService.searchBook(title);
 
         model.addAttribute("responses", responses);
@@ -66,7 +65,7 @@ public class BookManageViewController {
     }
 
     @GetMapping("/delete/book")
-    public String deleteForm(Model model){
+    public String deleteForm(Model model) {
         model.addAttribute("selectFlag", "deleteBook");
         return "manage/bookgroup/book-delete";
     }

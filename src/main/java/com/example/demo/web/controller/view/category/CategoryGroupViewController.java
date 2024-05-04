@@ -19,13 +19,13 @@ public class CategoryGroupViewController {
     @GetMapping("/register/category-group")
     public String registerForm(Model model){
         model.addAttribute("selectFlag", "registerCategoryGroup");
-        return "manage/category/categorygroup-register";
+        return "manage/categorygroup/categorygroup-register";
     }
 
     @GetMapping("/update/category-group")
     public String updateForm(Model model){
         model.addAttribute("selectFlag", "updateCategoryGroup");
-        return "manage/category/categorygroup-update";
+        return "manage/categorygroup/categorygroup-update";
     }
 
 

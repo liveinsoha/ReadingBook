@@ -53,6 +53,16 @@ function selectAuthor() {
 }
 
 
+$(function () {
+    $('.search').on('click', function () {
+        var title = $('#title').val(); // 입력된 도서 제목 가져오기
+        if (title.trim() !== '') { // 입력된 도서 제목이 비어있지 않은 경우에만 검색
+            window.location.href = '/result/book?title=' + title; // 검색 결과 페이지로 이동
+        } else {
+            alert('도서 제목을 입력하세요.'); // 도서 제목이 입력되지 않은 경우 알림 표시
+        }
+    });
+});
 
 
 $(function () {
