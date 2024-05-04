@@ -1,17 +1,19 @@
 package com.example.demo.web.dto.response;
 
 import com.example.demo.web.domain.entity.Author;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
 public class AuthorInformationResponse {
-    private Long id;
-    private String name;
-    private String option;
-    private String nationality;
-    private String description;
-    private String birthYear;
-    private String gender;
+    Long id;
+    String name;
+    String option;
+    String nationality;
+    String description;
+    String birthYear;
+    String gender;
+
 
     public AuthorInformationResponse(Author author) {
         this.id = author.getId();
@@ -22,11 +24,12 @@ public class AuthorInformationResponse {
         this.birthYear = author.getBirthYear();
         this.gender = "남성";
 
-        switch (author.getAuthorOption().toString()){
-            case "WOMEN" :
+
+        switch (author.getAuthorOption().toString()) {
+            case "WOMEN":
                 gender = "여성";
                 break;
-            case "SECRET" :
+            case "SECRET":
                 gender = "미상";
                 break;
         }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,56 +15,59 @@
   <script th:src="@{/js/common/call-ajax.js}"></script>
   <script th:src="@{/js/manage/author/author.js}"></script>
 </head>
+
 <body>
-<div class="container">
-  <header class="header mb-5 mt-1">
-    <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
-  </header>
-  <main class="main">
-    <div class="row">
-      <div class="col-2">
-        <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
+  <div class="container">
+    <header class="header mb-5 mt-1">
+      <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
+    </header>
+
+    <main class="main">
+      <div class="row">
+        <div class="col-2">
+          <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
+        </div>
+        <div class="col-10">
+          <form class="author-form content-box" action="">
+            <label for="authorId">작가 아이디</label>
+            <input type="text" name="authorId" id="authorId" class="form-control mb-3 p-2" th:value="${author.id}"
+              disabled />
+
+            <label for="name">이름</label>
+            <input type="text" name="name" id="name" class="form-control mb-3 p-2" th:value="${author.name}" />
+
+            <label for="authorOption">옵션</label>
+            <select name="authorOption" id="authorOption" class="form-control mb-3 p-2">
+              <option value="AUTHOR" th:selected="${author.option == 'AUTHOR'}">작가</option>
+              <option value="TRANSLATOR" th:selected="${author.option == 'TRANSLATOR'}">번역가</option>
+              <option value="ILLUSTRATOR" th:selected="${author.option == 'ILLUSTRATOR'}">삽화가</option>
+            </select>
+
+            <label for="nationality">국적</label>
+            <input type="text" name="nationality" id="nationality" class="form-control mb-3 p-2"
+              th:value="${author.nationality}" />
+
+            <label for="birthYear">생년</label>
+            <input type="text" name="birthYear" id="birthYear" placeholder="예) 1952" class="form-control mb-3 p-2"
+              th:value="${author.birthYear}" />
+
+            <label for="gender">성별</label>
+            <select name="gender" id="gender" class="form-control mb-3 p-2">
+              <option value="MEN" th:selected="${author.gender == 'MEN'}">남성</option>
+              <option value="WOMEN" th:selected="${author.gender == 'WOMEN'}">여성</option>
+            </select>
+
+            <label for="description">설명</label>
+            <textarea name="description" id="description" class="form-control mb-3 p-2"
+              th:text="${author.description}"></textarea>
+
+            <button type="button" class="btn btn-primary w-100 p-3 update">수정하기</button>
+          </form>
+        </div>
       </div>
-      <div class="col-10">
-        <form class="author-form content-box" action="">
-          <label for="authorId">작가 아이디</label>
-          <input type="text" name="authorId" id="authorId" class="form-control mb-3 p-2"/>
+    </main>
 
-          <label for="name">이름</label>
-          <input type="text" name="name" id="name" class="form-control mb-3 p-2"/>
-
-          <label for="authorOption">옵션</label>
-          <select name="authorOption" id="authorOption"
-                  class="form-control mb-3 p-2">
-            <option value="AUTHOR">작가</option>
-            <option value="TRANSLATOR">번역가</option>
-            <option value="ILLUSTRATOR">삽화가</option>
-          </select>
-
-          <label for="nationality">국적</label>
-          <input type="text" name="nationality" id="nationality"
-                 class="form-control mb-3 p-2"/>
-
-          <label for="birthYear">생년</label>
-          <input type="text" name="birthYear" id="birthYear" placeholder="예) 1952"
-                 class="form-control mb-3 p-2"/>
-
-          <label for="gender">성별</label>
-          <select name="gender" id="gender"
-                  class="form-control mb-3 p-2">
-            <option value="MEN">남성</option>
-            <option value="WOMEN">여성</option>
-          </select>
-
-          <label for="description">설명</label>
-          <textarea name="description" id="description"
-                    class="form-control mb-3 p-2"></textarea>
-
-          <button type="button" class="btn btn-primary w-100 p-3 update">수정하기</button>
-        </form>
-      </div>
-    </div>
-  </main>
-</div>
+  </div>
 </body>
+
 </html>

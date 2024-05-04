@@ -1,6 +1,8 @@
 package com.example.demo.web.controller.view.manage;
 
+import com.example.demo.web.domain.entity.Author;
 import com.example.demo.web.dto.BaseResponse;
+import com.example.demo.web.dto.response.AuthorInformationResponse;
 import com.example.demo.web.dto.response.AuthorSearchResponse;
 import com.example.demo.web.service.AuthorManageService;
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,11 +33,15 @@ public class AuthorManageViewController {
         return "manage/author/author-register";
     }
 
-    @GetMapping("/update/author")
-    public String updateForm(Model model) {
+    @GetMapping("/update/author/{authorId}")
+    public String updateForm(Model model, @PathVariable Long authorId) {
+        Author author = authorManageService.findAuthorById(authorId);
+        AuthorInformationResponse authorInformationResponse = new AuthorInformationResponse(author);
+        model.addAttribute("author", authorInformationResponse); // 작가 정보를 모델에 추가
         model.addAttribute("selectFlag", "updateAuthor");
         return "manage/author/author-update";
     }
+
 
     @GetMapping("/search/author")
     public String searchForm(Model model) {
