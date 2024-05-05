@@ -3,14 +3,17 @@ package com.example.demo.web.service;
 import com.example.demo.utils.ImageUploadUtil;
 import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.dto.request.*;
+import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.repository.BookContentRepository;
 import com.example.demo.web.repository.BookRepository;
+import com.example.demo.web.repository.SearchBookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +52,18 @@ class BookManageServiceTest {
     @Autowired
     private BookService bookService;
 
+
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() {
         imageUploadUtil = Mockito.mock(ImageUploadUtil.class);
-        bookManagementService = new BookManageService(bookService, bookRepository, categoryService, imageUploadUtil, bookGroupManagementService, bookContentRepository);
+        //   bookManagementService = new BookManageService(bookService, bookRepository, categoryService, imageUploadUtil, bookGroupManagementService, bookContentRepository, searchBookRepository);
+    }
+
+    @Test
+    void QueryTest() {
+        Page<BookManageSearchResponse> allBooks = bookManagementService.getAllBooks();
+        System.out.println("allBooks = " + allBooks);
+
     }
 
     @Test
@@ -111,7 +122,7 @@ class BookManageServiceTest {
 
         Long bookId = bookManagementService.registerBook(request, file);
 
-        BookUpdateRequest updateRequest = new BookUpdateRequest("홍길동전", "test", "test", "test", 1, 1, 1, categoryId, 0L,"21세기 최고의 책");
+        BookUpdateRequest updateRequest = new BookUpdateRequest("홍길동전", "test", "test", "test", 1, 1, 1, categoryId, 0L, "21세기 최고의 책");
         bookManagementService.updateBookContent(updateRequest, bookId);
 
         Book book = bookService.findBook(bookId);
@@ -137,7 +148,7 @@ class BookManageServiceTest {
 
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L,"21세기 최고의 책");
+                "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
         Long bookId = bookManagementService.registerBook(request, file);
 
         //when
@@ -151,7 +162,7 @@ class BookManageServiceTest {
     }
 
     @Test
-    void whenDeletingBookHasBookContent_thenThrowException(){ //도서 내용 먼저 삭제 해야함.
+    void whenDeletingBookHasBookContent_thenThrowException() { //도서 내용 먼저 삭제 해야함.
         //given
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
@@ -168,7 +179,7 @@ class BookManageServiceTest {
 
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
-                "2023.01.01", 0, 9900, 5, categoryId, 0L,"21세기 최고의 책");
+                "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
         Long bookId = bookManagementService.registerBook(request, file);
 
         BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "testContent");
@@ -179,7 +190,7 @@ class BookManageServiceTest {
                 .hasMessageContaining("해당 도서에는 도서 내용이 있습니다. 도서 내용을 삭제한 다음에 도서를 삭제해주세요.");
     }
 
-    private static BookRegisterRequest createRegisterRequest(String title, String isbn, String publisher, String publishingDate, 
+    private static BookRegisterRequest createRegisterRequest(String title, String isbn, String publisher, String publishingDate,
                                                              int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId, String description) {
         return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId, description);
     }

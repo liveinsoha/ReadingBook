@@ -1,7 +1,10 @@
 package com.example.demo.web.repository;
 
+import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.enums.AuthorOption;
+import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.dto.response.BookSearchResponse;
+import com.example.demo.web.dto.response.QBookManageSearchResponse;
 import com.example.demo.web.dto.response.QBookSearchResponse;
 import com.example.demo.web.repository.searchCond.SearchCondUtils;
 import com.example.demo.web.service.search.BookSearchCondition;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.example.demo.web.domain.entity.QAuthor.author;
 import static com.example.demo.web.domain.entity.QBook.book;
 import static com.example.demo.web.domain.entity.QBookAuthorList.bookAuthorList;
 import static com.example.demo.web.domain.entity.QReview.review;
@@ -30,6 +34,7 @@ public class SearchBookRepositoryImpl implements SearchBookRepository {
     public SearchBookRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
+
 
     /**
      * 조회 메소드
@@ -58,12 +63,15 @@ public class SearchBookRepositoryImpl implements SearchBookRepository {
         JPAQuery<Long> countQuery = queryFactory
                 .select(book.count())
                 .from(book)
-                .where(SearchCondUtils.contains(book.title, query));
+                .join(bookAuthorList).on(bookAuthorList.book.eq(book))
+                .join(bookAuthorList.author, author)
+                .where(
+                        book.publisher.contains(query)
+                                .or(book.title.contains(query))
+                                .or(author.name.contains(query))
+                )
+                .groupBy(book.id); // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
 
-        /* --- 출판사로 검색했는지, 제목으로 검색했는지 확인하는 메소드 --- */
-        boolean isPublisherSearching = isPublisherSearching(query); //'출판사_' 로 시작하는 검색어로 검색한 경우 true
-        StringPath path = initPath(isPublisherSearching); //일반 검색어는 Qbook.title
-        query = initQuery(isPublisherSearching, query); //일반 검색어는 초기화 할 필요 없음. 출판사의 경우 앞에 '출판사_'제거
 
         List<BookSearchResponse> content = queryFactory
                 .select(new QBookSearchResponse(
@@ -126,9 +134,14 @@ public class SearchBookRepositoryImpl implements SearchBookRepository {
                         )
                 )
                 .from(book)
+                .join(bookAuthorList).on(bookAuthorList.book.eq(book))
+                .join(bookAuthorList.author, author)
                 .where(
-                        SearchCondUtils.contains(path, query) //제목(QBook.title), 검색어(query)  // Or 출판사(QBook.publisher) ,검색어
+                        book.publisher.contains(query)
+                                .or(book.title.contains(query))
+                                .or(author.name.contains(query))
                 )
+                .groupBy(book.id) // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
                 .orderBy(SearchCondUtils.bookOrder(book, condition.getOrder()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -137,26 +150,92 @@ public class SearchBookRepositoryImpl implements SearchBookRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private String initQuery(boolean isPublisherSearching, String query) {
-        if (isPublisherSearching == false) {
-            return query;
-        }
+    @Override
+    public Page<BookManageSearchResponse> searchRegisteredBook(String searchQuery, Pageable pageable, BookSearchCondition condition) {
+        JPAQuery<BookManageSearchResponse> query = queryFactory
+                .select(new QBookManageSearchResponse(
+                        book.id,
+                        book.title,
+                        book.publisher,
+                        book.savedImageName
+                ))
+                .from(book)
+                .join(bookAuthorList).on(bookAuthorList.book.eq(book))
+                .join(bookAuthorList.author, author)
+                .where(
+                        book.publisher.contains(searchQuery)
+                                .or(book.title.contains(searchQuery))
+                                .or(author.name.contains(searchQuery))
+                )
+                .groupBy(book.id) // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
+                .orderBy(SearchCondUtils.bookOrder(book, condition.getOrder()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
 
-        query = query.substring(4);
-        return query;
+        List<BookManageSearchResponse> content = query.fetch();
+
+        // 전체 레코드 수를 가져오는 쿼리
+        JPAQuery<Long> countQuery = queryFactory
+                .select(book.count())
+                .from(book)
+                .join(bookAuthorList).on(bookAuthorList.book.eq(book))
+                .join(bookAuthorList.author, author)
+                .where(
+                        book.publisher.contains(searchQuery)
+                                .or(book.title.contains(searchQuery))
+                                .or(author.name.contains(searchQuery))
+                )
+                .groupBy(book.id); // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private StringPath initPath(boolean isPublisherSearching) {
-        if (isPublisherSearching == true) {
-            return book.publisher;
-        }
-        return book.title;
+
+    @Override
+    public List<BookManageSearchResponse> searchBookQuery(String query) {
+        List<BookManageSearchResponse> searchResponses = select(new QBookManageSearchResponse(
+                book.id,
+                book.title,
+                book.publisher,
+                book.savedImageName
+        ))
+                .from(book)
+                .join(bookAuthorList).on(bookAuthorList.book.eq(book))
+                .join(bookAuthorList.author, author)
+                .where(
+                        book.publisher.contains(query)
+                                .or(book.title.contains(query))
+                                .or(author.name.contains(query))
+                )
+                .groupBy(book.id) // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
+                .fetch();
+
+        return searchResponses;
     }
 
-    private boolean isPublisherSearching(String query) {
-        if (query == null) {
-            return false;
-        }
-        return query.contains("출판사_");
+    @Override
+    public Page<BookManageSearchResponse> searchAllBooks(Pageable pageable) {
+
+        JPAQuery<BookManageSearchResponse> query = queryFactory
+                .select(new QBookManageSearchResponse(
+                        book.id,
+                        book.title,
+                        book.publisher,
+                        book.savedImageName
+                ))
+                .from(book)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<BookManageSearchResponse> content = query.fetch();
+
+        // 전체 레코드 수를 가져오는 쿼리
+        JPAQuery<Long> countQuery = queryFactory
+                .select(book.count())
+                .from(book);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
+
+
 }

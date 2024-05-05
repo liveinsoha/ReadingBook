@@ -48,7 +48,7 @@ class BookAuthorListServiceTest {
         bookAuthorListService.register(request1);
         assertThatThrownBy(() -> bookAuthorListService.register(request2))
                 .isInstanceOf(BaseException.class)
-                .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_EXIST.getMessage());
+                .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_ALREADY_EXIST.getMessage());
     }
 
     @Test
@@ -64,7 +64,7 @@ class BookAuthorListServiceTest {
         bookAuthorListService.register(request1);
         assertThatThrownBy(() -> bookAuthorListService.register(request2))
                 .isInstanceOf(BaseException.class)
-                .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_ORDINAL_EXIST.getMessage());
+                .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_ORDINAL_ALREADY_EXIST.getMessage());
     }
 
     @Test

@@ -8,12 +8,13 @@ import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.dto.response.BookUpdateResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
-import com.example.demo.web.repository.AuthorRepository;
-import com.example.demo.web.repository.BookAuthorListRepository;
-import com.example.demo.web.repository.BookContentRepository;
-import com.example.demo.web.repository.BookRepository;
+import com.example.demo.web.repository.*;
+import com.example.demo.web.service.search.BookSearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,13 +38,18 @@ public class BookManageService {
     private final BookAuthorListRepository bookAuthorListRepository;
     private final AuthorRepository authorRepository;
 
+
     /**
      * 도서 등록 메소드
      *
-     * @param request
-     * @param file
      * @return bookId
      */
+
+    public Page<BookManageSearchResponse> getAllBooks(){
+        Pageable pageRequest = PageRequest.of(0, 5);
+        return bookRepository.searchAllBooks(pageRequest);
+    }
+
     public Long registerBook(BookRegisterRequest request, MultipartFile file) {
 
         validateForm(
@@ -85,7 +91,7 @@ public class BookManageService {
 
 
     @Transactional(readOnly = true)
-    public BookUpdateResponse searchBook(Long bookId) {
+    public BookUpdateResponse getBook(Long bookId) {
         Optional<Book> book = bookRepository.findById(bookId);
 
         if (book.isEmpty()) {
@@ -111,12 +117,15 @@ public class BookManageService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookManageSearchResponse> searchBook(String title) {
-        List<Book> books = bookRepository.findByTitle(title);
+    public Page<BookManageSearchResponse> searchBook(String searchQuery, Pageable pageable, BookSearchCondition condition) {
+        Page<BookManageSearchResponse> bookManageSearchResponses = bookRepository.searchRegisteredBook(searchQuery, pageable, condition);
 
-        return books.stream()
-                .map(b -> new BookManageSearchResponse(b.getId(), b.getTitle(), b.getPublisher(), b.getSavedImageName()))
-                .collect(Collectors.toList());
+        return bookManageSearchResponses;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookManageSearchResponse> searchBookQuery(String searchQuery) {
+        return bookRepository.searchBookQuery(searchQuery);
     }
 
     private void validateForm(String title, String isbn, String publisher, String publishingDate,

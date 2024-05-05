@@ -16,6 +16,13 @@ public interface BookAuthorListRepository extends JpaRepository<BookAuthorList, 
 
     boolean existsByAuthorId(Long authorId);
 
+
+    @Query("SELECT bal.book FROM BookAuthorList bal " +
+            "JOIN bal.book b " +
+            "JOIN bal.author a " +
+            "WHERE b.title LIKE %:searchQuery% OR a.name LIKE %:searchQuery%")
+    List<Book> findBySearchQuery(@Param("searchQuery") String searchQuery);
+
     @Query("select bal " +
             "from BookAuthorList bal " +
             "join fetch bal.book b " +

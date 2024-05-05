@@ -15,6 +15,7 @@ public class BookUpdateResponse {
     private int paperPrice;
     private int ebookPrice;
     private int discountRate;
+    private String description;
     private String savedImageName;
     private Long categoryId;
     private Long bookGroupId;
@@ -30,9 +31,10 @@ public class BookUpdateResponse {
         this.discountRate = book.getDiscountRate();
         this.savedImageName = book.getSavedImageName();
         this.categoryId = book.getCategory().getId();
-        if(book.getBookGroup() == null){
+        this.description = book.getDescription();
+        if (book.getBookGroup() == null) {
             this.bookGroupId = null;
-        }else{
+        } else {
             this.bookGroupId = book.getBookGroup().getId();
         }
     }

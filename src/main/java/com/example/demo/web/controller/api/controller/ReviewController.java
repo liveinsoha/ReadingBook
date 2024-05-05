@@ -38,8 +38,8 @@ public class ReviewController {
                 .body(baseResponse);
     }
 
-    @PatchMapping
-    public ResponseEntity<Object> update(Principal principal, Long reviewId, String content, Double starRating){
+    @PatchMapping("/{reviewId}")
+    public ResponseEntity<Object> update(Principal principal, @PathVariable Long reviewId, String content, Double starRating){
         Member member = memberService.getMember(principal);
         int intStarRating = starRating.intValue();
 

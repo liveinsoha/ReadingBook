@@ -22,16 +22,6 @@
                th:classappend="${selectFlag eq 'searchAuthor'} ? 'selected' : ''">작가 검색</a>
           </li>
         </ul>
-        <ul class="content">
-          <li>
-            <a href="/register/book-author-list"
-               th:classappend="${selectFlag eq 'registerBookAuthorList'} ? 'selected' : ''">도서 작가 등록</a>
-          </li>
-          <li>
-            <a href="/delete/book-author-list"
-               th:classappend="${selectFlag eq 'deleteBookAuthorList'} ? 'selected' : ''">도서 작가 삭제</a>
-          </li>
-        </ul>
       </li>
       <li class="navbar-box">
         <div class="title">도서 관리</div>
@@ -41,15 +31,7 @@
                th:classappend="${selectFlag eq 'registerBook'} ? 'selected' : ''">도서 등록</a>
           </li>
           <li>
-            <a href="/update/search/book"
-               th:classappend="${selectFlag eq 'updateBook'} ? 'selected' : ''">도서 수정</a>
-          </li>
-          <li>
-            <a href="/delete/book"
-               th:classappend="${selectFlag eq 'deleteBook'} ? 'selected' : ''">도서 삭제</a>
-          </li>
-          <li>
-            <a href="/search/book"
+            <a href="/manage/search/book"
                th:classappend="${selectFlag eq 'searchBook'} ? 'selected' : ''">도서 검색</a>
           </li>
           <li>

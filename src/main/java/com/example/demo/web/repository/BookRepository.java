@@ -16,6 +16,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, SearchBookRep
 
     boolean existsByBookGroupId(Long bookGroupId);
 
+
     List<Book> findByTitle(String title);
 
     @Query(

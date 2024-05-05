@@ -143,92 +143,109 @@ $('.update-search').on("click", function () {
     $('#bookSearchForm').submit();
 });
 
-$('.update-content').on("click", function () {
-    const bookId = $('#bookId-content').val();
-    const title = $('#title').val();
-    const isbn = $('#isbn').val();
-    const publisher = $('#publisher').val();
-    const publishingDate = $('#publishingDate').val();
-    let paperPrice = $('#paperPrice').val();
-    const ebookPrice = $('#ebookPrice').val();
-    const discountRate = $('#discountRate').val();
-    const categoryId = $('#categoryId').val();
-    let bookGroupId = $('#bookGroupId').val();
-    const description = ckeditorInstance.getData()
-
-    if (bookId.trim() == '') {
-        alert('도서 아이디를 입력해주세요');
-        return false;
-    }
-
-    validateRequestForm(title, isbn, publisher, publishingDate, ebookPrice, discountRate, categoryId, description);
-
-    if (paperPrice.trim() == '') {
-        paperPrice = 0;
-    }
-    if (bookGroupId.trim() == '') {
-        bookGroupId = 0;
-    }
-
-    const data = {
-        "title": title,
-        "isbn": isbn,
-        "publisher": publisher,
-        "publishingDate": publishingDate,
-        "paperPrice": paperPrice,
-        "ebookPrice": ebookPrice,
-        "discountRate": discountRate,
-        "categoryId": categoryId,
-        "bookGroupId": bookGroupId,
-        "description": description
-    }
-
-    callAjax('patch', '/manage/book/content/' + bookId, data);
+$(function () {
+    $('.toggle-all-buttons').on('click', function () {
+        $('.toggle-buttons').toggle(); // 검색 결과의 수정 버튼을 토글
+    });
 });
 
-$('.update-image').on("click", function () {
-    const bookId = $('#bookId-image').val();
-    const file = $('#file')[0].files[0];
 
-    if (bookId.trim() == '') {
-        alert('도서 아이디를 입력해주세요');
-        return false;
-    }
 
-    const isValidFile = validateFile(file);
-    if (isValidFile == false) {
-        return false;
-    }
+$(function () {
 
-    const formData = new FormData();
-    formData.append('file', file);
+    // 도서 콘텐츠 수정 버튼 클릭 이벤트
+    $('#update-content').on("click", function () {
+        const bookId = $('#bookId-content').val();
+        const title = $('#title').val();
+        const isbn = $('#isbn').val();
+        const publisher = $('#publisher').val();
+        const publishingDate = $('#publishingDate').val();
+        let paperPrice = $('#paperPrice').val();
+        const ebookPrice = $('#ebookPrice').val();
+        const discountRate = $('#discountRate').val();
+        const categoryId = $('#categoryId').val();
+        let bookGroupId = $('#bookGroupId').val();
+        const description = ckeditorInstance.getData()
 
-    uploadFileUsingAjax('patch', '/manage/book/image/' + bookId, formData);
-});
+        if (bookId.trim() == '') {
+            alert('도서 아이디를 입력해주세요');
+            return false;
+        }
 
-$('.search').on("click", function () {
-    const title = $('#title').val();
-    if (title.trim() == '') {
-        alert('도서 제목을 입력하세요.');
-        return false;
-    }
+        validateRequestForm(title, isbn, publisher, publishingDate, ebookPrice, discountRate, categoryId, description);
 
-    $(".book-form").submit();
-});
+        if (paperPrice.trim() == '') {
+            paperPrice = 0;
+        }
+        if (bookGroupId.trim() == '') {
+            bookGroupId = 0;
+        }
 
-$('.delete').on("click", function () {
-    const bookId = $('#bookId').val();
-    if (bookId.trim() == '') {
-        alert('도서 아이디를 입력하세요.');
-        return false;
-    }
+        const data = {
+            "title": title,
+            "isbn": isbn,
+            "publisher": publisher,
+            "publishingDate": publishingDate,
+            "paperPrice": paperPrice,
+            "ebookPrice": ebookPrice,
+            "discountRate": discountRate,
+            "categoryId": categoryId,
+            "bookGroupId": bookGroupId,
+            "description": description
+        }
 
-    const result = confirm('삭제하면 복구할 수 없습니다. 삭제하시겠습니까?');
-    if (result == false) {
-        return false;
-    }
+        callAjax('patch', '/manage/book/content/' + bookId, data);
+    });
 
-    callAjax('delete', '/manage/book/' + bookId);
+    // 도서 이미지 수정 버튼 클릭 이벤트
+    $('#update-image').on("click", function () {
+        const bookId = $('#bookId-image').val();
+        const file = $('#file')[0].files[0];
+
+        if (bookId.trim() == '') {
+            alert('도서 아이디를 입력해주세요');
+            return false;
+        }
+
+        const isValidFile = validateFile(file);
+        if (isValidFile == false) {
+            return false;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        uploadFileUsingAjax('patch', '/manage/book/image/' + bookId, formData);
+    });
+
+    $('.search').on("click", function () {
+        const title = $('#title').val();
+        if (title.trim() == '') {
+            alert('도서 제목을 입력하세요.');
+            return false;
+        }
+
+        $(".book-form").submit();
+    });
+
+    $('.delete-button').on("click", function () {
+        const result = confirm('삭제하면 복구할 수 없습니다. 삭제하시겠습니까?');
+        if (result == false) {
+            return false;
+        }
+    
+        const bookId = $(this).closest('tr').find('td:first').text().trim(); // 해당 행의 첫 번째 열에서 도서 ID를 가져옴
+    
+        if (bookId === '') {
+            alert('도서 아이디를 찾을 수 없습니다.');
+            return false;
+        }
+    
+        console.log(bookId);
+    
+        callAjax('delete', '/manage/book/' + bookId);
+    });
+    
 });
 
 
