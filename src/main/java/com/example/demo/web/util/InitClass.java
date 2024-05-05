@@ -84,15 +84,15 @@ public class InitClass {
     public void initAuthorData(int index, Long bookId) { // 작가 등록
         AuthorRegisterRequest firstAuthorRequest = createAuthorRegisterRequest("DANNY" + index, AuthorOption.AUTHOR, "영국", "test", "1999", Gender.MEN);
         Long firstAuthorId = authorManageService.registerAuthor(firstAuthorRequest);
-        initBookAuthorListData(bookId, firstAuthorId, 1);
+
 
         AuthorRegisterRequest secondAuthorRequest = createAuthorRegisterRequest("KIM" + index, AuthorOption.AUTHOR, "미국", "test", "1999", Gender.MEN);
         Long secondAuthorId = authorManageService.registerAuthor(secondAuthorRequest);
-        initBookAuthorListData(bookId, secondAuthorId, 2);
+
 
         AuthorRegisterRequest secondTranslatorRequest = createAuthorRegisterRequest("JACK" + index, AuthorOption.TRANSLATOR, "대한민국", "test", "1999", Gender.MEN);
         Long translatorId = authorManageService.registerAuthor(secondTranslatorRequest);
-        initBookAuthorListData(bookId, translatorId, 3);
+
     }
 
     public void initBookAuthorListData(Long bookId, Long authorId, int ordinal) {

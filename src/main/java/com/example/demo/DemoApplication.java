@@ -22,8 +22,8 @@ public class DemoApplication {
 
     @PostConstruct
     void initData() {
-        initClass.initData();
         initAdminClass.initData();
+        initClass.initAuthorData(1,1L);
     }
 
 

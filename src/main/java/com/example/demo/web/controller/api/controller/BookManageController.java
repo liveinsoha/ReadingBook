@@ -27,6 +27,8 @@ public class BookManageController {
     @PostMapping
     public ResponseEntity<Object> registerBook(BookRegisterRequest request,
                                                MultipartFile file) {
+
+        System.out.println("request.getBookGroupId() = " + request.getBookGroupId());
         bookManagementService.registerBook(request, file);
 
         BaseResponse response = new BaseResponse(HttpStatus.CREATED, "등록이 완료되었습니다.", true);

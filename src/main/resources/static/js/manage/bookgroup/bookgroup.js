@@ -71,8 +71,8 @@ $(function () {
         $('.bookgroup-form').submit();
     });
 
-    $('.delete').on("click", function (){
-        const bookGroupId = $('#bookGroupId').val();
+    $('.delete-button').on("click", function (){
+        const bookGroupId = $(this).closest('tr').find('td:first').text().trim(); // 해당 행의 첫 번째 열에서 도서 ID를 가져옴
 
         const isValidId = validateId(bookGroupId);
         if(isValidId == false){
@@ -85,6 +85,12 @@ $(function () {
         }
 
         callAjax('delete', '/manage/book-group/'+bookGroupId);
+    });
+});
+
+$(function () {
+    $('.toggle-all-buttons').on('click', function () {
+        $('.toggle-buttons').toggle(); // 검색 결과의 수정 버튼을 토글
     });
 });
 

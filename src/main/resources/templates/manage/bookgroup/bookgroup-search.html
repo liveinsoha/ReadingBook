@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,26 +15,65 @@
   <script th:src="@{/js/common/call-ajax.js}"></script>
   <script th:src="@{/js/manage/bookgroup/bookgroup.js}"></script>
 </head>
-<body>
-<div class="container">
-  <header class="header mb-5 mt-1">
-    <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
-  </header>
-  <main class="main">
-    <div class="row">
-      <div class="col-2">
-        <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
-      </div>
-      <div class="col-10">
-        <form class="bookgroup-form content-box" action="/result/book-group" method="get">
-          <label for="title">도서 그룹명 검색</label>
-          <input type="text" name="title" id="title" class="form-control mb-3 p-2"/>
 
-          <button type="button" class="btn btn-primary w-100 p-3 search">검색하기</button>
-        </form>
+<body>
+  <div class="container">
+    <header class="header mb-5 mt-1">
+      <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
+    </header>
+    <main class="main">
+      <div class="row">
+        <div class="col-2">
+          <div class="nav-sidebar">
+            <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
+          </div>
+        </div>
+
+        <div class="col-10">
+          <form class="bookgroup-form content-box d-flex justify-content-end" action="/search/book-group" method="get">
+            <label for="title" class="mr-2">도서 그룹명 검색</label>
+            <input type="text" name="title" id="title" class="form-control mb-3 p-2 mr-2" />
+            <button type="button" class="btn btn-primary p-2 search">검색하기</button>
+          </form>
+
+          <div class="text-center">
+            <form class="category-form content-box" action="">
+              <table class="table" th:if="${responses.size() ne 0}">
+                <thead class="table-light">
+                  <tr>
+                    <td class="border-end">도서 그룹 아이디</td>
+                    <td class="border-end">도서 그룹명</td>
+                    <td>이미지</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="response : ${responses}">
+                    <td class="border-end" th:text="${response.id}"></td>
+                    <td class="border-end" th:text="${response.title}"></td>
+                    <td class="border-end">
+                      <img th:src="@{/images/book/{savedImageName}(savedImageName=${response.savedImageName})}"
+                        width="150px" height="200px">
+                    </td>
+                    <td>
+                      <div class="toggle-buttons" style="display:none;"> <!-- 수정 및 삭제 버튼 숨김 -->
+                        <a th:href="@{'/update/book-group/' + ${response.id}}" class="btn btn-primary">수정</a>
+                        <button class="btn btn-danger delete-button" th:data-book="${response.id}">삭제</button>
+                      </div>
+                      <!-- 수정 버튼 추가 -->
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="content-box" th:if="${responses.size() eq 0}">
+                '<span th:text="${search}"></span>'에 대한 검색 결과가 없습니다.
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-  </main>
-</div>
+    </main>
+
+  </div>
 </body>
+
 </html>

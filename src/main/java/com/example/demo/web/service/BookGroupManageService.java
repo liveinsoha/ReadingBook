@@ -94,6 +94,14 @@ public class BookGroupManageService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<BookGroupSearchResponse> searchAllBookGroup() {
+        List<BookGroup> bookGroups = bookGroupRepository.findAll();
+        return bookGroups.stream()
+                .map(b -> new BookGroupSearchResponse(b.getId(), b.getTitle(), b.getSavedImageName()))
+                .collect(Collectors.toList());
+    }
+
     /**
      * 도서 그룹 삭제 메소드
      *

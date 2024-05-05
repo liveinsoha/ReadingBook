@@ -110,7 +110,7 @@ public class BookManageService {
     @Transactional(readOnly = true)
     private BookGroup getBookGroup(Long bookGroupId) {
         BookGroup bookGroup = null;
-        if (bookGroupId != null) {
+        if (bookGroupId != 0) {
             bookGroup = bookGroupManagementService.findBookGroupById(bookGroupId);
         }
         return bookGroup;
