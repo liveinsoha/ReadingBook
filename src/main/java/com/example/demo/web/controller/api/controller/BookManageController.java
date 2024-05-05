@@ -29,9 +29,9 @@ public class BookManageController {
                                                MultipartFile file) {
 
         System.out.println("request.getBookGroupId() = " + request.getBookGroupId());
-        bookManagementService.registerBook(request, file);
+        Long savedBookId = bookManagementService.registerBook(request, file);
 
-        BaseResponse response = new BaseResponse(HttpStatus.CREATED, "등록이 완료되었습니다.", true);
+        BaseResponse<Long> response = new BaseResponse<>(HttpStatus.CREATED, "책 등록 성공! 내용을 등록해주세요", savedBookId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);

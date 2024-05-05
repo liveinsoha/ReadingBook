@@ -88,7 +88,7 @@ public class BookGroupManageService {
      */
     @Transactional(readOnly = true)
     public List<BookGroupSearchResponse> searchByBookGroupTitle(String title) {
-        List<BookGroup> bookGroups = bookGroupRepository.findByTitle(title);
+        List<BookGroup> bookGroups = bookGroupRepository.findByTitleContaining(title);
         return bookGroups.stream()
                 .map(b -> new BookGroupSearchResponse(b.getId(), b.getTitle(), b.getSavedImageName()))
                 .collect(Collectors.toList());

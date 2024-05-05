@@ -18,6 +18,7 @@ public class BookContentController {
 
     @PostMapping
     public ResponseEntity<Object> register(BookContentRegisterRequest request){
+        System.out.println("request = " + request);
         bookContentService.register(request);
 
         BaseResponse response = new BaseResponse(HttpStatus.CREATED, "등록이 완료되었습니다.", true);

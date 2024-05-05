@@ -1,4 +1,50 @@
 $(document).ready(function () {
+    $('#bookGroupId').on('input', searchBookGroups);
+
+    // 동적 이벤트 연결
+    $('#bookGroupSuggestions').on('click', '.bookGroupSuggestion', selectBookGroup);
+});
+
+function searchBookGroups() {
+    var name = $(this).val();
+    if (name != '') {
+        $.ajax({
+            url: '/manage/book-group/search',
+            type: 'GET',
+            data: { name: name },
+            dataType: 'json',
+            success: function (response) {
+                displayBookGroupSuggestions(response.data);
+            }
+        });
+    } else {
+        clearBookGroupSuggestions();
+    }
+}
+
+function selectBookGroup() {
+    var selectedBookGroupId = $(this).data('book-group-id');
+    var selectedBookGroupName = $(this).text();
+    $('#selectedBookGroupId').val(selectedBookGroupId);
+    $('#bookGroupId').val(selectedBookGroupName);
+    $('#bookGroupSuggestions').empty();
+}
+
+function displayBookGroupSuggestions(bookGroups) {
+    $('#bookGroupSuggestions').empty();
+    $.each(bookGroups, function (index, bookGroup) {
+        $('#bookGroupSuggestions').append('<div class="bookGroupSuggestion" data-book-group-id="' + bookGroup.id + '">' + bookGroup.title + '</div>');
+    });
+}
+
+function clearBookGroupSuggestions() {
+    $('#selectedBookGroupId').val('');
+    $('#bookGroupSuggestions').empty();
+}
+
+
+
+$(document).ready(function () {
     $('#authorName').keyup(searchAuthors);
     // 동적 이벤트 연결
     $('#authorSuggestions').on('click', '.authorSuggestion', function () {
@@ -6,18 +52,22 @@ $(document).ready(function () {
         var selectedAuthorName = $(this).text();
 
         // 작가 선택 폼 추가
+        // 작가 선택 폼 추가
         $('#authorForms').append(`
-        <div class="authorForm mb-3 d-flex align-items-center">
-            <input type="hidden" name="selectedAuthorId" value="${selectedAuthorId}">
-            <label class="mr-3">${selectedAuthorName}</label>
-            <select class="form-control ordinalSelect">
-                <option value="1">1st</option>
-                <option value="2">2nd</option>
-                <option value="3">3rd</option>
-                <!-- 필요한 만큼 옵션을 추가하세요 -->
-            </select>
-        </div>
-    `);
+            <div class="authorForm mb-3 d-flex align-items-center">
+                <label class="mr-3">작가명: ${selectedAuthorName}</label>
+                <div style="width: 10px;"></div> <!-- 적절한 공간을 추가 -->
+                <label class="mr-3">서수: </label>
+                <select class="form-control ordinalSelect" style="width: 80px;">
+                    <option value="1">1st</option>
+                    <option value="2">2nd</option>
+                    <option value="3">3rd</option>
+                    <!-- 필요한 만큼 옵션을 추가하세요 -->
+                </select>
+                <input type="hidden" name="selectedAuthorId" id="selectedAuthorId_${selectedAuthorId}" value="${selectedAuthorId}" class="hidden-input">
+            </div>
+        `);
+    
 
 
         $('#authorSuggestions').empty();
@@ -133,10 +183,16 @@ $(function () {
         const discountRate = $('#discountRate').val();
         const categoryId = $('#category').val();
         const description = ckeditorInstance.getData()
-        let bookGroupId = $('#bookGroupId').val();
+        let bookGroupId = $('#selectedBookGroupId').val();
         const file = $('#file')[0].files[0];
 
         const isValidForm = validateRequestForm(title, isbn, publisher, publishingDate, ebookPrice, discountRate, categoryId, description);
+
+        if (authors.length === 0) {
+            alert('작가를 최소 한 명 이상 선택해주세요.');
+            return false;
+        }
+
         if (isValidForm == false) {
             return false;
         }
@@ -174,9 +230,40 @@ $(function () {
         formData.append("description", description);
         formData.append('file', file);
 
-        uploadFileUsingAjax('post', '/manage/book', formData);
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            method: 'post',
+            url: '/manage/book',
+            data: formData,
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (data) {
+                console.log(data);
+
+                var bookId = data.data;
+
+                console.log('Book ID:', bookId);
+
+                alert(data.message);
+
+                window.location.href = '/register/book-content/' + bookId;
+            },
+            error: function (data) {
+                const response = data.responseJSON;
+                console.log(response);
+                alert(response.message);
+                window.location.reload();
+            }
+        });
     });
 });
+
 
 
 $('.update-search').on("click", function () {
@@ -325,6 +412,7 @@ function validateRequestForm(title, isbn, publisher, publishingDate, ebookPrice,
         return false;
     }
 
+
     if (publisher.trim() == '') {
         alert('출판사를 입력해주세요.')
         return false;
@@ -355,4 +443,3 @@ function validateRequestForm(title, isbn, publisher, publishingDate, ebookPrice,
         return false;
     }
 }
-

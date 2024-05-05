@@ -22,7 +22,31 @@
       height: 400px;
       margin-bottom: 1rem;
     }
+
+    .authorSuggestion {
+      border: 1px solid #ccc;
+      /* 테두리 스타일 및 색상 지정 */
+      padding: 5px;
+      /* 내부 여백 추가 */
+      margin-bottom: 5px;
+      /* 하단 마진 추가 */
+    }
+
+    .bookGroupSuggestion {
+      border: 1px solid #ccc;
+      /* 테두리 스타일 및 색상 지정 */
+      padding: 5px;
+      /* 내부 여백 추가 */
+      margin-bottom: 5px;
+      /* 하단 마진 추가 */
+    }
+
+    .hidden-input {
+      display: none;
+    }
   </style>
+
+
 </head>
 
 <body>
@@ -55,7 +79,7 @@
             <input type="text" name="authorName" id="authorName" class="form-control mb-3 p-2"
               placeholder="작가 이름을 입력하세요">
             <div id="authorSuggestions" class="mb-3 p-2"></div>
-            <input type="hidden" name="selectedAuthorId" id="selectedAuthorId">
+        
 
             <div id="authorForms">
               <!-- 여기에 작가 선택 폼이 동적으로 추가될 것입니다. -->
@@ -95,10 +119,13 @@
               <option value="" selected disabled>카테고리 선택</option>
               <!-- Categories will be dynamically populated based on the selected category group -->
             </select>
-s
-            <label for="bookGroupId">도서 그룹 아이디</label>
+
+            <label for="bookGroupId">도서 시리즈 선택</label>
             <input type="text" name="bookGroupId" id="bookGroupId" class="form-control mb-3 p-2"
               placeholder="해당 도서가 시리즈와 같은 그룹으로 묶여있지 않다면 기입하지 않아도 됩니다." />
+            <div id="bookGroupSuggestions" class="mb-3 p-2"></div>
+            <input type="hidden" name="selectedBookGroupId" id="selectedBookGroupId">
+
 
             <label for="description">도서 설명</label>
             <textarea name="description" id="description" class="form-control mb-3 p-2"></textarea>
@@ -112,7 +139,7 @@ s
             <input type="file" name="file" id="file" class="form-control mb-3 p-2"
               accept="image/gif, image/jpeg, image/jpg, image/png" />
 
-            <button type="button" class="btn btn-primary w-100 p-3 mb-3 register">등록하기</button>
+            <button type="button" class="btn btn-primary w-100 p-3 mb-3 register">내용 등록하기</button>
           </form>
         </div>
       </div>

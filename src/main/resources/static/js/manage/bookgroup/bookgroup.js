@@ -17,7 +17,7 @@ $(function () {
         formData.append('file', file);
         formData.append('title', title)
 
-        uploadFileUsingAjax('post', '/manage/book-group', formData);
+        uploadFileUsingAjaxWithRedirect('post', '/manage/book-group', formData, "/manage/home");
     });
 
     $('.update-title').on("click", function (){

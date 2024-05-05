@@ -3,6 +3,8 @@ $(function () {
         const bookId = $('#bookId').val();
         const content = $('#content').val();
 
+        console.log(bookId);
+
         if(bookId.trim() == ''){
             alert('도서 아이디를 입력해주세요');
             return false;
@@ -17,7 +19,7 @@ $(function () {
             "content" : content
         }
 
-        callAjax('post', '/manage/book-content', data);
+        callAjaxWithRedirect('post', '/manage/book-content', data, "/manage/home");
     });
 
     $('.update-search').on("click", function (){

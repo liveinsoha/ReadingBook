@@ -31,7 +31,7 @@
 
         <div class="col-10">
           <form class="bookgroup-form content-box d-flex justify-content-end" action="/search/book-group" method="get">
-            <label for="title" class="mr-2">도서 그룹명 검색</label>
+            <label for="title" class="mr-2">도서 시리즈 검색</label>
             <input type="text" name="title" id="title" class="form-control mb-3 p-2 mr-2" />
             <button type="button" class="btn btn-primary p-2 search">검색하기</button>
           </form>
@@ -41,8 +41,8 @@
               <table class="table" th:if="${responses.size() ne 0}">
                 <thead class="table-light">
                   <tr>
-                    <td class="border-end">도서 그룹 아이디</td>
-                    <td class="border-end">도서 그룹명</td>
+                    <td class="border-end">도서 시리즈 아이디</td>
+                    <td class="border-end">도서 시리즈명</td>
                     <td>이미지</td>
                   </tr>
                 </thead>

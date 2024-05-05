@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface BookGroupRepository extends JpaRepository<BookGroup, Long> {
     List<BookGroup> findByTitle(String title);
+    List<BookGroup> findByTitleContaining(String title);
 }

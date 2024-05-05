@@ -37,8 +37,6 @@ public class BookContentService {
 
         validateForm(bookId, content);
 
-
-
         Book book = bookService.findBook(bookId);
         BookContent bookContent = BookContent.createBookContent(book, content);
 
