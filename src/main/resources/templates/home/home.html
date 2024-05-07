@@ -85,21 +85,10 @@
                     <ul class="d-flex justify-content-start w-100"> <!-- justify-content-start로 변경 -->
                         <li class="me-2" th:each="book : ${bestBooks}">
                             <a th:href="@{/book/{isbn}(isbn=${book.isbn})}" class="d-block"> <!-- d-block 클래스 추가 -->
-                                <img th:src="@{{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="120" height="180">
-                                <div class="text-truncate" style="max-width: 120px;" th:text="${book.title}"></div> <!-- text-truncate 클래스와 max-width 속성 추가 -->
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </section>
-            <section class="book-wrap">
-                <div class="content">
-                    <h1 class="fs-3 fw-bold">새로 나온 도서</h1>
-                    <ul class="d-flex justify-content-start w-100"> <!-- justify-content-start로 변경 -->
-                        <li class="me-2" th:each="book : ${newBooks}">
-                            <a th:href="@{/book/{isbn}(isbn=${book.isbn})}" class="d-block"> <!-- d-block 클래스 추가 -->
-                                <img th:src="@{{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="180" height="260" alt="">
-                                <div class="fs-5 fw-bold text-truncate" style="max-width: 180px;" th:text="${book.title}">도서 제목</div> <!-- text-truncate 클래스와 max-width 속성 추가 -->
+                                <img th:src="@{{savedBookName}(savedBookName=${book.savedImageName})}"
+                                    th:alt="${book.title + '의 표지'}" width="120" height="180">
+                                <div class="text-truncate" style="max-width: 120px;" th:text="${book.title}"></div>
+                                <!-- text-truncate 클래스와 max-width 속성 추가 -->
                                 <div>
                                     <th:block th:if="${book.reviewRatingAvg eq '0'}">
                                         <span>아직 리뷰가 없습니다.</span>
@@ -120,7 +109,37 @@
                     </ul>
                 </div>
             </section>
-            
+            <section class="book-wrap">
+                <div class="content">
+                    <h1 class="fs-3 fw-bold">새로 나온 도서</h1>
+                    <ul class="d-flex justify-content-start w-100"> <!-- justify-content-start로 변경 -->
+                        <li class="me-2" th:each="book : ${newBooks}">
+                            <a th:href="@{/book/{isbn}(isbn=${book.isbn})}" class="d-block"> <!-- d-block 클래스 추가 -->
+                                <img th:src="@{{savedBookName}(savedBookName=${book.savedImageName})}"
+                                    th:alt="${book.title + '의 표지'}" width="180" height="260" alt="">
+                                <div class="fs-5 fw-bold text-truncate" style="max-width: 180px;"
+                                    th:text="${book.title}">도서 제목</div> <!-- text-truncate 클래스와 max-width 속성 추가 -->
+                                <div>
+                                    <th:block th:if="${book.reviewRatingAvg eq '0'}">
+                                        <span>아직 리뷰가 없습니다.</span>
+                                    </th:block>
+                                    <th:block th:if="${book.reviewRatingAvg ne '0'}">
+                                        <span class="text-orange" th:text="${book.reviewRatingAvg + ' 점'}"></span>
+                                        <span class="text-grey" th:text="${'('+book.reviewCount+')'}"></span>
+                                    </th:block>
+                                </div>
+                                <div class="text-grey">
+                                    <span th:text="${book.author}"></span>
+                                    <th:block th:if="${book.authorCountExceptMainAuthor ne 0}">
+                                        외 <span th:text="${book.authorCountExceptMainAuthor}"></span>명
+                                    </th:block>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
         </main>
     </div>
     <th:block th:replace="~{common/fragments/footer :: footer}"></th:block>

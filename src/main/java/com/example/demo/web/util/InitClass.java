@@ -24,7 +24,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class InitClass {
 
-   
+
     void init(){
         initAuthorData(1,1L);
     }
