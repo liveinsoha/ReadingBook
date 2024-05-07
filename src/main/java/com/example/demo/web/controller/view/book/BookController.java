@@ -93,6 +93,7 @@ public class BookController {
             email = "";
         }
         model.addAttribute("email", email);
+        model.addAttribute("reviews", reviews);
 
         model.addAttribute("myReview", myReview);
         model.addAttribute("information", bookInformation);

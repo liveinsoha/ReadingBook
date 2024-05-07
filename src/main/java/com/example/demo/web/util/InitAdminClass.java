@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class InitAdminClass {
 
-    @PostConstruct
+
     void init(){
        initData();
     }
