@@ -54,7 +54,7 @@
         <div class="d-flex">
           <div class="img-wrap p-2">
             <a th:href="@{/book/{isbn}(isbn=${response.isbn})}">
-              <img th:src="@{/images/book/{image}(image=${response.savedImageName})}" th:alt="${response.title + '의 표지'}" style="width: 100px; height: 180px">
+              <img th:src="@{{image}(image=${response.savedImageName})}" th:alt="${response.title + '의 표지'}" style="width: 100px; height: 180px">
             </a>
           </div>
           <div class="p-2">

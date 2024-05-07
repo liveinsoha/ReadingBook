@@ -57,7 +57,7 @@
                     <td th:text="${response.title}"></td>
                     <td th:text="${response.publisher}"></td>
                     <td>
-                      <img th:src="@{/images/book/{savedImageName}(savedImageName=${response.savedImageName})}"
+                      <img th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}"
                         width="150px" height="200px">
                     </td>
                     <td>

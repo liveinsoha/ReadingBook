@@ -12,15 +12,22 @@ import com.example.demo.web.repository.CategoryRepository;
 import com.example.demo.web.service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 
 import java.util.Random;
 
+@Profile("local")
 @Component
 @RequiredArgsConstructor
 public class InitClass {
+
+    @PostConstruct
+    void init(){
+        initAuthorData(1,1L);
+    }
 
     Random random = new Random();
 

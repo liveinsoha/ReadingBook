@@ -44,7 +44,7 @@
             <div class="w-100 mb-3">
               <div>현재 이미지</div>
               <img class="img-thumbnail"
-                th:src="@{/images/book/{savedImageName}(savedImageName=${response.savedImageName})}" width="150px"
+                th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}" width="150px"
                 height="200px">
             </div>
 

@@ -5,14 +5,19 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
 
+@Profile("deploy")
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class AwsS3ImageUploadUtil implements ImageUploadUtil{
+public class AwsS3ImageUploadUtil implements ImageUploadUtil {
 
     private final AmazonS3Client amazonS3Client;
 
@@ -31,13 +36,16 @@ public class AwsS3ImageUploadUtil implements ImageUploadUtil{
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
 
+        String s3name = "readingbook/" + saveFilename;
+
         try {
-            amazonS3Client.putObject(bucket, saveFilename, file.getInputStream(), metadata);
+            log.info("S3에 파일 업로드");
+            amazonS3Client.putObject(bucket, s3name, file.getInputStream(), metadata);
         } catch (IOException e) {
             log.debug("uploading error = ", e);
         }
 
-        return saveFilename;
+        return amazonS3Client.getUrl(bucket, s3name).toString().replaceAll("\\+", "+");
     }
 
     private String getSaveFilename(String filename, String fileExtension) {
@@ -56,7 +64,7 @@ public class AwsS3ImageUploadUtil implements ImageUploadUtil{
 
     @Override
     public void deleteImage(String savedImageName) {
-       // amazonS3Client.deleteObject(bucket, savedImageName);
+        // amazonS3Client.deleteObject(bucket, savedImageName);
     }
 
     private String extractExtension(String filename) {

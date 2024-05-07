@@ -85,7 +85,7 @@
                     <ul class="d-flex justify-content-start w-100"> <!-- justify-content-start로 변경 -->
                         <li class="me-2" th:each="book : ${bestBooks}">
                             <a th:href="@{/book/{isbn}(isbn=${book.isbn})}" class="d-block"> <!-- d-block 클래스 추가 -->
-                                <img th:src="@{/images/book/{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="120" height="180">
+                                <img th:src="@{{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="120" height="180">
                                 <div class="text-truncate" style="max-width: 120px;" th:text="${book.title}"></div> <!-- text-truncate 클래스와 max-width 속성 추가 -->
                             </a>
                         </li>
@@ -98,7 +98,7 @@
                     <ul class="d-flex justify-content-start w-100"> <!-- justify-content-start로 변경 -->
                         <li class="me-2" th:each="book : ${newBooks}">
                             <a th:href="@{/book/{isbn}(isbn=${book.isbn})}" class="d-block"> <!-- d-block 클래스 추가 -->
-                                <img th:src="@{/images/book/{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="180" height="260" alt="">
+                                <img th:src="@{{savedBookName}(savedBookName=${book.savedImageName})}" th:alt="${book.title + '의 표지'}" width="180" height="260" alt="">
                                 <div class="fs-5 fw-bold text-truncate" style="max-width: 180px;" th:text="${book.title}">도서 제목</div> <!-- text-truncate 클래스와 max-width 속성 추가 -->
                                 <div>
                                     <th:block th:if="${book.reviewRatingAvg eq '0'}">

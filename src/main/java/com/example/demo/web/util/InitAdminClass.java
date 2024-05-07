@@ -10,13 +10,20 @@ import com.example.demo.web.service.MemberService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@Profile("local")
 @Component
 @RequiredArgsConstructor
 public class InitAdminClass {
+
+    @PostConstruct
+    void init(){
+       initData();
+    }
 
     private final PasswordEncoder passwordEncoder;
 

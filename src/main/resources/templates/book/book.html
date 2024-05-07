@@ -25,7 +25,7 @@
   <main class="main">
     <section class="mt-5 w-100 d-block d-flex">
       <div class="">
-        <img th:src="@{/images/book/{image}(image=${information.bookDto.savedImageName})}" th:alt="${information.bookDto.title + '의 표지'}" style="width: 180px; height: 250px">
+        <img th:src="@{{image}(image=${information.bookDto.savedImageName})}" th:alt="${information.bookDto.title + '의 표지'}" style="width: 180px; height: 250px">
       </div>
       <div class="ms-4 w-100">
         <div class="mt-1">
@@ -89,7 +89,7 @@
         <li class="border-bottom d-flex pb-2">
           <a class="text-black fs-6 d-flex" th:href="@{/book/{isbn}(isbn=${book.isbn})}">
             <div class="me-2">
-              <img th:src="@{/images/book/{image}(image=${book.savedImageName})}"
+              <img th:src="@{{image}(image=${book.savedImageName})}"
                    class="img-thumbnail" style="width: 50px; height: 70px">
             </div>
             <div class="d-flex align-items-center fw-bold" th:text="${book.title}">

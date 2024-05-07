@@ -59,7 +59,7 @@
                         <td class="img-wrap">
                             <input type="checkbox" class="checkbox check-book me-2" th:data-sale-price="${response.salePrice}" th:data-discount-price="${response.discountPrice}" th:data-ebook-price="${response.ebookPrice}" th:data-book="${response.bookId}" th:data-wishlist="${response.wishlistId}"/>
                             <a th:href="@{/book/{isbn}(isbn = ${response.isbn})}">
-                                <img class="thumbnail mt-2 mb-2" th:src="@{/images/book/{savedImageName}(savedImageName = ${response.savedImageName})}" alt="" width="80" height="120">
+                                <img class="thumbnail mt-2 mb-2" th:src="@{{savedImageName}(savedImageName = ${response.savedImageName})}" alt="" width="80" height="120">
                             </a>
                         </td>
                         <td class="title">

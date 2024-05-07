@@ -51,7 +51,7 @@
                     <td class="border-end" th:text="${response.id}"></td>
                     <td class="border-end" th:text="${response.title}"></td>
                     <td class="border-end">
-                      <img th:src="@{/images/book/{savedImageName}(savedImageName=${response.savedImageName})}"
+                      <img th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}"
                         width="150px" height="200px">
                     </td>
                     <td>

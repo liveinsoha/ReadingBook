@@ -1,5 +1,8 @@
 package com.example.demo.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,13 +10,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-@Service
+@Profile("local")
+@Slf4j
 public class ImageUploadUtilImpl implements ImageUploadUtil {
 
     String UPLOAD_PATH = "C:/Temp/readingbook/";
 
     @Override
     public String uploadImage(MultipartFile file) {
+        log.info("로컬 파일 업로드");
         String fileName = createFileName();
         String fileExtension = extractExtension(file.getOriginalFilename());
         String filePath = getFilePath(UPLOAD_PATH, fileName, fileExtension);

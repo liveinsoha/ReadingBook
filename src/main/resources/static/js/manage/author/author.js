@@ -21,7 +21,7 @@ $(function () {
             "description": description
         }
 
-        callAjax('post', '/manage/author', data);
+        callAjaxWithRedirect('post', '/manage/author', data, "/manage/home");
     });
 
     $('.update').on("click", function () {
