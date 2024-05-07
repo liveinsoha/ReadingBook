@@ -35,7 +35,7 @@ public class BookController {
 
         if (bookInformation == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return "/error/404";
+            return "error/404";
         }
         /* --- 시리즈 정보 --- */
         List<BookGroupInformationResponse> seriesInformation = bookInformationService.getSeriesInformation(isbn);

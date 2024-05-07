@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Profile("local")
+@Component
 @Slf4j
 public class ImageUploadUtilImpl implements ImageUploadUtil {
 

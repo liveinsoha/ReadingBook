@@ -43,23 +43,23 @@ public class LoginViewController {
         String token = csrfToken.getToken();
 
         model.addAttribute("csrfToken", token);
-        return "/login/email-register";
+        return "login/email-register";
     }
 
     @GetMapping("/find-id")
     public String findId(){
-        return "/login/find-id";
+        return "login/find-id";
     }
 
     @GetMapping("/find-password")
     public String findPassword(){
-        return "/login/find-password";
+        return "login/find-password";
     }
 
 
     @GetMapping("/leave")
     public String leave(){
-        return "/login/leave";
+        return "login/leave";
     }
 
 
