@@ -15,8 +15,6 @@ FROM openjdk:17-jdk-slim
 # 환경 변수 설정
 ENV SPRING_PROFILES_ACTIVE=deploy
 
-ENV_FILE=./.env
-
 WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar app.jar
