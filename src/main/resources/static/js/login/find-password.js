@@ -10,19 +10,23 @@ $(function () {
 
         console.log(data);
 
+        $('.main').html('<p class="text-center">메일 전송 중...</p>');
+
         $.ajax({
             method: "post",
             url: "/account/find-password",
             data: data,
             success: function (data) {
                 console.log(data);
+                $('.main').html('<h3 class="text-center fs-5 fw-bold">이메일이 전송되었습니다!</h3><div class="text-center fw-bold text-primary mb-2">'+email+'</div><div class="text-grey text-center mb-4">이메일로 전송받은 임시 비밀번호를 확인해주세요.</div><a href="/account/login" class="btn btn-primary w-100 p-3">로그인</a>');
             },
             error: function (data) {
                 const response = data.responseJSON;
                 console.log(response);
+                alert("일치하는 회원정보가 없습니다.");
+                window.location.reload();
             }
         });
-        $('.main').html('<h3 class="text-center fs-5 fw-bold">이메일이 전송되었습니다!</h3><div class="text-center fw-bold text-primary mb-2">'+email+'</div><div class="text-grey text-center mb-4">이메일로 전송받은 임시 비밀번호를 확인해주세요.</div><a href="/account/login" class="btn btn-primary w-100 p-3">로그인</a>');
     });
 
     $('.email').on("blur", function () {
