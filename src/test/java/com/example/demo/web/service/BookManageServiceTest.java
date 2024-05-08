@@ -2,6 +2,7 @@ package com.example.demo.web.service;
 
 import com.example.demo.utils.ImageUploadUtil;
 import com.example.demo.web.domain.entity.Book;
+import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.dto.request.*;
 import com.example.demo.web.dto.response.BookManageSearchResponse;
@@ -9,12 +10,14 @@ import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.repository.BookContentRepository;
 import com.example.demo.web.repository.BookRepository;
 import com.example.demo.web.repository.SearchBookRepository;
+import com.example.demo.web.service.search.BookSearchCondition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,9 +77,26 @@ class BookManageServiceTest {
 
     @Test
     void QueryTest() {
-        Page<BookManageSearchResponse> allBooks = bookManagementService.getAllBooks();
-        System.out.println("allBooks = " + allBooks);
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
 
+        Member seller = memberService.getMember(memberId1);
+
+        Page<BookManageSearchResponse> allBooks = bookManagementService.getAllBooks(seller);
+        System.out.println("allBooks = " + allBooks);
+    }
+
+    @Test
+    void QuerySearchTest() {
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
+        Member seller = memberService.getMember(memberId1);
+
+        BookSearchCondition condition = new BookSearchCondition("reviews");
+        PageRequest pageRequest = PageRequest.of(0, 5);
+        Page<BookManageSearchResponse> allBooks = bookManagementService.searchBook("asd", pageRequest, condition, seller);
+        System.out.println("allBooks = " + allBooks);
     }
 
     @Test

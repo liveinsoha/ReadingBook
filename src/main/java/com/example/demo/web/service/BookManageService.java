@@ -46,9 +46,9 @@ public class BookManageService {
      * @return bookId
      */
 
-    public Page<BookManageSearchResponse> getAllBooks() {
+    public Page<BookManageSearchResponse> getAllBooks(Member seller) {
         Pageable pageRequest = PageRequest.of(0, 5);
-        return bookRepository.searchAllBooks(pageRequest);
+        return bookRepository.searchAllBooks(pageRequest, seller);
     }
 
     @Transactional
@@ -124,15 +124,15 @@ public class BookManageService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BookManageSearchResponse> searchBook(String searchQuery, Pageable pageable, BookSearchCondition condition) {
-        Page<BookManageSearchResponse> bookManageSearchResponses = bookRepository.searchRegisteredBook(searchQuery, pageable, condition);
+    public Page<BookManageSearchResponse> searchBook(String searchQuery, Pageable pageable, BookSearchCondition condition, Member seller) {
+        Page<BookManageSearchResponse> bookManageSearchResponses = bookRepository.searchRegisteredBook(searchQuery, pageable, condition, seller);
 
         return bookManageSearchResponses;
     }
 
     @Transactional(readOnly = true)
-    public List<BookManageSearchResponse> searchBookQuery(String searchQuery) {
-        return bookRepository.searchBookQuery(searchQuery);
+    public List<BookManageSearchResponse> searchBookQuery(String searchQuery, Member seller) {
+        return bookRepository.searchBookQuery(searchQuery, seller);
     }
 
     private void validateForm(String title, String isbn, String publisher, String publishingDate,

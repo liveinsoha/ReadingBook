@@ -58,31 +58,33 @@ public class BookManageViewController {
     }
 
 
-    @GetMapping("/update/search/book")
+  /*  @GetMapping("/update/search/book")
     public String updateSearchForm(Model model) {
         model.addAttribute("selectFlag", "updateBook");
         return "manage/book/book-update-search";
-    }
+    }*/
 
-    @GetMapping("/result/book")
+   /* @GetMapping("/result/book")
     public String searchForm(Model model) {
 
         model.addAttribute("selectFlag", "searchBook");
         model.addAttribute("selectFlag", "searchBook");
         return "manage/book/book-search";
     }
-
+*/
 
     @GetMapping("/manage/search/book")
     public String returnSearchResult(@PageableDefault(size = 5) Pageable pageable,
                                      @RequestParam(required = false, defaultValue = "") String query,
                                      @ModelAttribute BookSearchCondition condition,
+                                     Principal principal,
                                      Model model) {
+        Member seller = memberService.getMember(principal);
         Page<BookManageSearchResponse> responses = null;
         if (query.isEmpty()) {
-            responses = bookManageService.getAllBooks();
+            responses = bookManageService.getAllBooks(seller);
         } else {
-            responses = bookManageService.searchBook(query, pageable, condition);
+            responses = bookManageService.searchBook(query, pageable, condition, seller);
         }
         PagingManageBookSearchDto paging = new PagingManageBookSearchDto(responses);
 
@@ -93,7 +95,7 @@ public class BookManageViewController {
         return "manage/book/book-search";
     }
 
-    @Deprecated
+    /*@Deprecated
     @GetMapping("/manage/search/book/result")
     public String returnSearchResult(@PageableDefault(size = 5) Pageable pageable,
                                      @RequestParam(required = false) String query,
@@ -102,11 +104,13 @@ public class BookManageViewController {
         Page<BookManageSearchResponse> responses = bookManageService.searchBook(query, pageable, condition);
         PagingManageBookSearchDto paging = new PagingManageBookSearchDto(responses);
         return "search/book-search";
-    }
+    }*/
 
     @GetMapping("/manage/book/search-query")
-    public ResponseEntity<BaseResponse<List<BookManageSearchResponse>>> returnSearchQuery(@RequestParam(required = false) String query) {
-        List<BookManageSearchResponse> searchBookQuery = bookManageService.searchBookQuery(query);
+    public ResponseEntity<BaseResponse<List<BookManageSearchResponse>>> returnSearchQuery(@RequestParam(required = false) String query,
+                                                                                          Principal principal) {
+        Member seller = memberService.getMember(principal);
+        List<BookManageSearchResponse> searchBookQuery = bookManageService.searchBookQuery(query, seller);
         BaseResponse<List<BookManageSearchResponse>> response = new BaseResponse<>(HttpStatus.OK, "검색어 추천합니다", searchBookQuery);
         return ResponseEntity.ok(response);
     }

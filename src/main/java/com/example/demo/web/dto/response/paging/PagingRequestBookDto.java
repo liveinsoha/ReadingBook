@@ -3,11 +3,13 @@ package com.example.demo.web.dto.response.paging;
 
 import com.example.demo.web.dto.response.RequestedBookDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class PagingRequestBookDto extends PagingDto{
     // 최초 페이지 번호

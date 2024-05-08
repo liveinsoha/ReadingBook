@@ -34,7 +34,8 @@
           <!-- 도서 제목으로 검색하는 폼 -->
           <form class="book-form content-box d-flex" id="bookForm" method="GET" action="/manage/search/book">
             <!-- action과 method 속성 추가 -->
-            <input type="text" name="query" th:value="${query}" id="bookSearch" class="form-control mb-3 p-2 flex-grow-1" />
+            <input type="text" name="query" th:value="${query}" id="bookSearch"
+              class="form-control mb-3 p-2 flex-grow-1" />
             <!-- input name을 query로 변경 -->
             <div id="bookSuggestions" class="mb-3 p-2"></div>
             <button type="submit" class="btn btn-primary p-3 search ms-2">검색</button> <!-- 버튼 타입을 submit으로 변경 -->
@@ -49,6 +50,9 @@
                     <th scope="col">도서 제목</th>
                     <th scope="col">출판사</th>
                     <th scope="col">이미지</th>
+                    <th scope="col">승인 여부</th>
+                    <th scope="col">판매 중</th>
+                    <th scope="col">수정 및 삭제</th> <!-- 수정 및 삭제 버튼 열 추가 -->
                   </tr>
                 </thead>
                 <tbody>
@@ -57,8 +61,19 @@
                     <td th:text="${response.title}"></td>
                     <td th:text="${response.publisher}"></td>
                     <td>
-                      <img th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}"
-                        width="150px" height="200px">
+                      <img th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}" width="150px"
+                        height="200px">
+                    </td>
+                    <td>
+                      <div th:if="${response.isRequested}">승인 대기중</div>
+                      <div th:if="${!response.isRequested && response.isAccepted}">승인됨</div>
+                      <div th:if="${!response.isRequested && !response.isAccepted}">승인 거부</div>
+                      <!-- 승인 상태 표시 -->
+                    </td>
+                    <td>
+                      <div th:if="${response.isOnSale}" >O</div>
+                      <div th:unless="${response.isOnSale}">X</div>
+                      <!-- 판매 중 여부 표시 -->
                     </td>
                     <td>
                       <div class="toggle-buttons" style="display:none;"> <!-- 수정 및 삭제 버튼 숨김 -->
@@ -69,6 +84,7 @@
                     </td>
                   </tr>
                 </tbody>
+
               </table>
               <div class="content-box" th:if="${responses.content.size() eq 0}">
                 '<span th:text="${query}"></span>'에 대한 검색 결과가 없습니다.

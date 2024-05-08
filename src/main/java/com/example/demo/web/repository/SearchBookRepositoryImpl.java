@@ -1,6 +1,6 @@
 package com.example.demo.web.repository;
 
-import com.example.demo.web.domain.entity.Book;
+import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.enums.AuthorOption;
 import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.dto.response.BookSearchResponse;
@@ -9,7 +9,6 @@ import com.example.demo.web.dto.response.QBookSearchResponse;
 import com.example.demo.web.repository.searchCond.SearchCondUtils;
 import com.example.demo.web.service.search.BookSearchCondition;
 import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -151,21 +150,18 @@ public class SearchBookRepositoryImpl implements SearchBookRepository {
     }
 
     @Override
-    public Page<BookManageSearchResponse> searchRegisteredBook(String searchQuery, Pageable pageable, BookSearchCondition condition) {
+    public Page<BookManageSearchResponse> searchRegisteredBook(String searchQuery, Pageable pageable, BookSearchCondition condition, Member seller) {
         JPAQuery<BookManageSearchResponse> query = queryFactory
                 .select(new QBookManageSearchResponse(
-                        book.id,
-                        book.title,
-                        book.publisher,
-                        book.savedImageName
+                        book
                 ))
                 .from(book)
                 .join(bookAuthorList).on(bookAuthorList.book.eq(book))
                 .join(bookAuthorList.author, author)
                 .where(
-                        book.publisher.contains(searchQuery)
-                                .or(book.title.contains(searchQuery))
-                                .or(author.name.contains(searchQuery))
+                        book.seller.eq(seller).and(book.publisher.contains(searchQuery))
+                                .or(book.seller.eq(seller).and(book.title.contains(searchQuery)))
+                                .or(book.seller.eq(seller).and(author.name.contains(searchQuery)))
                 )
                 .groupBy(book.id) // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
                 .orderBy(SearchCondUtils.bookOrder(book, condition.getOrder()))
@@ -181,49 +177,48 @@ public class SearchBookRepositoryImpl implements SearchBookRepository {
                 .join(bookAuthorList).on(bookAuthorList.book.eq(book))
                 .join(bookAuthorList.author, author)
                 .where(
-                        book.publisher.contains(searchQuery)
-                                .or(book.title.contains(searchQuery))
-                                .or(author.name.contains(searchQuery))
+                        book.seller.eq(seller).and(book.publisher.contains(searchQuery))
+                                .or( book.seller.eq(seller).and(book.title.contains(searchQuery)))
+                                .or( book.seller.eq(seller).and(author.name.contains(searchQuery)))
                 )
                 .groupBy(book.id); // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+
     }
 
 
+
     @Override
-    public List<BookManageSearchResponse> searchBookQuery(String query) {
+    public List<BookManageSearchResponse> searchBookQuery(String query, Member seller) {
+
         List<BookManageSearchResponse> searchResponses = select(new QBookManageSearchResponse(
-                book.id,
-                book.title,
-                book.publisher,
-                book.savedImageName
+                book
         ))
                 .from(book)
                 .join(bookAuthorList).on(bookAuthorList.book.eq(book))
                 .join(bookAuthorList.author, author)
                 .where(
-                        book.publisher.contains(query)
-                                .or(book.title.contains(query))
-                                .or(author.name.contains(query))
+                        book.seller.eq(seller).and(book.publisher.contains(query))
+                                .or(book.seller.eq(seller).and(book.title.contains(query)))
+                                .or(book.seller.eq(seller).and(author.name.contains(query)))
                 )
-                .groupBy(book.id) // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
+                .groupBy(book.id)      // 책 ID로 그루핑하여 중복된 책을 그룹화합니다.
                 .fetch();
 
         return searchResponses;
+
     }
 
     @Override
-    public Page<BookManageSearchResponse> searchAllBooks(Pageable pageable) {
+    public Page<BookManageSearchResponse> searchAllBooks(Pageable pageable, Member seller) {
 
         JPAQuery<BookManageSearchResponse> query = queryFactory
                 .select(new QBookManageSearchResponse(
-                        book.id,
-                        book.title,
-                        book.publisher,
-                        book.savedImageName
+                        book
                 ))
                 .from(book)
+                .where(book.seller.eq(seller))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
@@ -232,7 +227,8 @@ public class SearchBookRepositoryImpl implements SearchBookRepository {
         // 전체 레코드 수를 가져오는 쿼리
         JPAQuery<Long> countQuery = queryFactory
                 .select(book.count())
-                .from(book);
+                .from(book)
+                .where(book.seller.eq(seller));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
