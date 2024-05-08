@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "/register/book-group", "/update/book-group", "/delete/book-group", "/search/book-group",
                                 "/register/category-group", "/update/category-group", "/delete/category-group", "/search/category-group",
                                 "/register/category", "/update/category", "/delete/category", "/search/category", "/search/categories"
-                        ).hasRole("ADMIN")
+                        ).hasAnyRole("ADMIN", "VENDOR")
+                        .requestMatchers("/vendor/request").hasRole("VENDOR")
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .anyRequest().permitAll()
 

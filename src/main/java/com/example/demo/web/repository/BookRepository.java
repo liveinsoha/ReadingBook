@@ -11,8 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository extends JpaRepository<Book, Long>, SearchBookRepository, HomeRepository {
+public interface BookRepository extends JpaRepository<Book, Long>, SearchBookRepository, HomeRepository, BookRequestRepository {
     boolean existsByCategoryId(Long categoryId);
+
 
     List<Book> findByIsRequested(boolean isRequested);
 

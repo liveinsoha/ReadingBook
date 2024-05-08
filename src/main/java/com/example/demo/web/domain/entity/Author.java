@@ -19,7 +19,7 @@ public class Author extends BaseEntity {
     private String name;
 
     @JoinColumn(name = "member_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member registrant;
 
     @Enumerated(EnumType.STRING)

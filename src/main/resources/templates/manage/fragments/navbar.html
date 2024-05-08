@@ -53,6 +53,16 @@
           </li>
         </ul>
       </li>
+      <th:block sec:authorize="hasAnyRole('VENDOR')">
+        <li class="navbar-box">
+          <div class="title">운영자</div>
+          <ul class="content">
+            <li>
+              <a href="/vendor/request" th:classappend="${selectFlag eq 'requestedBook'} ? 'selected' : ''">판매 요청 목록</a>
+            </li>
+          </ul>
+        </li>
+      </th:block>
     </ul>
   </aside>
 </th:block>

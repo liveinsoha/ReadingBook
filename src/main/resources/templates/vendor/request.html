@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <th:block th:replace="~{common/fragments/csrf :: csrf}"></th:block>
+    <title>리딩북스</title>
+
+    <th:block th:replace="~{common/fragments/common-settings :: settings}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/home/navbar.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/management/management.css}" type="text/css">
+
+    <script th:src="@{/js/common/call-ajax.js}"></script>
+    <script th:src="@{/js/vendor/request.js}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header mb-5 mt-1">
+            <th:block th:replace="~{common/fragments/navbar :: navbar}"></th:block>
+        </header>
+        <main class="main">
+            <div class="row">
+                <div class="col-2">
+                    <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
+                </div>
+                <div class="col-10">
+                    <div class="text-center">
+                        <div class="category-form content-box">
+                            <table class="table" th:if="${responses.content.size() ne 0}">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">도서 아이디</th>
+                                        <th scope="col">도서 제목</th>
+                                        <th scope="col">출판사</th>
+                                        <th scope="col">이미지</th>
+                                        <th scope="col">액션</th> <!-- 수정 -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <div th:each="response : ${responses.content}">
+                                        <tr>
+                                            <td th:text="${response.bookId}"></td>
+                                            <td th:text="${response.title}"></td>
+                                            <td th:text="${response.publisher}"></td>
+                                            <td>
+                                                <img th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}"
+                                                    width="150px" height="200px">
+                                            </td>
+                                            <td>
+                                                <div class="toggle-buttons" style="display:block;">
+                                                    <a class="btn btn-primary request-accept"
+                                                        th:data-request="${response.bookId}">승인</a>
+                                                    <a class="btn btn-primary request-reject"
+                                                        th:data-request="${response.bookId}">거부</a>
+                                                    <button class="btn btn-primary toggle-button">내용 보기</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="book-content-row" style="display:none;">
+                                            <td colspan="5"> <!-- colspan을 사용하여 전체 행을 확장 -->
+                                                <div class="book-content">
+                                                    <p th:text="${response.bookContent}" style="text-align: left;"></p>
+                                                    <!-- 텍스트를 왼쪽에 정렬 -->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </div>
+                                </tbody>
+                            </table>
+                            <div class="content-box" th:if="${responses.content.size() eq 0}">
+                                판매 요청 도서가 없습니다.
+                            </div>
+
+                            <section th:if="${responses.totalElements ne 0}" class="mt-2 d-flex justify-content-center">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        <li class="page-item" th:class="${responses.first} ? 'disabled'">
+                                            <a class="page-link"
+                                                th:href="@{/vendor/request(page=${paging.firstPageNumber})}"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:class="${responses.first} ? 'disabled'">
+                                            <a class="page-link"
+                                                th:href="@{/vendor/request(page=${paging.prevPageNumber})}"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <th:block
+                                            th:with="start = ${paging.startPageNumberInThisPageGroup}, end = ${paging.lastPageNumberInThisPageGroup}">
+                                            <li class="page-item" th:each="num : ${#numbers.sequence(start, end)}"
+                                                th:class="${responses.pageable.pageNumber eq num - 1} ? 'active' : ''">
+                                                <a class="page-link" th:href="@{/vendor/request(page=${num} - 1)}"
+                                                    th:text="${num}">1</a>
+                                            </li>
+                                        </th:block>
+                                        <li class="page-item" th:class="${responses.last} ? 'disabled' : ''">
+                                            <a class="page-link"
+                                                th:href="@{/vendor/request(page=${paging.nextPageNumber})}"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:class="${responses.last} ? 'disabled' : ''">
+                                            <a class="page-link"
+                                                th:href="@{/vendor/request(page=${paging.lastPageNumber})}"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&raquo;&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- 검색 결과를 감싸는 컨테이너 -->
+            </div>
+
+        </main>
+
+    </div>
+</body>
+
+
+</html>

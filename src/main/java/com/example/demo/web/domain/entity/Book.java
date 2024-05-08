@@ -34,7 +34,7 @@ public class Book extends BaseEntity {
     private boolean isRequested;
 
     @JoinColumn(name = "member_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member seller;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -80,6 +80,18 @@ public class Book extends BaseEntity {
         book.description = request.getDescription();
         book.reviewCount = 0;
         return book;
+    }
+
+    public void updateAccepted() {
+        this.isRequested = false;
+        this.isAccepted = true;
+        this.isOnSale = true;
+    }
+
+    public void updateRejected() {
+        this.isRequested = false;
+        this.isAccepted = false;
+        this.isOnSale = false;
     }
 
     public void updateImage(String updatedImageName) {
