@@ -348,5 +348,6 @@ public class TestInitClass {
         return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender, phoneNo);
     }
 
+
 }
 

@@ -18,6 +18,10 @@ public class Author extends BaseEntity {
 
     private String name;
 
+    @JoinColumn(name = "member_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Member registrant;
+
     @Enumerated(EnumType.STRING)
     private AuthorOption authorOption;
 
@@ -28,7 +32,7 @@ public class Author extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    public static Author createAuthor(AuthorRegisterRequest request){
+    public static Author createAuthor(AuthorRegisterRequest request) {
         Author author = new Author();
         author.name = request.getName();
         author.authorOption = request.getAuthorOption();
@@ -39,7 +43,7 @@ public class Author extends BaseEntity {
         return author;
     }
 
-    public void updateAuthor(AuthorUpdateRequest request){
+    public void updateAuthor(AuthorUpdateRequest request) {
         this.name = request.getName();
         this.authorOption = request.getAuthorOption();
         this.nationality = request.getNationality();

@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, Long>, SearchBookRepository, HomeRepository {
     boolean existsByCategoryId(Long categoryId);
 
+    List<Book> findByIsRequested(boolean isRequested);
+
     List<Book> findByIsAcceptedAndIsOnSaleAndIdIn(boolean isAccepted, boolean isOnSale, List<Long> bookIdList);
 
     boolean existsByBookGroupId(Long bookGroupId);

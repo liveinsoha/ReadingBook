@@ -1,11 +1,13 @@
 package com.example.demo.web.controller.view.manage;
 
+import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.dto.BaseResponse;
 import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.dto.response.BookUpdateResponse;
 import com.example.demo.web.dto.response.paging.PagingManageBookSearchDto;
 
 import com.example.demo.web.service.BookManageService;
+import com.example.demo.web.service.MemberService;
 import com.example.demo.web.service.search.BookSearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -30,6 +33,7 @@ import java.util.List;
 public class BookManageViewController {
 
     private final BookManageService bookManageService;
+    private final MemberService memberService;
 
     @GetMapping("/register/book")
     public String registerForm(Model model) {
@@ -39,8 +43,9 @@ public class BookManageViewController {
 
 
     @GetMapping("/update/book/{bookId}")
-    public String updateForm(Model model, @PathVariable Long bookId) {
-        BookUpdateResponse response = bookManageService.getBook(bookId);
+    public String updateForm(Model model, @PathVariable Long bookId, Principal principal) {
+        Member seller = memberService.getMember(principal);
+        BookUpdateResponse response = bookManageService.getBook(bookId, seller.getId());
 
         if (response == null) {
             model.addAttribute("isSearched", false);
@@ -88,6 +93,7 @@ public class BookManageViewController {
         return "manage/book/book-search";
     }
 
+    @Deprecated
     @GetMapping("/manage/search/book/result")
     public String returnSearchResult(@PageableDefault(size = 5) Pageable pageable,
                                      @RequestParam(required = false) String query,
@@ -95,8 +101,6 @@ public class BookManageViewController {
 
         Page<BookManageSearchResponse> responses = bookManageService.searchBook(query, pageable, condition);
         PagingManageBookSearchDto paging = new PagingManageBookSearchDto(responses);
-
-
         return "search/book-search";
     }
 

@@ -3,6 +3,7 @@ package com.example.demo.web.util;
 import com.example.demo.web.domain.entity.Book;
 import com.example.demo.web.domain.entity.BookGroup;
 import com.example.demo.web.domain.entity.Category;
+import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.domain.enums.AuthorOption;
 import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.dto.request.*;
@@ -24,9 +25,9 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class InitClass {
 
-@PostConstruct
-    void init(){
-        initAuthorData(1,1L);
+    @PostConstruct
+    void init() {
+        initAuthorData(1, 1L);
     }
 
     Random random = new Random();
@@ -47,18 +48,20 @@ public class InitClass {
 
     private final BookGroupRepository bookGroupRepository;
 
+    private final MemberService memberService;
 
-    public void initData(){
+
+    public void initData() {
         initBookGroupData();
         initCategoryData();
         initBookData(1);
-        initAuthorData(1,1L);
+        initAuthorData(1, 1L);
     }
 
-    public void initBookGroupData(){
+    public void initBookGroupData() {
         BookGroupRegisterRequest request = new BookGroupRegisterRequest("BookGroupTitle");
         BookGroup bookGroup = BookGroup.createBookGroup(request, "book1.png");
-         bookGroupRepository.save(bookGroup);
+        bookGroupRepository.save(bookGroup);
     }
 
     public void initCategoryData() {
@@ -71,6 +74,11 @@ public class InitClass {
 
     public void initBookData(int index) {
 
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
+        Member seller = memberService.getMember(memberId1);
+
         // 시리즈 번호를 제목에 추가
         String title = "해리포터와 마법사의 돌 " + index;
         // 책 등록 request
@@ -79,12 +87,11 @@ public class InitClass {
 
         Category category = categoryRepository.getReferenceById(request.getCategoryId());
         BookGroup bookgroup = bookGroupRepository.getReferenceById(request.getBookGroupId());
-        bookRepository.save(Book.createBook(request,category,bookgroup,"book1.png"));
+        bookRepository.save(Book.createBook(request, category, bookgroup, "book1.png",seller));
     }
 
     private static BookRegisterRequest createRegisterRequest(String title, String isbn, String publisher, String
-            publishingDate,
-                                                             int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId, String description) {
+            publishingDate, int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId, String description) {
         return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId, description);
     }
 
@@ -117,4 +124,8 @@ public class InitClass {
         return new AuthorRegisterRequest(name, option, nationality, description, birthYear, gender);
     }
 
+    private MemberRegisterRequest createMemberRegisterRequest(String email, String password, String
+            passwordConfirm, String name, String birthYear, Gender gender, String phoneNo) {
+        return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender, phoneNo);
+    }
 }

@@ -33,6 +33,10 @@ public class Book extends BaseEntity {
     private boolean isAccepted;
     private boolean isRequested;
 
+    @JoinColumn(name = "member_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Member seller;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @ToString.Exclude
@@ -51,7 +55,7 @@ public class Book extends BaseEntity {
     private int reviewCount;
 
 
-    public static Book createBook(BookRegisterRequest request, Category category, BookGroup bookGroup, String savedImageName) {
+    public static Book createBook(BookRegisterRequest request, Category category, BookGroup bookGroup, String savedImageName, Member seller) {
         Book book = new Book();
         book.title = request.getTitle();
         book.isbn = request.getIsbn();
@@ -66,6 +70,8 @@ public class Book extends BaseEntity {
         book.isAccepted = false; // 승인 여부
         book.isRequested = true; //판매 요청
         book.isOnSale = false;
+
+        book.seller = seller;
 
         book.category = category;
         book.bookGroup = bookGroup;

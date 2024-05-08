@@ -37,7 +37,6 @@ public class BookManageService {
     private final BookContentRepository bookContentRepository;
     private final BookAuthorListRepository bookAuthorListRepository;
     private final AuthorRepository authorRepository;
-    private final BookMemberMapRepository bookMemberMapRepository;
     private final MemberRepository memberRepository;
 
 
@@ -55,7 +54,7 @@ public class BookManageService {
     @Transactional
     public Long registerBook(BookRegisterRequest request, MultipartFile file, Long memberId) {
 
-        Member member = memberRepository.findById(memberId)
+        Member seller = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
 
         validateForm(
@@ -68,7 +67,8 @@ public class BookManageService {
 
         Category category = getCategory(request.getCategoryId());
         BookGroup bookGroup = getBookGroup(request.getBookGroupId());
-        Book book = Book.createBook(request, category, bookGroup, savedImageName);
+
+        Book book = Book.createBook(request, category, bookGroup, savedImageName, seller);
         bookRepository.save(book);
 
         request.getAuthors().stream().forEach(
@@ -82,8 +82,6 @@ public class BookManageService {
                     bookAuthorListRepository.save(bookAuthorList);
                 }
         );
-        bookMemberMapRepository.save(BookMemberMap.create(member, book));
-
         return book.getId();
     }
 
@@ -98,13 +96,15 @@ public class BookManageService {
 
 
     @Transactional(readOnly = true)
-    public BookUpdateResponse getBook(Long bookId) {
+    public BookUpdateResponse getBook(Long bookId, Long sellerId) {
         Optional<Book> book = bookRepository.findById(bookId);
 
         if (book.isEmpty()) {
             return null;
         }
-
+        if (!book.get().getSeller().getId().equals(sellerId)) {
+            throw new BaseException(BaseResponseCode.NO_AUTHORIZATION_FOR_BOOK);
+        }
         return book.map(BookUpdateResponse::new).get();
     }
 

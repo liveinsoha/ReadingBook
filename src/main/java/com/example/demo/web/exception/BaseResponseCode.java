@@ -30,6 +30,7 @@ public enum BaseResponseCode {
     BOOK_ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "이미 구매한 도서입니다"),
     ORDER_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "주문 아이디를 찾을 수 없습니다."),
     ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, "이미 해당 도서에 리뷰를 작성했습니다."),
+    NO_AUTHORIZATION_FOR_BOOK(HttpStatus.BAD_REQUEST, "본인이 등록한 책이 아닙니다"),
 
 
 
