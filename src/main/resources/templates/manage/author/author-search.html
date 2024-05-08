@@ -28,14 +28,16 @@
         </div>
 
         <div class="col-10">
-          <form class="author-form content-box" id="authorForm"> <!-- 폼에 ID 추가 -->
+          <form class="author-form content-box" id="authorForm" method="GET" action="/search/author">
+            <!-- method와 action 추가 -->
             <label for="authorSearch">작가 이름으로 검색</label>
-            <input type="text" name="authorName" id="authorSearch" class="form-control mb-3 p-2" />
+            <input type="text" name="query" id="authorSearch" class="form-control mb-3 p-2" th:value="${query}" />
             <div id="authorSuggestions" class="mb-3 p-2"></div>
-            <button type="submit" class="btn btn-primary w-100 p-3 search">검색하기</button> <!-- 버튼 타입 변경 -->
+            <button type="submit" class="btn btn-primary w-100 p-3 search">검색하기</button> <!-- 버튼 타입을 submit으로 변경 -->
           </form>
-        
-          <!-- 결과를 표시할 테이블 -->
+
+
+          <!-- 작가 검색 결과 표시 -->
           <div class="category-form">
             <table class="table">
               <thead>
@@ -45,16 +47,31 @@
                   <th>출생 연도</th>
                   <th>성별</th>
                   <th>작가 옵션</th>
+                  <th>수정</th> <!-- 수정 버튼 추가 -->
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+                <tr th:each="authorResponse : ${responses}">
+                  <td th:text="${authorResponse.authorId}"></td>
+                  <td th:text="${authorResponse.authorName}"></td>
+                  <td th:text="${authorResponse.birthYear}"></td>
+                  <td th:text="${authorResponse.gender}"></td>
+                  <td th:text="${authorResponse.authorOption}"></td>
+                  <td><a th:href="@{'/update/author/' + ${authorResponse.authorId}}" class="btn btn-primary">수정</a></td>
+                  <!-- 수정 버튼 링크 -->
+                </tr>
+              </tbody>
             </table>
+            <div class="content-box" th:if="${responses.size() eq 0}">
+              '<span th:text="${query}"></span>'에 대한 검색 결과가 없습니다.
+            </div>
           </div>
-        
-          <!-- 선택된 작가 ID를 저장할 hidden input -->
-          <input type="hidden" name="selectedAuthorId" id="selectedAuthorId">
         </div>
-        
+
+        <!-- 선택된 작가 ID를 저장할 hidden input -->
+        <input type="hidden" name="selectedAuthorId" id="selectedAuthorId">
+      </div>
+
 </body>
 
 </html>

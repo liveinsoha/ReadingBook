@@ -26,6 +26,33 @@ public class MailServiceImpl implements MailService {
         javaMailSender.send(message);
     }
 
+    @Override
+    public void sendCode(String toEmail, String sellerCode) {
+        MimeMessage message = createCodeMessage(toEmail, sellerCode);
+        javaMailSender.send(message);
+    }
+
+    private MimeMessage createCodeMessage(String toEmail, String sellerCode) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+            messageHelper.setTo(toEmail);
+            messageHelper.setSubject("[bookshop] 판매자 확인 코드입니다.");
+
+            String sendMessage = "";
+            sendMessage += "<h2>판매자 확인 코드</h2>";
+            sendMessage += "<strong>확인코드 : </strong>";
+            sendMessage += "<span>"+sellerCode+"</span>";
+            message.setText(sendMessage, "utf-8", "html");
+
+        } catch (MessagingException e) {
+            throw new BaseException(BaseResponseCode.EMAIL_ERROR_OCCURRED);
+        }
+
+        return message;
+    }
+
     private MimeMessage createMessage(String toEmail, String tempPassword) {
         MimeMessage message = javaMailSender.createMimeMessage();
 

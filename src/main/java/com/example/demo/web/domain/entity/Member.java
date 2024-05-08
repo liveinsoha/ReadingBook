@@ -23,12 +23,17 @@ public class Member extends BaseEntity {
     private String birthYear;
     private String phoneNo;
 
+    private String sellerCode;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    public void updateSellerCode(String newSellerCode) {
+        this.sellerCode = newSellerCode;
+    }
 
     public static Member createMember(MemberRegisterRequest request) {
         Member member = new Member();

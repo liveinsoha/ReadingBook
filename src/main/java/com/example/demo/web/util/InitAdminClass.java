@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class InitAdminClass {
 
-
+    @PostConstruct
     void init(){
        initData();
     }
@@ -30,7 +30,7 @@ public class InitAdminClass {
     private final MemberRepository memberRepository;
 
     public void initData() {
-        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+        MemberRegisterRequest registerRequest1 = new MemberRegisterRequest(
                 "admin@naver.com",
                 passwordEncoder.encode("Asdasd!!1"),
                 passwordEncoder.encode("Asdasd!!1"),
@@ -39,8 +39,8 @@ public class InitAdminClass {
                 Gender.MEN,
                 "01096780573"
         );
-        MemberRegisterRequest registerRequest1 = new MemberRegisterRequest(
-                "treesheep1@naver.com",
+        MemberRegisterRequest registerRequest2 = new MemberRegisterRequest(
+                "wonjun88888@gmail.com",
                 passwordEncoder.encode("Asdasd!!1"),
                 passwordEncoder.encode("Asdasd!!1"),
                 "이기제",
@@ -48,11 +48,25 @@ public class InitAdminClass {
                 Gender.MEN,
                 "01096780573"
         );
-        Member member1 = Member.createMember(registerRequest1);
-        Member member = Member.createMember(registerRequest);
-        member1.setRole(MemberRole.ROLE_VENDOR);
-        member.setRole(MemberRole.ROLE_ADMIN);
+        MemberRegisterRequest registerRequest3 = new MemberRegisterRequest(
+                "treesheep@naver.com",
+                passwordEncoder.encode("Asdasd!!1"),
+                passwordEncoder.encode("Asdasd!!1"),
+                "전희수",
+                "1999",
+                Gender.MEN,
+                "01096780573"
+        );
+        Member vendor = Member.createMember(registerRequest1);
+        Member admin = Member.createMember(registerRequest2);
+        Member member = Member.createMember(registerRequest3);
+
+        vendor.setRole(MemberRole.ROLE_VENDOR);
+        admin.setRole(MemberRole.ROLE_ADMIN);
+        member.setRole(MemberRole.ROLE_MEMBER);
+
+        memberRepository.save(vendor);
+        memberRepository.save(admin);
         memberRepository.save(member);
-        memberRepository.save(member1);
     }
 }

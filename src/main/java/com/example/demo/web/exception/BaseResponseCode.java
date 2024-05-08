@@ -37,6 +37,7 @@ public enum BaseResponseCode {
     USER_DUPLICATE(HttpStatus.BAD_REQUEST, "중복된 사용자가 있습니다"),
     AUTHORIZATION_NOT_VALID(HttpStatus.BAD_REQUEST, "인증정보가 일치하지 않습니다"),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다. 다시 입력해주세요."),
+    INVALID_SELLER_CODE(HttpStatus.BAD_REQUEST, "확인코드가 다릅니다"),
 
 
     EMPTY_NAME(HttpStatus.BAD_REQUEST, "이름을 입력해주세요."),

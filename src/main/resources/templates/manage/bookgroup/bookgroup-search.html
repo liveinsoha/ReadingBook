@@ -30,10 +30,13 @@
         </div>
 
         <div class="col-10">
-          <form class="bookgroup-form content-box d-flex justify-content-end" action="/search/book-group" method="get">
-            <label for="title" class="mr-2">도서 시리즈 검색</label>
-            <input type="text" name="title" id="title" class="form-control mb-3 p-2 mr-2" />
-            <button type="button" class="btn btn-primary p-2 search">검색하기</button>
+          <form class="bookgroup-form content-box d-flex justify-content-end" action="/search/book-group" method="GET">
+            <label for="query" class="mr-2">도서 시리즈 검색</label>
+            <input type="text" name="query" id="book-group-search" class="form-control mb-3 p-2 mr-2"
+              th:value="${query}" />
+            <!-- th:value를 input 태그 내에 이동 -->
+            <button type="submit" class="btn btn-primary p-2 search">검색하기</button>
+            <!-- 버튼 타입을 submit으로 변경 -->
           </form>
 
           <div class="text-center">
@@ -51,8 +54,8 @@
                     <td class="border-end" th:text="${response.id}"></td>
                     <td class="border-end" th:text="${response.title}"></td>
                     <td class="border-end">
-                      <img th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}"
-                        width="150px" height="200px">
+                      <img th:src="@{{savedImageName}(savedImageName=${response.savedImageName})}" width="150px"
+                        height="200px">
                     </td>
                     <td>
                       <div class="toggle-buttons" style="display:none;"> <!-- 수정 및 삭제 버튼 숨김 -->
@@ -65,10 +68,11 @@
                 </tbody>
               </table>
               <div class="content-box" th:if="${responses.size() eq 0}">
-                '<span th:text="${search}"></span>'에 대한 검색 결과가 없습니다.
+                '<span th:text="${query}"></span>'에 대한 검색 결과가 없습니다.
               </div>
             </form>
           </div>
+          
         </div>
       </div>
     </main>

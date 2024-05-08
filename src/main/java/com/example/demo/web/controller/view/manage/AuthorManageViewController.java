@@ -44,7 +44,16 @@ public class AuthorManageViewController {
 
 
     @GetMapping("/search/author")
-    public String searchForm(Model model) {
+    public String searchForm(@RequestParam(required = false, defaultValue = "") String query,
+                             Model model) {
+        List<AuthorSearchResponse> responses ;
+        if (query.isEmpty()) {
+            responses = authorManageService.searchAllAuthors();
+        } else {
+            responses = authorManageService.searchByAuthorName(query);
+        }
+        model.addAttribute("responses", responses);
+        model.addAttribute("query", query);
         model.addAttribute("selectFlag", "searchAuthor");
         return "manage/author/author-search";
     }

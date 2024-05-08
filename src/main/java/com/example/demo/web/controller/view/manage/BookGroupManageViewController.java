@@ -50,19 +50,19 @@ public class BookGroupManageViewController {
     }
 
     @GetMapping("/search/book-group")
-    public String returnSearchResult(@RequestParam(required = false, defaultValue = "") String title,
+    public String returnSearchResult(@RequestParam(required = false, defaultValue = "") String query,
                                      Model model) {
         List<BookGroupSearchResponse> responses = null;
-        if (title.isEmpty()) {
+        if (query.isEmpty()) {
             responses = bookGroupManagementService.searchAllBookGroup();
         } else {
-            responses = bookGroupManagementService.searchByBookGroupTitle(title);
+            responses = bookGroupManagementService.searchByBookGroupTitle(query);
         }
 
         System.out.println("responses = " + responses);
 
         model.addAttribute("responses", responses);
-        model.addAttribute("search", title);
+        model.addAttribute("query", query);
         model.addAttribute("selectFlag", "searchBookGroup");
         return "manage/bookgroup/bookgroup-search";
     }

@@ -93,6 +93,15 @@ public class AuthorManageService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<AuthorSearchResponse> searchAllAuthors() {
+        List<Author> authors = authorRepository.findAll();
+
+        return authors.stream()
+                .map(a -> new AuthorSearchResponse(a.getId(), a.getName(), a.getBirthYear(), a.getGender().getKorean(), a.getAuthorOption().getKorean()))
+                .collect(Collectors.toList());
+    }
+
     /**
      * 작가 삭제 메소드
      * @param authorId

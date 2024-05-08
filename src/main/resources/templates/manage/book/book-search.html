@@ -34,7 +34,7 @@
           <!-- 도서 제목으로 검색하는 폼 -->
           <form class="book-form content-box d-flex" id="bookForm" method="GET" action="/manage/search/book">
             <!-- action과 method 속성 추가 -->
-            <input type="text" name="query" id="bookSearch" class="form-control mb-3 p-2 flex-grow-1" />
+            <input type="text" name="query" th:value="${query}" id="bookSearch" class="form-control mb-3 p-2 flex-grow-1" />
             <!-- input name을 query로 변경 -->
             <div id="bookSuggestions" class="mb-3 p-2"></div>
             <button type="submit" class="btn btn-primary p-3 search ms-2">검색</button> <!-- 버튼 타입을 submit으로 변경 -->

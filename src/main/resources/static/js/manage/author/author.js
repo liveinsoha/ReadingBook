@@ -131,65 +131,65 @@ function selectAuthor() {
     $('#authorSuggestions').empty();
 }
 
-$(function () {
-    $('#authorForm').submit(function (event) { // 폼 제출 이벤트 핸들러 추가
-        event.preventDefault(); // 폼 제출 방지
-        $('#authorSuggestions').empty();
+// $(function () {
+//     $('#authorForm').submit(function (event) { // 폼 제출 이벤트 핸들러 추가
+//         event.preventDefault(); // 폼 제출 방지
+//         $('#authorSuggestions').empty();
 
-        var name = $('#authorSearch').val(); // 입력된 작가 이름 가져오기
-        if (name.trim() !== '') { // 입력된 작가 이름이 비어있지 않은 경우에만 검색
-            $.ajax({
-                url: '/result/author',
-                type: 'GET',
-                data: { name: name },
-                dataType: 'json',
-                success: function (response) {
+//         var name = $('#authorSearch').val(); // 입력된 작가 이름 가져오기
+//         if (name.trim() !== '') { // 입력된 작가 이름이 비어있지 않은 경우에만 검색
+//             $.ajax({
+//                 url: '/result/author',
+//                 type: 'GET',
+//                 data: { name: name },
+//                 dataType: 'json',
+//                 success: function (response) {
                   
-                    generateAuthorResults(response.data);
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX request error:', error);
-                }
-            });
-        } else {
-            alert('작가 이름을 입력하세요.');
-        }
-    });
+//                     generateAuthorResults(response.data);
+//                 },
+//                 error: function (xhr, status, error) {
+//                     console.error('AJAX request error:', error);
+//                 }
+//             });
+//         } else {
+//             alert('작가 이름을 입력하세요.');
+//         }
+//     });
 
-    // 기존 코드는 유지됩니다.
-});
+//     // 기존 코드는 유지됩니다.
+// });
 
 
-function generateAuthorResults(response) {
-    var tableBody = $('.category-form .table tbody'); // 결과를 표시할 테이블의 tbody 요소
+// function generateAuthorResults(response) {
+//     var tableBody = $('.category-form .table tbody'); // 결과를 표시할 테이블의 tbody 요소
 
-    // 기존 결과 제거
-    tableBody.empty();
+//     // 기존 결과 제거
+//     tableBody.empty();
 
-    // 검색어 가져오기
-    var searchQuery = $('#authorSearch').val().trim();
+//     // 검색어 가져오기
+//     var searchQuery = $('#authorSearch').val().trim();
 
-    // 결과가 없는 경우
-    if (response.length === 0) {
-        var noResultMessage = $('<tr><td colspan="5">' +
-            '<span>' + searchQuery + '</span>에 대한 검색 결과가 없습니다.' +
-            '</td></tr>');
-        tableBody.append(noResultMessage);
-        return;
-    }
+//     // 결과가 없는 경우
+//     if (response.length === 0) {
+//         var noResultMessage = $('<tr><td colspan="5">' +
+//             '<span>' + searchQuery + '</span>에 대한 검색 결과가 없습니다.' +
+//             '</td></tr>');
+//         tableBody.append(noResultMessage);
+//         return;
+//     }
 
-    // 결과가 있는 경우
-    $.each(response, function (index, author) {
-        var row = $('<tr>' +
-            '<td class="border-end">' + author.authorId + '</td>' +
-            '<td class="border-end">' + author.authorName + '</td>' +
-            '<td class="border-end">' + author.birthYear + '</td>' +
-            '<td class="border-end">' + author.gender + '</td>' +
-            '<td>' + author.authorOption + '</td>' +
-            // 수정 버튼 추가
-            '<td><a href="/update/author/' + author.authorId + '" class="btn btn-primary">수정</a></td>' +
-            '</tr>');
-        tableBody.append(row);
-    });
-}
+//     // 결과가 있는 경우
+//     $.each(response, function (index, author) {
+//         var row = $('<tr>' +
+//             '<td class="border-end">' + author.authorId + '</td>' +
+//             '<td class="border-end">' + author.authorName + '</td>' +
+//             '<td class="border-end">' + author.birthYear + '</td>' +
+//             '<td class="border-end">' + author.gender + '</td>' +
+//             '<td>' + author.authorOption + '</td>' +
+//             // 수정 버튼 추가
+//             '<td><a href="/update/author/' + author.authorId + '" class="btn btn-primary">수정</a></td>' +
+//             '</tr>');
+//         tableBody.append(row);
+//     });
+// }
 

@@ -2,6 +2,7 @@ package com.example.demo.web.service;
 
 
 import com.example.demo.web.domain.entity.*;
+import com.example.demo.web.domain.enums.MemberRole;
 import com.example.demo.web.dto.request.MemberRegisterRequest;
 import com.example.demo.web.dto.response.MemberInformationResponse;
 import com.example.demo.web.dto.response.ModifyMemberResponse;
@@ -173,6 +174,25 @@ public class MemberService {
         return new ModifyMemberResponse(member);
     }
 
+    @Transactional
+    public void confirmSellerCode(String sellerCode, Member member) {
+        if (!member.getSellerCode().equals(sellerCode)) {
+            throw new BaseException(BaseResponseCode.INVALID_SELLER_CODE);
+        }
+        member.setRole(MemberRole.ROLE_ADMIN);
+    }
+
+    @Transactional
+    public void sendSellerConfirmEmail(String rawPassword, Member member) {
+        String encodedPassword = member.getPassword();
+        matchPasswords(rawPassword, encodedPassword);
+
+        String confirmSellCode = createConfirmSellCode();
+        member.updateSellerCode(confirmSellCode);
+
+        mailService.sendCode(member.getEmail(), confirmSellCode);
+    }
+
     private void matchPasswords(String rawPassword, String encodedPassword) {
         boolean result = passwordEncoder.matches(rawPassword, encodedPassword);
 
@@ -255,9 +275,9 @@ public class MemberService {
         String encodedPassword = member.getPassword();
         matchPasswords(password, encodedPassword);
 
-       /* Long memberId = member.getId();
+        /* Long memberId = member.getId();
 
-        *//* --- 주문의 member null처리--- *//*
+         *//* --- 주문의 member null처리--- *//*
         List<Orders> orders = ordersRepository.findAllByMember(member);
         List<Long> orderIds = orders.stream()
                 .map(order -> order.getId())
@@ -286,7 +306,7 @@ public class MemberService {
         bookRepository.updateReviewCountByBookIdInQuery(reviewedBooks);
 
         /*--- 이제 회원의 리뷰 제거 ---*/
-        reviewRepository.mDeleteByMember(member); 
+        reviewRepository.mDeleteByMember(member);
 
         //*  --- 회원의 리뷰 댓글 제거 --- *//*
         reviewCommentRepository.mDeleteByMember(member);
@@ -322,6 +342,11 @@ public class MemberService {
     private String createTempPassword() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString().substring(0, 8);
+    }
+
+    private String createConfirmSellCode() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().substring(0, 4);
     }
 
     private Member findMember(String email, String phoneNo) {
