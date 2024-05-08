@@ -14,7 +14,13 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, Long>, SearchBookRepository, HomeRepository {
     boolean existsByCategoryId(Long categoryId);
 
+    List<Book> findByIsAcceptedAndIsOnSaleAndIdIn(boolean isAccepted, boolean isOnSale, List<Long> bookIdList);
+
     boolean existsByBookGroupId(Long bookGroupId);
+
+    Optional<Book> findByIsAcceptedAndIsOnSaleAndId(boolean isAccepted, boolean isOnSale, Long id);
+
+    Optional<Book> findByIsAcceptedAndIsOnSaleAndIsbn(boolean isAccepted, boolean isOnSale, String isbn);
 
 
     List<Book> findByTitle(String title);
@@ -23,7 +29,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, SearchBookRep
             "select b from Book b " +
                     "join fetch b.category " +
                     "join fetch b.category.categoryGroup " + //지연로딩하지 않고 쿼리 날리는 순간 프록시 대신 해당 객체를 리턴
-                    "where b.isbn = :isbn" //항상 카테고리 정보가 필요하므로 지연로딩 하지 않았다.
+                    "where b.isbn = :isbn and b.isOnSale = true and b.isAccepted = true" //항상 카테고리 정보가 필요하므로 지연로딩 하지 않았다.
     )
     Optional<Book> getBookInformation(@Param("isbn") String isbn);
 

@@ -17,22 +17,28 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional(readOnly = true)
-    public Book findBook(Long bookId){
+    public Book findBookForContent(Long bookId) {
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
-    public Book findBook(String isbn){
-        return bookRepository.findByIsbn(isbn)
+    public Book findBook(Long bookId) {
+        return bookRepository.findByIsAcceptedAndIsOnSaleAndId(true, true, bookId)
+                .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public Book findBook(String isbn) {
+        return bookRepository.findByIsAcceptedAndIsOnSaleAndIsbn(true, true, isbn)
                 .orElseThrow(() -> new BaseException(BaseResponseCode.BOOK_NOT_FOUND));
     }
 
 
     public List<Book> findAllById(List<Long> bookIdList) {
-        if(bookIdList.size() == 0){
+        if (bookIdList.size() == 0) {
             throw new IllegalArgumentException("도서가 없습니다.");
         }
-        return bookRepository.findAllById(bookIdList);
+        return bookRepository.findByIsAcceptedAndIsOnSaleAndIdIn(true, true, bookIdList);
     }
 }

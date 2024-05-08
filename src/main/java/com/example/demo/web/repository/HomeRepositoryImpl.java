@@ -86,10 +86,8 @@ public class HomeRepositoryImpl implements HomeRepository {
                                 book.reviewCount)
                 )
                 .from(book)
-                .where(book.id.in(
-                        select(book.id) //리뷰 개수 순 내림차순
-                                .from(book)
-                                .orderBy(book.reviewCount.desc())))
+                .where(book.isAccepted.and(book.isOnSale))
+                .orderBy(book.reviewCount.desc())
                 .limit(5)
                 .fetch();
     }
@@ -127,6 +125,7 @@ public class HomeRepositoryImpl implements HomeRepository {
                         book.reviewCount)
                 )
                 .from(book)
+                .where(book.isAccepted.and(book.isOnSale))
                 .orderBy(book.createdTime.desc())
                 .limit(5)
                 .fetch();

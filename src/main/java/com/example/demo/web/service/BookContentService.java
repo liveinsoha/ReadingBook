@@ -37,7 +37,7 @@ public class BookContentService {
 
         validateForm(bookId, content);
 
-        Book book = bookService.findBook(bookId);
+        Book book = bookService.findBookForContent(bookId);
         BookContent bookContent = BookContent.createBookContent(book, content);
 
         return bookContentRepository.save(bookContent).getId();

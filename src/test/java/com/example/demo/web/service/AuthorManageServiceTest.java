@@ -26,6 +26,9 @@ class AuthorManageServiceTest {
     AuthorManageService authorManageService;
 
     @Autowired
+    MemberService memberService;
+
+    @Autowired
     private CategoryService categoryService;
 
     @Autowired
@@ -38,7 +41,7 @@ class AuthorManageServiceTest {
     private BookAuthorListService authorListService;
 
     @Test
-    void searchAuthorTest(){
+    void searchAuthorTest() {
         List<AuthorSearchResponse> authors = authorManageService.searchByAuthorName("D");
         System.out.println("authors = " + authors);
     }
@@ -108,7 +111,7 @@ class AuthorManageServiceTest {
     }
 
     @Test
-    void whenAuthorSearched_thenVerifyIsSearched(){
+    void whenAuthorSearched_thenVerifyIsSearched() {
         //given
         AuthorRegisterRequest firstRequest = createAuthorRegisterRequest("qwer", AuthorOption.AUTHOR, "영국", "test", "1999", Gender.MEN);
         authorManageService.registerAuthor(firstRequest);
@@ -125,7 +128,7 @@ class AuthorManageServiceTest {
     }
 
     @Test
-    void whenDeletingAuthorExistsBook_thenThrowException(){
+    void whenDeletingAuthorExistsBook_thenThrowException() {
         //given
         AuthorRegisterRequest firstRequest = createAuthorRegisterRequest("test", AuthorOption.AUTHOR, "영국", "test", "1999", Gender.MEN);
         Long authorId = authorManageService.registerAuthor(firstRequest);
@@ -142,8 +145,10 @@ class AuthorManageServiceTest {
     }
 
 
-
     private Long registerBook() {
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
                 "해리포터와 마법사의 돌.jpg",
@@ -161,14 +166,15 @@ class AuthorManageServiceTest {
         BookRegisterRequest request = createBookRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, categoryId, null, "21세기 최고의 책");
 
-        return bookManagementService.registerBook(request, file);
+        return bookManagementService.registerBook(request, file, memberId1);
     }
 
-  
+
     private static BookRegisterRequest createBookRegisterRequest(String title, String isbn, String publisher, String publishingDate, int paperPrice, int ebookPrice, int discountRate,
                                                                  Long categoryId, Long bookGroupId, String description) {
-        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId,description);
+        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId, description);
     }
+
     // Helper method to create AuthorRegisterRequest
     private AuthorRegisterRequest createAuthorRegisterRequest(String name, AuthorOption option, String nationality, String description, String birthYear, Gender gender) {
         AuthorRegisterRequest authorRegisterRequest = new AuthorRegisterRequest(name, option, nationality, description, birthYear, gender);
@@ -176,4 +182,8 @@ class AuthorManageServiceTest {
     }
 
 
+    private MemberRegisterRequest createMemberRegisterRequest(String email, String password, String
+            passwordConfirm, String name, String birthYear, Gender gender, String phoneNo) {
+        return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender, phoneNo);
+    }
 }

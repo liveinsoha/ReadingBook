@@ -140,6 +140,9 @@ public class TestInitClass {
     }
 
     public Long initBookData(int index) {
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
                 "해리포터와 마법사의 돌.jpg",
@@ -151,7 +154,7 @@ public class TestInitClass {
         // 책 등록 request
         BookRegisterRequest request = createRegisterRequest(title, "123123", "포터모어",
                 "2023.01.01", 0, random.nextInt(10000), 5, 1L, 0L, "21세기 최고의 책");
-        return bookManageService.registerBook(request, file);
+        return bookManageService.registerBook(request, file, memberId1);
     }
 
 
@@ -178,6 +181,11 @@ public class TestInitClass {
     }
 
     public void initHarryPotterSeriesBookAndAuthorData(int seriesNumber) {
+
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
+
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
                 "해리포터와 마법사의 돌.jpg",
@@ -194,7 +202,7 @@ public class TestInitClass {
         BookRegisterRequest request = createRegisterRequest(title, "123123", "포터모어",
                 "2023.01.01", 0, random.nextInt(10000), 5, 1L, 0L, "21세기 최고의 책");
 
-        Long bookId = bookManageService.registerBook(request, file); // 책 등록
+        Long bookId = bookManageService.registerBook(request, file, memberId1); // 책 등록
 
         AuthorRegisterRequest firstAuthorRequest = createAuthorRegisterRequest("DANNY", AuthorOption.AUTHOR, "영국", "test", "1999", Gender.MEN);
         Long firstAuthorId = authorManageService.registerAuthor(firstAuthorRequest);
@@ -228,6 +236,10 @@ public class TestInitClass {
 
 
     public void initBookAndAuthorData() {
+
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
                 "해리포터와 마법사의 돌.jpg",
@@ -242,7 +254,7 @@ public class TestInitClass {
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, 1L, 0L, "21세기 최고의 책");
 
-        Long bookId = bookManageService.registerBook(request, file); // 책 등록
+        Long bookId = bookManageService.registerBook(request, file, memberId1); // 책 등록
 
         //BookContent 등록
         BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "testContent1");
@@ -268,7 +280,7 @@ public class TestInitClass {
         BookRegisterRequest secondBookRequest = createRegisterRequest("톰 소여의 모험", "9788952760289", "포터모어",
                 "2023.01.01", 0, 9900, 5, 1L, 0L, "21세기 최고의 책");
 
-        Long secondBookId = bookManageService.registerBook(secondBookRequest, file);
+        Long secondBookId = bookManageService.registerBook(secondBookRequest, file, memberId1);
 
         //두 번째 BookContent 등록
         BookContentRegisterRequest bookContentRegisterRequest2 = new BookContentRegisterRequest(secondBookId, "testContent2");

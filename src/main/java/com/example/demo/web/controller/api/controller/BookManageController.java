@@ -1,11 +1,13 @@
 package com.example.demo.web.controller.api.controller;
 
+import com.example.demo.web.domain.entity.Member;
 import com.example.demo.web.dto.BaseResponse;
 import com.example.demo.web.dto.request.BookRegisterRequest;
 import com.example.demo.web.dto.request.BookUpdateRequest;
 import com.example.demo.web.dto.response.AuthorSearchResponse;
 import com.example.demo.web.service.AuthorManageService;
 import com.example.demo.web.service.BookManageService;
+import com.example.demo.web.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -23,13 +26,17 @@ public class BookManageController {
 
     private final BookManageService bookManagementService;
     private final AuthorManageService authorManageService;
+    private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Object> registerBook(BookRegisterRequest request,
+    public ResponseEntity<Object> registerBook(Principal principal,
+                                               BookRegisterRequest request,
                                                MultipartFile file) {
 
+        Member member = memberService.getMember(principal);
+
         System.out.println("request.getBookGroupId() = " + request.getBookGroupId());
-        Long savedBookId = bookManagementService.registerBook(request, file);
+        Long savedBookId = bookManagementService.registerBook(request, file, member.getId());
 
         BaseResponse<Long> response = new BaseResponse<>(HttpStatus.CREATED, "책 등록 성공! 내용을 등록해주세요", savedBookId);
         return ResponseEntity

@@ -22,6 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookAuthorListServiceTest {
 
     @Autowired
+    MemberService memberService;
+
+    @Autowired
     private BookAuthorListService bookAuthorListService;
 
     @Autowired
@@ -37,7 +40,7 @@ class BookAuthorListServiceTest {
     private CategoryGroupService categoryGroupService;
 
     @Test
-    void whenAuthorDuplicate_thenThrowException(){
+    void whenAuthorDuplicate_thenThrowException() {
         //given
         Long bookId = createBook();
         Long authorId = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
@@ -52,7 +55,7 @@ class BookAuthorListServiceTest {
     }
 
     @Test
-    void whenAuthorOrdinalDuplicate_thenThrowException(){
+    void whenAuthorOrdinalDuplicate_thenThrowException() {
         Long bookId = createBook();
         //given
         Long authorId1 = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
@@ -68,7 +71,7 @@ class BookAuthorListServiceTest {
     }
 
     @Test
-    void whenBookIdNull_ThenThrowException(){
+    void whenBookIdNull_ThenThrowException() {
         //given
         Long authorId = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
 
@@ -80,7 +83,7 @@ class BookAuthorListServiceTest {
     }
 
     @Test
-    void whenAuthorIdNull_ThenThrowException(){
+    void whenAuthorIdNull_ThenThrowException() {
         //given
         Long bookId = createBook();
 
@@ -91,7 +94,7 @@ class BookAuthorListServiceTest {
     }
 
     @Test
-    void whenAuthorRegistered_thenVerifyRegistered(){
+    void whenAuthorRegistered_thenVerifyRegistered() {
         Long bookId = createBook();
         Long authorId = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
         Long translatorId = createAuthor("유재석", AuthorOption.TRANSLATOR);
@@ -124,7 +127,7 @@ class BookAuthorListServiceTest {
     }
 
     @Test
-    void whenAuthorDeleted_thenVerifyIsDeleted(){
+    void whenAuthorDeleted_thenVerifyIsDeleted() {
         Long bookId = createBook();
         Long authorId = createAuthor("J.K 롤링", AuthorOption.AUTHOR);
 
@@ -132,30 +135,36 @@ class BookAuthorListServiceTest {
         bookAuthorListService.register(request);
         bookAuthorListService.delete(bookId, authorId);
 
-        assertThatThrownBy(() -> bookAuthorListService.findBookAuthorListByBookIdAndAuthorId(bookId,authorId))
+        assertThatThrownBy(() -> bookAuthorListService.findBookAuthorListByBookIdAndAuthorId(bookId, authorId))
                 .isInstanceOf(BaseException.class)
                 .hasMessageContaining(BaseResponseCode.BOOK_AUTHOR_LIST_NOT_FOUND.getMessage());
     }
 
 
     private Long createBook() {
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
 
         BookRegisterRequest bookRegisterRequest = createBookRegisterRequest("해리포터와 마법사의", "4141", "포터모어",
                 "2023.01.01", 0, 9900, 5, 1L, 1L, "21세기 최고의 책");
 
         MockMultipartFile file = getMockMultipartFile();
 
-        return bookManagementService.registerBook(bookRegisterRequest, file);
+        return bookManagementService.registerBook(bookRegisterRequest, file, memberId1);
     }
 
 
-
     private static BookRegisterRequest createBookRegisterRequest(String title, String isbn, String publisher, String publishingDate,
-                                                                 int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId,String description) {
-        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId,description);
+                                                                 int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId, String description) {
+        return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId, description);
     }
 
     private AuthorRegisterRequest createAuthorRegisterRequest(String name, AuthorOption option, String nationality, String description, String birthYear, Gender gender) {
         return new AuthorRegisterRequest(name, option, nationality, description, birthYear, gender);
+    }
+
+    private MemberRegisterRequest createMemberRegisterRequest(String email, String password, String
+            passwordConfirm, String name, String birthYear, Gender gender, String phoneNo) {
+        return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender, phoneNo);
     }
 }

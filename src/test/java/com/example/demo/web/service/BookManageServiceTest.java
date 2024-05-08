@@ -2,6 +2,7 @@ package com.example.demo.web.service;
 
 import com.example.demo.utils.ImageUploadUtil;
 import com.example.demo.web.domain.entity.Book;
+import com.example.demo.web.domain.enums.Gender;
 import com.example.demo.web.dto.request.*;
 import com.example.demo.web.dto.response.BookManageSearchResponse;
 import com.example.demo.web.exception.BaseException;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -52,11 +55,21 @@ class BookManageServiceTest {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    MemberService memberService;
+
 
     @BeforeEach
     void beforeEach() {
         imageUploadUtil = Mockito.mock(ImageUploadUtil.class);
         //   bookManagementService = new BookManageService(bookService, bookRepository, categoryService, imageUploadUtil, bookGroupManagementService, bookContentRepository, searchBookRepository);
+    }
+
+    @Test
+    void QueryTes1t() {
+        List<Book> allById = bookService.findAllById(List.of(1L, 2L));
+        System.out.println("allBooks = " + allById);
+
     }
 
     @Test
@@ -68,6 +81,10 @@ class BookManageServiceTest {
 
     @Test
     void whenBookRegistered_thenVerifyIsRegistered() {
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
+
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
                 "해리포터와 마법사의 돌.jpg",
@@ -86,7 +103,7 @@ class BookManageServiceTest {
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
 
-        Long bookId = bookManagementService.registerBook(request, file); //등록
+        Long bookId = bookManagementService.registerBook(request, file, memberId1); //등록
 
         Book book = bookService.findBook(bookId);
         assertThat(book.getTitle()).isEqualTo("해리포터와 마법사의 돌");
@@ -103,6 +120,9 @@ class BookManageServiceTest {
 
     @Test
     void whenBookUpdatedContent_thenVerifyFields() {
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
                 "해리포터와 마법사의 돌.jpg",
@@ -120,7 +140,7 @@ class BookManageServiceTest {
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
 
-        Long bookId = bookManagementService.registerBook(request, file);
+        Long bookId = bookManagementService.registerBook(request, file, memberId1);
 
         BookUpdateRequest updateRequest = new BookUpdateRequest("홍길동전", "test", "test", "test", 1, 1, 1, categoryId, 0L, "21세기 최고의 책");
         bookManagementService.updateBookContent(updateRequest, bookId);
@@ -132,6 +152,10 @@ class BookManageServiceTest {
 
     @Test
     void whenBookDeleted_thenVerifyIsDeleted() {
+
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
         //given
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
@@ -149,7 +173,7 @@ class BookManageServiceTest {
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
-        Long bookId = bookManagementService.registerBook(request, file);
+        Long bookId = bookManagementService.registerBook(request, file, memberId1);
 
         //when
         boolean isDeleted = bookManagementService.deleteBook(bookId);
@@ -163,6 +187,10 @@ class BookManageServiceTest {
 
     @Test
     void whenDeletingBookHasBookContent_thenThrowException() { //도서 내용 먼저 삭제 해야함.
+
+        MemberRegisterRequest memberRegisterRequest1 = createMemberRegisterRequest("test@example.com", "test1234", "test1234", "test1", "1999", Gender.SECRET, "01012341234");
+        Long memberId1 = memberService.register(memberRegisterRequest1).getMemberId();
+
         //given
         MockMultipartFile file = new MockMultipartFile(
                 "해리포터와 마법사의 돌",
@@ -180,7 +208,7 @@ class BookManageServiceTest {
 
         BookRegisterRequest request = createRegisterRequest("해리포터와 마법사의 돌", "123123", "포터모어",
                 "2023.01.01", 0, 9900, 5, categoryId, 0L, "21세기 최고의 책");
-        Long bookId = bookManagementService.registerBook(request, file);
+        Long bookId = bookManagementService.registerBook(request, file, memberId1);
 
         BookContentRegisterRequest bookContentRegisterRequest = new BookContentRegisterRequest(bookId, "testContent");
         bookContentService.register(bookContentRegisterRequest);
@@ -193,5 +221,10 @@ class BookManageServiceTest {
     private static BookRegisterRequest createRegisterRequest(String title, String isbn, String publisher, String publishingDate,
                                                              int paperPrice, int ebookPrice, int discountRate, Long categoryId, Long bookGroupId, String description) {
         return new BookRegisterRequest(title, isbn, publisher, publishingDate, paperPrice, ebookPrice, discountRate, categoryId, bookGroupId, description);
+    }
+
+    private MemberRegisterRequest createMemberRegisterRequest(String email, String password, String
+            passwordConfirm, String name, String birthYear, Gender gender, String phoneNo) {
+        return new MemberRegisterRequest(email, password, passwordConfirm, name, birthYear, gender, phoneNo);
     }
 }

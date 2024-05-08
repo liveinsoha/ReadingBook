@@ -87,6 +87,8 @@ public enum BaseResponseCode {
 
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "검색되는 도서가 없습니다. 도서 아이디를 다시 확인해주세요."),
 
+    BOOK_IS_NOT_ACCEPTED(HttpStatus.NOT_FOUND, "승인 되지 않은 도서입니다. 다시 확인해주세요."),
+
     BOOK_GROUP_NOT_FOUND(HttpStatus.BAD_REQUEST, "검색되는 도서 그룹이 없습니다. 도서 그룹 아이디를 다시 확인해주세요."),
 
     BOOK_NOT_IN_WISHLIST(HttpStatus.BAD_REQUEST, "위시리스트에 삭제하고자 하는 도서가 존재하지 않습니다."),

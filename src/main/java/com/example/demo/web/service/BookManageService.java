@@ -37,6 +37,8 @@ public class BookManageService {
     private final BookContentRepository bookContentRepository;
     private final BookAuthorListRepository bookAuthorListRepository;
     private final AuthorRepository authorRepository;
+    private final BookMemberMapRepository bookMemberMapRepository;
+    private final MemberRepository memberRepository;
 
 
     /**
@@ -45,12 +47,16 @@ public class BookManageService {
      * @return bookId
      */
 
-    public Page<BookManageSearchResponse> getAllBooks(){
+    public Page<BookManageSearchResponse> getAllBooks() {
         Pageable pageRequest = PageRequest.of(0, 5);
         return bookRepository.searchAllBooks(pageRequest);
     }
 
-    public Long registerBook(BookRegisterRequest request, MultipartFile file) {
+    @Transactional
+    public Long registerBook(BookRegisterRequest request, MultipartFile file, Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseCode.MEMBER_NOT_FOUND));
 
         validateForm(
                 request.getTitle(), request.getIsbn(), request.getPublisher(),
@@ -76,6 +82,7 @@ public class BookManageService {
                     bookAuthorListRepository.save(bookAuthorList);
                 }
         );
+        bookMemberMapRepository.save(BookMemberMap.create(member, book));
 
         return book.getId();
     }

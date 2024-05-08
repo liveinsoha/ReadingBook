@@ -18,7 +18,7 @@ public class BookContentViewController {
 
     @GetMapping("/register/book-content/{bookId}")
     public String registerForm(Model model, @PathVariable Long bookId) {
-        Book book = bookService.findBook(bookId);
+        Book book = bookService.findBookForContent(bookId);
         model.addAttribute("book", book);
         model.addAttribute("selectFlag", "registerBookContent");
         return "manage/bookcontent/bookcontent-register";
