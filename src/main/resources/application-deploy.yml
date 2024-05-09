@@ -20,7 +20,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create #create update none
+      ddl-auto: update #create update none
     properties:
       hibernate:
         default_batch_fetch_size: 100 # 페이징을 위한 IN 쿼리 발생. 100~1000 사이가 적당
