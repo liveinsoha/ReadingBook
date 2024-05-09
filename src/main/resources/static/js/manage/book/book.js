@@ -276,12 +276,6 @@ $('.update-search').on("click", function () {
     $('#bookSearchForm').submit();
 });
 
-$(function () {
-    $('.toggle-all-buttons').on('click', function () {
-        $('.toggle-buttons').toggle(); // 검색 결과의 수정 버튼을 토글
-    });
-});
-
 
 
 $(function () {
@@ -361,13 +355,31 @@ $(function () {
         $(".book-form").submit();
     });
 
-    $('.delete-button').on("click", function () {
-        const result = confirm('삭제하면 복구할 수 없습니다. 삭제하시겠습니까?');
+    // $('.delete-button').on("click", function () {
+    //     const result = confirm('삭제하면 복구할 수 없습니다. 삭제하시겠습니까?');
+    //     if (result == false) {
+    //         return false;
+    //     }
+
+    //     const bookId = $(this).closest('tr').find('td:first').text().trim(); // 해당 행의 첫 번째 열에서 도서 ID를 가져옴
+
+    //     if (bookId === '') {
+    //         alert('도서 아이디를 찾을 수 없습니다.');
+    //         return false;
+    //     }
+
+    //     console.log(bookId);
+
+    //     callAjax('delete', '/manage/book/' + bookId);
+    // });
+
+    $('.book-onsale').on("click", function () {
+        const result = confirm('판매 개시하시겠습니까?');
         if (result == false) {
             return false;
         }
 
-        const bookId = $(this).closest('tr').find('td:first').text().trim(); // 해당 행의 첫 번째 열에서 도서 ID를 가져옴
+        const bookId = $(this).data('book'); 
 
         if (bookId === '') {
             alert('도서 아이디를 찾을 수 없습니다.');
@@ -376,8 +388,26 @@ $(function () {
 
         console.log(bookId);
 
-        callAjax('delete', '/manage/book/' + bookId);
+        callAjax('post', '/manage/book/on-sale/' + bookId);
     });
+
+    $('.book-offsale').on("click", function () {
+        const result = confirm('판매 중단하시겠습니까?');
+        if (result == false) {
+            return false;
+        }
+
+        const bookId = $(this).data('book'); 
+
+        if (bookId === '') {
+            alert('도서 아이디를 찾을 수 없습니다.');
+            return false;
+        }
+
+        console.log(bookId);
+        callAjax('post', '/manage/book/off-sale/' + bookId);
+    });
+
 
 });
 

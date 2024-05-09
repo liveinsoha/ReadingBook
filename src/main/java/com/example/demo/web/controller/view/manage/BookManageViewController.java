@@ -82,7 +82,7 @@ public class BookManageViewController {
         Member seller = memberService.getMember(principal);
         Page<BookManageSearchResponse> responses = null;
         if (query.isEmpty()) {
-            responses = bookManageService.getAllBooks(seller);
+            responses = bookManageService.getAllBooks(pageable, seller);
         } else {
             responses = bookManageService.searchBook(query, pageable, condition, seller);
         }

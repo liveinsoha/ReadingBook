@@ -46,9 +46,9 @@ public class BookManageService {
      * @return bookId
      */
 
-    public Page<BookManageSearchResponse> getAllBooks(Member seller) {
-        Pageable pageRequest = PageRequest.of(0, 5);
-        return bookRepository.searchAllBooks(pageRequest, seller);
+    public Page<BookManageSearchResponse> getAllBooks(Pageable pageable, Member seller) {
+
+        return bookRepository.searchAllBooks(pageable, seller);
     }
 
     @Transactional
@@ -94,6 +94,25 @@ public class BookManageService {
         }
     }
 
+    @Transactional
+    public void updateOnSale(Member seller, Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BaseException(BaseResponseCode.NO_ID_EXCEPTION));
+        if (!book.getSeller().equals(seller)) {
+            throw new BaseException(BaseResponseCode.NO_AUTHORIZATION_FOR_BOOK);
+        }
+        book.updateOnSale();
+    }
+
+    @Transactional
+    public void updateOffSale(Member seller, Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BaseException(BaseResponseCode.NO_ID_EXCEPTION));
+        if (!book.getSeller().equals(seller)) {
+            throw new BaseException(BaseResponseCode.NO_AUTHORIZATION_FOR_BOOK);
+        }
+        book.updateOffSale();
+    }
 
     @Transactional(readOnly = true)
     public BookUpdateResponse getBook(Long bookId, Long sellerId) {

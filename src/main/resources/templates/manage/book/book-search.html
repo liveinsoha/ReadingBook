@@ -46,18 +46,16 @@
               <table class="table" th:if="${responses.content.size() ne 0}">
                 <thead class="table-light">
                   <tr>
-                    <th scope="col">도서 아이디</th> <!-- scope="col" 추가 -->
                     <th scope="col">도서 제목</th>
                     <th scope="col">출판사</th>
                     <th scope="col">이미지</th>
                     <th scope="col">승인 여부</th>
                     <th scope="col">판매 중</th>
-                    <th scope="col">수정 및 삭제</th> <!-- 수정 및 삭제 버튼 열 추가 -->
+                    <th scope="col">수정 및 판매</th> <!-- 수정 및 삭제 버튼 열 추가 -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr th:each="response : ${responses.content}">
-                    <td th:text="${response.bookId}"></td>
                     <td th:text="${response.title}"></td>
                     <td th:text="${response.publisher}"></td>
                     <td>
@@ -71,14 +69,17 @@
                       <!-- 승인 상태 표시 -->
                     </td>
                     <td>
-                      <div th:if="${response.isOnSale}" >O</div>
+                      <div th:if="${response.isOnSale}">O</div>
                       <div th:unless="${response.isOnSale}">X</div>
                       <!-- 판매 중 여부 표시 -->
                     </td>
                     <td>
-                      <div class="toggle-buttons" style="display:none;"> <!-- 수정 및 삭제 버튼 숨김 -->
+                      <div class="toggle-buttons">
                         <a th:href="@{'/update/book/' + ${response.bookId}}" class="btn btn-primary">수정</a>
-                        <button class="btn btn-danger delete-button" th:data-book="${response.bookId}">삭제</button>
+                        <button th:if="${response.isOnSale && response.isAccepted}" class="btn book-onsale"
+                          th:data-book="${response.bookId}">판매 중단</button>
+                        <button th:if="${!response.isOnSale && response.isAccepted}" class="btn book-offsale"
+                          th:data-book="${response.bookId}">판매 개시</button>
                       </div>
                       <!-- 수정 버튼 추가 -->
                     </td>

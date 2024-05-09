@@ -54,6 +54,28 @@ public class BookManageController {
                 .body(response);
     }
 
+    @PostMapping("/on-sale/{bookId}")
+    public ResponseEntity<Object> onSale(Principal principal, @PathVariable Long bookId) {
+        Member member = memberService.getMember(principal);
+        bookManagementService.updateOnSale(member, bookId);
+
+        BaseResponse response = new BaseResponse(HttpStatus.OK, "판매 개시 처리 완로.", true);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @PostMapping("/off-sale/{bookId}")
+    public ResponseEntity<Object> offSale(Principal principal, @PathVariable Long bookId) {
+        Member member = memberService.getMember(principal);
+        bookManagementService.updateOffSale(member, bookId);
+
+        BaseResponse response = new BaseResponse(HttpStatus.OK, "판매 중단 처리 완료.", true);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
     @PatchMapping("/content/{bookId}")
     public ResponseEntity<Object> updateImage(BookUpdateRequest request, @PathVariable Long bookId) {
         bookManagementService.updateBookContent(request, bookId);

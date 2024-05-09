@@ -82,6 +82,14 @@ public class Book extends BaseEntity {
         return book;
     }
 
+    public void updateOnSale() {
+        this.isOnSale = true;
+    }
+
+    public void updateOffSale() {
+        this.isOnSale = false;
+    }
+
     public void updateAccepted() {
         this.isRequested = false;
         this.isAccepted = true;
