@@ -59,7 +59,7 @@ public class BookManageController {
         Member member = memberService.getMember(principal);
         bookManagementService.updateOnSale(member, bookId);
 
-        BaseResponse response = new BaseResponse(HttpStatus.OK, "판매 개시 처리 완로.", true);
+        BaseResponse response = new BaseResponse(HttpStatus.OK, "판매 개시 처리 완료", true);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
@@ -70,7 +70,7 @@ public class BookManageController {
         Member member = memberService.getMember(principal);
         bookManagementService.updateOffSale(member, bookId);
 
-        BaseResponse response = new BaseResponse(HttpStatus.OK, "판매 중단 처리 완료.", true);
+        BaseResponse response = new BaseResponse(HttpStatus.OK, "판매 중단 처리 완료", true);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);

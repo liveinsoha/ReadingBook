@@ -27,10 +27,6 @@
           <th:block th:replace="~{manage/fragments/navbar :: navbar}"></th:block>
         </div>
         <div class="col-10">
-          <div class="text-center mb-3">
-            <!-- 전체 수정 버튼 -->
-            <button class="btn btn-primary toggle-all-buttons">수정,삭제</button>
-          </div>
           <!-- 도서 제목으로 검색하는 폼 -->
           <form class="book-form content-box d-flex" id="bookForm" method="GET" action="/manage/search/book">
             <!-- action과 method 속성 추가 -->
@@ -76,9 +72,9 @@
                     <td>
                       <div class="toggle-buttons">
                         <a th:href="@{'/update/book/' + ${response.bookId}}" class="btn btn-primary">수정</a>
-                        <button th:if="${response.isOnSale && response.isAccepted}" class="btn book-onsale"
+                        <button th:if="${response.isOnSale && response.isAccepted}" class="btn btn-danger book-offsale"
                           th:data-book="${response.bookId}">판매 중단</button>
-                        <button th:if="${!response.isOnSale && response.isAccepted}" class="btn book-offsale"
+                        <button th:if="${!response.isOnSale && response.isAccepted}" class="btn btn-primary book-onsale"
                           th:data-book="${response.bookId}">판매 개시</button>
                       </div>
                       <!-- 수정 버튼 추가 -->
