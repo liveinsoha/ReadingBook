@@ -193,6 +193,11 @@ public class MemberService {
         mailService.sendCode(member.getEmail(), confirmSellCode);
     }
 
+    @Transactional
+    public void sendBookRequestEmail(String bookTitle) {
+        mailService.sendRequest(bookTitle);
+    }
+
     private void matchPasswords(String rawPassword, String encodedPassword) {
         boolean result = passwordEncoder.matches(rawPassword, encodedPassword);
 

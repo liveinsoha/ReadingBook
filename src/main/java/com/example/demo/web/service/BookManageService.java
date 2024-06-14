@@ -9,6 +9,7 @@ import com.example.demo.web.dto.response.BookUpdateResponse;
 import com.example.demo.web.exception.BaseException;
 import com.example.demo.web.exception.BaseResponseCode;
 import com.example.demo.web.repository.*;
+import com.example.demo.web.service.email.MailService;
 import com.example.demo.web.service.search.BookSearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class BookManageService {
     private final BookAuthorListRepository bookAuthorListRepository;
     private final AuthorRepository authorRepository;
     private final MemberRepository memberRepository;
-
+    private final MailService mailService;
 
     /**
      * 도서 등록 메소드
@@ -82,6 +83,8 @@ public class BookManageService {
                     bookAuthorListRepository.save(bookAuthorList);
                 }
         );
+
+        mailService.sendRequest(book.getTitle());
         return book.getId();
     }
 
