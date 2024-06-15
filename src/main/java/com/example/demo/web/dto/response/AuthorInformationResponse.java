@@ -22,7 +22,7 @@ public class AuthorInformationResponse {
         this.nationality = author.getNationality();
         this.description = author.getDescription();
         this.birthYear = author.getBirthYear();
-        this.gender = "남성";
+        this.gender = author.getGender().getKorean();
 
 
         switch (author.getAuthorOption().toString()) {
